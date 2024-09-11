@@ -13,4 +13,9 @@ Rails.application.routes.draw do
 
   # Defines the root path route ("/")
   # root "posts#index"
+
+  namespace :oauth do
+    get "/login", to: "sessions#login"
+    get "/callback", to: "sessions#callback"
+  end
 end
