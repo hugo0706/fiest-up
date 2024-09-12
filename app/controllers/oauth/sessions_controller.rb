@@ -1,47 +1,34 @@
 module Oauth
   class SessionsController < ApplicationController
-    SPOTIFY_CLIENT_ID = ENV["SPOTIFY_CLIENT_ID"]
-    SPOTIFY_REDIRECT_URI = ENV["SPOTIFY_REDIRECT_URI"]
-    SPOTIFY_ACCOUNTS_URL= "https://accounts.spotify.com/"
-    USER_SCOPE = %w[user-read-private user-read-email]
-
     def login
-      auth_url = conn.build_url("authorize")
+      state, oauth_url = Spotify::Oauth::AuthorizeService.new.get_state_and_authorize_url
+      session[:oauth_state] = state
 
-      redirect_to auth_url, allow_other_host: true
+      redirect_to oauth_url, allow_other_host: true
     end
 
     def callback
-      render plain: "logged in", status: :ok
+      error, code, state = callback_params
+
+      show_start_error if error.present?
+
+      if code.present? && state.present? && state == session[:oauth_state]
+        user = UserFetcherService.new(code).call
+        render plain: user.spotify_id, status: :ok
+      else
+        show_start_error
+      end
     end
 
     private
 
-    def conn
-      Faraday.new(connection_options) do |f|
-        f.request :url_encoded
-      end
+    def callback_params
+      params.permit(:error, :code, :state).values_at(:error, :code, :state)
     end
 
-    def connection_options
-      {
-        url: SPOTIFY_ACCOUNTS_URL,
-        params: oauth_params,
-        request: {
-            open_timeout: 7,
-            timeout: 7
-          }
-      }
-    end
-
-    def oauth_params
-      {
-        client_id: SPOTIFY_CLIENT_ID,
-        response_type: "code",
-        redirect_uri: SPOTIFY_REDIRECT_URI,
-        scope: USER_SCOPE.join(" "),
-        state: SecureRandom.hex(16)
-      }
+    def show_start_error
+      flash[:error] = 'An unexoected error ocurred while login in'
+      redirect_to root_path
     end
   end
 end
