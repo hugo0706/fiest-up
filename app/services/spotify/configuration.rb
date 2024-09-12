@@ -1,6 +1,6 @@
 module Spotify
   class Configuration
-    API_VERSION = 'v1'
+    API_VERSION = "v1"
     BASE_URL = "https://api.spotify.com/#{API_VERSION}"
     ACCOUNTS_URL = "https://accounts.spotify.com/"
 

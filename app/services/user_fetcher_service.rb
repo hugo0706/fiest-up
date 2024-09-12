@@ -1,6 +1,6 @@
 class UserFetcherService
   attr_accessor :code
-  #TODO: Refactor this, mixes spotify api with business logic
+  # TODO: Refactor this, mixes spotify api with business logic
   def initialize(code)
     self.code = code
   end
@@ -17,13 +17,13 @@ class UserFetcherService
   private
 
   def registered_user
-    spotify_id = @user_profile_data['id']
+    spotify_id = @user_profile_data["id"]
     user = User.find_by(spotify_id: spotify_id)
     user
   end
 
   def set_current_user_profile
-    response = conn.get('me')
+    response = conn.get("me")
     @user_profile_data = JSON.parse(response.body)
   end
 
@@ -33,7 +33,7 @@ class UserFetcherService
 
   def conn
     Faraday.new(connection_options) do |f|
-      f.request :authorization, 'Bearer', -> { oauth_data['access_token'] }
+      f.request :authorization, "Bearer", -> { oauth_data["access_token"] }
     end
   end
 
@@ -57,10 +57,10 @@ class UserFetcherService
 
   def user_info
     {
-      spotify_id: @user_profile_data['id'],
-      access_token: oauth_data['access_token'],
-      refresh_token: oauth_data['refresh_token'],
-      access_token_expires_at: Time.now + oauth_data['expires_in']
+      spotify_id: @user_profile_data["id"],
+      access_token: oauth_data["access_token"],
+      refresh_token: oauth_data["refresh_token"],
+      access_token_expires_at: Time.now + oauth_data["expires_in"]
     }
   end
 end

@@ -1,10 +1,10 @@
 module Spotify
   module Oauth
     class Base
-      CLIENT_ID = ENV['SPOTIFY_CLIENT_ID']
-      CLIENT_SECRET = ENV['SPOTIFY_CLIENT_SECRET']
+      CLIENT_ID = ENV["SPOTIFY_CLIENT_ID"]
+      CLIENT_SECRET = ENV["SPOTIFY_CLIENT_SECRET"]
       SPOTIFY_REDIRECT_URI = ENV["SPOTIFY_REDIRECT_URI"]
-      
+
       private
 
       def accounts_url

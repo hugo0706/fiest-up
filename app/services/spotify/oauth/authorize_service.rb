@@ -9,7 +9,7 @@ module Spotify
       end
 
       def get_state_and_authorize_url
-        url = conn.build_url('authorize', oauth_params)
+        url = conn.build_url("authorize", oauth_params)
         return state, url
       end
 

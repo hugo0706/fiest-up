@@ -1,7 +1,6 @@
 module Spotify
   module Oauth
     class AccessTokenService < Base
-      
       attr_accessor :code
 
       def initialize(code)
@@ -9,7 +8,7 @@ module Spotify
       end
 
       def request_access_token
-        response = conn.post('api/token', access_token_params)
+        response = conn.post("api/token", access_token_params)
         JSON.parse(response.body)
       end
 
@@ -23,7 +22,7 @@ module Spotify
 
       def access_token_params
         {
-          grant_type: 'authorization_code',
+          grant_type: "authorization_code",
           code: code,
           redirect_uri: SPOTIFY_REDIRECT_URI
         }

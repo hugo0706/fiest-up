@@ -27,7 +27,7 @@ module Oauth
     end
 
     def show_start_error
-      flash[:error] = 'An unexoected error ocurred while login in'
+      flash[:error] = "An unexpected error ocurred while login in"
       redirect_to root_path
     end
   end
