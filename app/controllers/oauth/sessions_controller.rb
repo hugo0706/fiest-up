@@ -14,7 +14,8 @@ module Oauth
 
       if code.present? && state.present? && state == session[:oauth_state]
         user = UserFetcherService.new(code).call
-        render plain: user.spotify_id, status: :ok
+        session[:user_id] = user.id
+        redirect_to home_path
       else
         show_start_error
       end

@@ -12,10 +12,12 @@ Rails.application.routes.draw do
   get "manifest" => "rails/pwa#manifest", :as => :pwa_manifest
 
   # Defines the root path route ("/")
-  root "start_page#index"
+  root "start_page#index", :as => :start
 
   namespace :oauth do
     get "/login", to: "sessions#login"
     get "/callback", to: "sessions#callback"
   end
+  
+  get "/home", to: "home#index"
 end
