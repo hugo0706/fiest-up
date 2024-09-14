@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class UserFetcherService
   attr_accessor :code
 
@@ -6,7 +8,7 @@ class UserFetcherService
   end
 
   def call
-    @user_profile = Spotify::Api::CurrentProfileService.new(oauth_data).get_current_profile 
+    @user_profile = Spotify::Api::CurrentProfileService.new(oauth_data).get_current_profile
     user = get_registered_user
 
     return user if user.present?

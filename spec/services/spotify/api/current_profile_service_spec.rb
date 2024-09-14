@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'rails_helper'
 require 'webmock/rspec'
 
@@ -42,10 +44,10 @@ RSpec.describe Spotify::Api::CurrentProfileService do
         )
         .to_return(status: 200, body: current_profile_response.to_json, headers: { 'Content-Type' => 'application/json' })
     end
-    
+
     it 'performs a GET request to Spotify me API endpoint' do
       subject.get_current_profile
-      
+
       expect(WebMock).to have_requested(:get, current_profile_url)
         .with(
           headers: {
@@ -53,7 +55,7 @@ RSpec.describe Spotify::Api::CurrentProfileService do
           }
         )
     end
-    
+
     it 'it returns the body converted to hash' do
       expect(subject.get_current_profile).to eq(current_profile_response)
     end

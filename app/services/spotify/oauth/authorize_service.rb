@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Spotify
   module Oauth
     class AuthorizeService < Base

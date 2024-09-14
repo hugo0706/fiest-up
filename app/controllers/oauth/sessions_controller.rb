@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Oauth
   class SessionsController < ApplicationController
     def login

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'rails_helper'
 
 RSpec.describe Spotify::Oauth::AuthorizeService do
@@ -15,7 +17,7 @@ RSpec.describe Spotify::Oauth::AuthorizeService do
 
     it 'returns the state value and the url to redirect the user' do
       result = subject.get_state_and_authorize_url
-      expect([result.first, result.second.to_s]).to eq([ state,
+      expect([ result.first, result.second.to_s ]).to eq([ state,
                                                         "https://accounts.spotify.com/authorize?" \
                                                           "client_id=#{client_id}" \
                                                           "&redirect_uri=#{CGI.escape(spotify_redirect_uri)}" \
