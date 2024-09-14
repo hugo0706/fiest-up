@@ -31,7 +31,7 @@ module Oauth
 
     def show_start_error
       flash[:error] = "An unexpected error ocurred while login in"
-      redirect_to root_path
+      redirect_to start_path
     end
   end
 end
