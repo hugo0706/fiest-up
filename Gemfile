@@ -48,11 +48,13 @@ group :development, :test do
   # Omakase Ruby styling [https://github.com/rails/rubocop-rails-omakase/]
   gem "rubocop-rails-omakase", require: false
 
-  gem "rspec-rails", "~> 7.0.0"
+  gem "rspec-rails", "~> 7.0"
 
-  gem "factory_bot", "~> 6.5"
+  gem "factory_bot_rails", "~> 6.4"
 
   gem "dotenv-rails"
+
+  gem "webmock", "~> 3.23"
 end
 
 group :development do
