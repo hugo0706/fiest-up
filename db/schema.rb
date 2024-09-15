@@ -10,9 +10,30 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.2].define(version: 2024_09_11_172945) do
+ActiveRecord::Schema[7.2].define(version: 2024_09_15_170502) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
+
+  create_table "parties", force: :cascade do |t|
+    t.string "code", null: false
+    t.bigint "user_id", null: false
+    t.string "name", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["code"], name: "index_parties_on_code", unique: true
+    t.index ["user_id", "name"], name: "index_parties_on_user_id_and_name", unique: true
+    t.index ["user_id"], name: "index_parties_on_user_id"
+  end
+
+  create_table "party_users", force: :cascade do |t|
+    t.bigint "user_id", null: false
+    t.string "name", null: false
+    t.bigint "party_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["party_id"], name: "index_party_users_on_party_id"
+    t.index ["user_id"], name: "index_party_users_on_user_id"
+  end
 
   create_table "users", force: :cascade do |t|
     t.string "access_token", limit: 510, null: false
@@ -27,4 +48,8 @@ ActiveRecord::Schema[7.2].define(version: 2024_09_11_172945) do
     t.datetime "updated_at", null: false
     t.index ["spotify_id"], name: "index_users_on_spotify_id", unique: true
   end
+
+  add_foreign_key "parties", "users"
+  add_foreign_key "party_users", "parties"
+  add_foreign_key "party_users", "users"
 end
