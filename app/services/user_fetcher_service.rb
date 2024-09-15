@@ -17,7 +17,7 @@ class UserFetcherService
 
     create_user
   rescue ActiveRecord::RecordInvalid, ActiveRecord::RecordNotUnique => e
-    raise InvalidUserError, e.message
+    raise InvalidUserError, e
   end
 
   private

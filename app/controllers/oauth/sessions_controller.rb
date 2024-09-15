@@ -22,7 +22,8 @@ module Oauth
         show_start_error
       end
 
-    rescue UserFetcherService::InvalidUserError => e
+    rescue UserFetcherService::InvalidUserError, 
+           Spotify::Oauth::AccessTokenService::Error => e
       show_start_error
     end
 

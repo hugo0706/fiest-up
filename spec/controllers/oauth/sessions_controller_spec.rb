@@ -82,7 +82,15 @@ RSpec.describe Oauth::SessionsController, type: :controller do
       end
 
       context 'when UserFetcherService::InvalidUserError is raised' do
-        before { allow(UserFetcherService).to receive(:new).and_raise(UserFetcherService::InvalidUserError) }
+        before { allow(UserFetcherService).to receive(:new)
+                  .and_raise(UserFetcherService::InvalidUserError) }
+
+        it_behaves_like 'redirect to home page with error'
+      end
+
+      context 'when AccesTokenService::Error is raised' do
+        before { allow(Spotify::Oauth::AuthorizeService).to receive(:new)
+                  .and_raise(Spotify::Oauth::AccessTokenService::Error) }
 
         it_behaves_like 'redirect to home page with error'
       end

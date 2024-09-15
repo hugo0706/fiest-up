@@ -69,5 +69,16 @@ RSpec.describe Spotify::Oauth::AccessTokenService do
           }
         )
     end
+
+    context 'when Faraday request raises an exception' do
+      let(:conn) { double(Faraday::Connection) }
+
+      before { allow(subject).to receive(:conn).and_return(conn) }
+
+      it 'raises AccessTokenService::Error' do
+        allow(conn).to receive(:post).and_raise(Faraday::Error)
+        expect { subject.request_access_token }.to raise_error(described_class::Error)
+      end
+    end
   end
 end
