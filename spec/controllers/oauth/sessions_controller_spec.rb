@@ -32,7 +32,7 @@ RSpec.describe Oauth::SessionsController, type: :controller do
   end
 
   describe 'GET #callback' do
-    let(:params) { 
+    let(:params) {
       {
         code: code,
         state: state
@@ -40,46 +40,51 @@ RSpec.describe Oauth::SessionsController, type: :controller do
     }
     let(:code) { 'code' }
     let(:state) { 'state' }
-    
+
     context 'when parameters are correct' do
+      shared_examples_for 'redirect to home page with error' do
+        it 'redirects the user to start page with an error flash' do
+          get :callback, params: params
+
+          expect(response).to redirect_to(start_path)
+          expect(flash[:error]).to eq("An unexpected error ocurred while login in")
+        end
+      end
+
       context 'when there is no error field in parameters' do
         let(:user) { create(:user) }
-        before do 
+        before do
           expect(UserFetcherService).to receive(:new).with(code).and_call_original
           expect_any_instance_of(UserFetcherService).to receive(:call)
             .and_return(user)
           session[:oauth_state] = state
         end
-        
+
         it "calls UserFetcherService with the code parameter, " \
            "stores the user session and redirects to home" do
           get :callback, params: params
-          
+
           expect(session[:user_id]).to eq(user.id)
           expect(response).to redirect_to(home_path)
         end
       end
-      
+
       context 'when there is an error field in the parameters' do
-        before { params.merge({ error: 'error' })}
-        
-        it 'redirects the user to start page with an error flash' do
-          get :callback, params: params
-          
-          expect(response).to redirect_to(start_path)
-          expect(flash[:error]).to eq("An unexpected error ocurred while login in")
-        end
+        before { params.merge({ error: 'error' }) }
+
+        it_behaves_like 'redirect to home page with error'
       end
-      
+
       context 'when either state or code fields are missing or the state is not correct' do
         before { params.delete(:code) }
-        
-        it 'redirects the user to start page with an error flash' do
-          get :callback, params: params
-          
-          expect(response).to redirect_to(start_path)
-          expect(flash[:error]).to eq("An unexpected error ocurred while login in")
-        end
+
+        it_behaves_like 'redirect to home page with error'
+      end
+
+      context 'when UserFetcherService::InvalidUserError is raised' do
+        before { allow(UserFetcherService).to receive(:new).and_raise(UserFetcherService::InvalidUserError) }
+
+        it_behaves_like 'redirect to home page with error'
       end
     end
   end

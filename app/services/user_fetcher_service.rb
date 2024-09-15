@@ -3,6 +3,8 @@
 class UserFetcherService
   attr_accessor :code
 
+  class InvalidUserError < StandardError ; end
+
   def initialize(code)
     self.code = code
   end
@@ -14,6 +16,8 @@ class UserFetcherService
     return user if user.present?
 
     create_user
+  rescue ActiveRecord::RecordInvalid, ActiveRecord::RecordNotUnique => e
+    raise InvalidUserError, e.message
   end
 
   private

@@ -21,6 +21,9 @@ module Oauth
       else
         show_start_error
       end
+
+    rescue UserFetcherService::InvalidUserError => e
+      show_start_error
     end
 
     private
