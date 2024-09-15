@@ -15,8 +15,9 @@ class UserFetcherService
 
     return user if user.present?
 
-    create_user
-  rescue ActiveRecord::RecordInvalid, ActiveRecord::RecordNotUnique => e
+    User.create!(user_info)
+  rescue ActiveRecord::RecordInvalid, 
+        ActiveRecord::RecordNotUnique => e
     raise InvalidUserError, e
   end
 
@@ -29,10 +30,6 @@ class UserFetcherService
   def get_registered_user
     spotify_id = @user_profile["id"]
     User.find_by(spotify_id: spotify_id)
-  end
-
-  def create_user
-    User.create!(user_info)
   end
 
   def user_info
