@@ -35,6 +35,10 @@ class UserFetcherService
   def user_info
     {
       spotify_id: @user_profile["id"],
+      email: @user_profile["email"],
+      username: @user_profile["display_name"],
+      profile_url: @user_profile["external_urls"]["spotify"],
+      product: @user_profile["product"],
       access_token: oauth_data["access_token"],
       refresh_token: oauth_data["refresh_token"],
       access_token_expires_at: Time.now + oauth_data["expires_in"]

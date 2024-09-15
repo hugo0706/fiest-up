@@ -18,6 +18,10 @@ ActiveRecord::Schema[7.2].define(version: 2024_09_11_172945) do
     t.string "access_token", limit: 510, null: false
     t.string "spotify_id", null: false
     t.string "refresh_token", limit: 510, null: false
+    t.string "email", null: false
+    t.string "username", null: false
+    t.string "product", null: false
+    t.string "profile_url", null: false
     t.datetime "access_token_expires_at", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
