@@ -16,7 +16,7 @@ RSpec.describe Spotify::Api::CurrentProfileService do
 
   subject { described_class.new(oauth_data) }
 
-  describe '#get_current_profile' do
+  describe '#current_profile' do
     let(:current_profile_url) { 'https://api.spotify.com/v1/me' }
     let(:current_profile_response) {
       {
@@ -46,7 +46,7 @@ RSpec.describe Spotify::Api::CurrentProfileService do
     end
 
     it 'performs a GET request to Spotify me API endpoint' do
-      subject.get_current_profile
+      subject.current_profile
 
       expect(WebMock).to have_requested(:get, current_profile_url)
         .with(
@@ -57,7 +57,18 @@ RSpec.describe Spotify::Api::CurrentProfileService do
     end
 
     it 'it returns the body converted to hash' do
-      expect(subject.get_current_profile).to eq(current_profile_response)
+      expect(subject.current_profile).to eq(current_profile_response)
+    end
+    
+    context 'when Faraday request raises an exception' do
+      let(:conn) { double(Faraday::Connection) }
+
+      before { allow(subject).to receive(:conn).and_return(conn) }
+
+      it 'raises CurrentProfileService::Error' do
+        allow(conn).to receive(:get).and_raise(Faraday::Error)
+        expect { subject.current_profile }.to raise_error(described_class::Error)
+      end
     end
   end
 end

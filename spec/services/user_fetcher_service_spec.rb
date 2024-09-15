@@ -41,7 +41,7 @@ RSpec.describe UserFetcherService do
         .and_return(access_token_data)
       expect(Spotify::Api::CurrentProfileService).to receive(:new).with(access_token_data)
         .and_return(current_profile_service_double)
-      allow(current_profile_service_double).to receive(:get_current_profile)
+      allow(current_profile_service_double).to receive(:current_profile)
         .and_return(current_profile_data)
     end
 

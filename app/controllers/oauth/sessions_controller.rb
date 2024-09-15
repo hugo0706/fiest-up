@@ -2,11 +2,18 @@
 
 module Oauth
   class SessionsController < ApplicationController
+    before_action :authorize, only: :logout
+
     def login
       state, oauth_url = Spotify::Oauth::AuthorizeService.new.get_state_and_authorize_url
       session[:oauth_state] = state
 
       redirect_to oauth_url, allow_other_host: true
+    end
+    
+    def logout
+      session[:oauth_state] = nil
+      redirect_to start_path
     end
 
     def callback
@@ -23,7 +30,8 @@ module Oauth
       end
 
     rescue UserFetcherService::InvalidUserError, 
-           Spotify::Oauth::AccessTokenService::Error => e
+          Spotify::Oauth::AccessTokenService::Error,
+          Spotify::Api::CurrentProfileService::Error => e
       show_start_error
     end
 
