@@ -18,6 +18,13 @@ Rails.application.routes.draw do
     get "/login", to: "sessions#login"
     get "/callback", to: "sessions#callback"
   end
+  
+  scope '/party' do
+    get '/join/:code', to: "parties#join", as: 'join_party'
+    post '/create', to: "parties#create", as: 'create_party'
+    get '/:code', to: "parties#show", as: 'show_party'
+    get '/history', to: "parties#index", as: 'party_history'
+  end
 
   get "/home", to: "home#index"
   
