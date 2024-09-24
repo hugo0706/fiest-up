@@ -11,3 +11,25 @@
 }
 
 */
+
+@layer utilities {
+  .custom-scrollbar {
+    max-height: 400px;
+    overflow-y: auto;
+  }
+
+  /* For WebKit browsers */
+  .custom-scrollbar::-webkit-scrollbar {
+    width: 10px;
+  }
+
+  .custom-scrollbar::-webkit-scrollbar-track {
+    background: #121212; /* Tailwind gray-100 */
+    border-radius: 9px; /* Full-rounded */
+  }
+
+  .custom-scrollbar::-webkit-scrollbar-thumb {
+    background-color: #b3b3b3; /* Tailwind gray-300 */
+    border-radius: 9px; /* Full-rounded */
+  }
+}

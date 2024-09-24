@@ -15,6 +15,8 @@ module.exports = {
       colors: {
         "spotify-gray-secondary": "#121212",
         "spotify-gray-clear": "#191919",
+        "spotify-separator": "#b3b3b3",
+        "spotify-green": "#1DB954",
       },
       animation: {
         party: "backlightEffect 8s linear infinite",

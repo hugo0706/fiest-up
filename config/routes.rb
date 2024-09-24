@@ -22,8 +22,8 @@ Rails.application.routes.draw do
   scope '/party' do
     get '/join/:code', to: "parties#join", as: 'join_party'
     post '/create', to: "parties#create", as: 'create_party'
+    get '/list', to: "parties#index", as: 'party_list'
     get '/:code', to: "parties#show", as: 'show_party'
-    get '/history', to: "parties#index", as: 'party_history'
   end
 
   get "/home", to: "home#index"

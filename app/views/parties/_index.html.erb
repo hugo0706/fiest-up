@@ -1,0 +1,15 @@
+<div class="flex flex-col w-full h-1/2 p-4 rounded-2xl gap-2 bg-spotify-gray-clear">
+    <div class="h-1/2 overflow-y-auto custom-scrollbar">
+        <p class="text-xl sticky top-0 bg-spotify-gray-clear font-semibold">Your parties</p>
+        <% (1..100).each do |i| %>
+            <p> <%= i%> </p>
+        <% end %>
+    </div>
+    <div class="border-t-2 border-spotify-separator"></div>
+    <div class="h-1/2 overflow-y-auto custom-scrollbar">
+        <p class="text-xl sticky top-0 bg-spotify-gray-clear font-semibold">Parties you have joined</p>
+        <% (1..100).each do |i| %>
+            <p> <%= i%> </p>
+        <% end %>
+    </div>
+</div>
