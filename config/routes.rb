@@ -10,15 +10,15 @@ Rails.application.routes.draw do
   # Render dynamic PWA files from app/views/pwa/*
   get "service-worker" => "rails/pwa#service_worker", :as => :pwa_service_worker
   get "manifest" => "rails/pwa#manifest", :as => :pwa_manifest
-  
+
   # Defines the root path route ("/")
   root "start_page#index", as: :start
 
   namespace :oauth do
-    get "/login", to: "sessions#login"
+    get "/login", to: "sessions#login", as: 'login'
     get "/callback", to: "sessions#callback"
   end
-  
+
   scope '/party' do
     get '/join/:code', to: "parties#join", as: 'join_party'
     post '/create', to: "parties#create", as: 'create_party'
