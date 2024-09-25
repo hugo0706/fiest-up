@@ -58,6 +58,8 @@ group :development, :test do
   gem "webmock", "~> 3.23"
   
   gem "ffaker", "~> 2.23"
+  
+  gem "rails-controller-testing"
 
 end
 

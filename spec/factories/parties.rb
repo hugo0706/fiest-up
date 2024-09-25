@@ -1,6 +1,12 @@
+# frozen_string_literal: true
+
+require 'ffaker'
+
 FactoryBot.define do
   factory :party do
-    code { "MyString" }
-    user { nil }
+    code { FFaker::Color.hex_code }
+    name { FFaker::Name.name }
+
+    association :user, factory: :user
   end
 end
