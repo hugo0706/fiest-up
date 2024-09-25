@@ -1,7 +1,6 @@
 # frozen_string_literal: true
 
 class TemporalSessionsController < ApplicationController
-
   def create
     temporal_user = TemporalUser.create!(name: name)
     party = Party.find_by!(code: party_code)
