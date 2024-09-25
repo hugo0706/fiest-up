@@ -118,6 +118,7 @@ GEM
       logger
     faraday-net_http (3.3.0)
       net-http
+    ffaker (2.23.0)
     globalid (1.2.1)
       activesupport (>= 6.1)
     hashdiff (1.1.1)
@@ -355,6 +356,7 @@ DEPENDENCIES
   dotenv-rails
   factory_bot_rails (~> 6.4)
   faraday (~> 2.11)
+  ffaker (~> 2.23)
   importmap-rails
   jbuilder
   pg (~> 1.1)

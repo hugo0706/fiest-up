@@ -53,19 +53,33 @@ RSpec.describe Oauth::SessionsController, type: :controller do
 
       context 'when there is no error field in parameters' do
         let(:user) { create(:user) }
+
         before do
           expect(UserFetcherService).to receive(:new).with(code).and_call_original
           expect_any_instance_of(UserFetcherService).to receive(:call)
             .and_return(user)
           session[:oauth_state] = state
         end
+        context 'when the user was creating an account' do
+          it "calls UserFetcherService with the code parameter, " \
+            "stores the user session and redirects to home" do
+            get :callback, params: params
 
-        it "calls UserFetcherService with the code parameter, " \
-           "stores the user session and redirects to home" do
-          get :callback, params: params
+            expect(session[:user_id]).to eq(user.id)
+            expect(response).to redirect_to(home_path)
+          end
+        end
 
-          expect(session[:user_id]).to eq(user.id)
-          expect(response).to redirect_to(home_path)
+        context 'when the user was joining a party and created an account' do
+          before { session[:joining_party_code] = code }
+
+          it "calls UserFetcherService with the code parameter, " \
+             "stores the user session and redirects to the join party path" do
+            get :callback, params: params
+
+            expect(session[:user_id]).to eq(user.id)
+            expect(response).to redirect_to(join_party_path(code: code))
+          end
         end
       end
 
@@ -94,9 +108,9 @@ RSpec.describe Oauth::SessionsController, type: :controller do
 
         it_behaves_like 'redirect to home page with error'
       end
-      
+
       context 'when  Spotify::Api::CurrentProfileService::Error is raised' do
-        before { allow( Spotify::Api::CurrentProfileService).to receive(:new)
+        before { allow(Spotify::Api::CurrentProfileService).to receive(:new)
                   .and_raise(Spotify::Api::CurrentProfileService::Error) }
 
         it_behaves_like 'redirect to home page with error'
