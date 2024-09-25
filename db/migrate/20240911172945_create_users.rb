@@ -9,7 +9,7 @@ class CreateUsers < ActiveRecord::Migration[7.2]
       t.string :email, null: false
       t.string :username, null: false
       t.string :product, null: false
-      t.string :profile_url , null: false
+      t.string :profile_url, null: false
       t.datetime :access_token_expires_at, null: false
 
       t.timestamps

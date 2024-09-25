@@ -10,7 +10,7 @@ module Oauth
 
       redirect_to oauth_url, allow_other_host: true
     end
-    
+
     def logout
       session[:user_id] = nil
       redirect_to start_path

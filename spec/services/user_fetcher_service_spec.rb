@@ -61,10 +61,10 @@ RSpec.describe UserFetcherService do
         expect { result = subject.call }.to change { User.count }.from(0).to(1)
         expect(result).to eq(User.find_by(spotify_id: spotify_id))
       end
-      
+
       context 'when the user created is invalid' do
-        before { allow(User).to receive(:create!).and_raise(ActiveRecord::RecordInvalid)}
-        
+        before { allow(User).to receive(:create!).and_raise(ActiveRecord::RecordInvalid) }
+
         it 'raises InvalidUserError' do
           expect { subject.call }.to raise_error(described_class::InvalidUserError)
         end

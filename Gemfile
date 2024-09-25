@@ -56,11 +56,10 @@ group :development, :test do
   gem "dotenv-rails"
 
   gem "webmock", "~> 3.23"
-  
-  gem "ffaker", "~> 2.23"
-  
-  gem "rails-controller-testing"
 
+  gem "ffaker", "~> 2.23"
+
+  gem "rails-controller-testing"
 end
 
 group :development do
