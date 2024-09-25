@@ -15,20 +15,20 @@ Rails.application.routes.draw do
   root "start_page#index", as: :start
 
   namespace :oauth do
-    get "/login", to: "sessions#login", as: 'login'
+    get "/login", to: "sessions#login", as: "login"
     get "/callback", to: "sessions#callback"
   end
 
-  scope '/party' do
-    get '/join/:code', to: "parties#join", as: 'join_party'
-    post '/create', to: "parties#create", as: 'create_party'
-    get '/list', to: "parties#index", as: 'party_list'
-    get '/:code', to: "parties#show", as: 'show_party'
+  scope "/party" do
+    get "/join/:code", to: "parties#join", as: "join_party"
+    post "/create", to: "parties#create", as: "create_party"
+    get "/list", to: "parties#index", as: "party_list"
+    get "/:code", to: "parties#show", as: "show_party"
   end
-  
+
   resources :temporal_sessions, only: :create
 
   get "/home", to: "home#index"
-  
-  match '*unmatched', to: 'application#not_found_method', via: :all
+
+  match "*unmatched", to: "application#not_found_method", via: :all
 end

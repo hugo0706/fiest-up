@@ -4,7 +4,7 @@ module Spotify
   module Api
     class CurrentProfileService < Base
       class Error < StandardError; end
-      
+
       def current_profile
         response = conn.get("me")
         JSON.parse(response.body)

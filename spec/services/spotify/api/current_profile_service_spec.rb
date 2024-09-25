@@ -59,7 +59,7 @@ RSpec.describe Spotify::Api::CurrentProfileService do
     it 'it returns the body converted to hash' do
       expect(subject.current_profile).to eq(current_profile_response)
     end
-    
+
     context 'when Faraday request raises an exception' do
       let(:conn) { double(Faraday::Connection) }
 

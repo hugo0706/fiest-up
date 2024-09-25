@@ -41,7 +41,7 @@ class PartiesController < ApplicationController
     party = Party.find_by(code: code)
 
     if party.nil?
-      flash[:error] = 'That party does not exist'
+      flash[:error] = "That party does not exist"
       redirect_to start_path
       return
     end
@@ -52,7 +52,7 @@ class PartiesController < ApplicationController
     else
       session[:joining_party_code] = code
       @code = code
-      render 'non_logged_join'
+      render "non_logged_join"
     end
   end
 
@@ -79,7 +79,7 @@ class PartiesController < ApplicationController
 
     return true if user.present? && party.party_users.exists?(user: user)
 
-    flash[:error] = 'You have to join the party first'
+    flash[:error] = "You have to join the party first"
     redirect_to join_party_path(code: code)
   end
 

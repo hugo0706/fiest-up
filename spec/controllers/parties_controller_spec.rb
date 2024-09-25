@@ -173,7 +173,7 @@ RSpec.describe PartiesController, type: :controller do
           end
         end
       end
-      
+
       context 'when the user does not belong to the party' do
         context 'when it is a normal user' do
           let(:user) { create(:user) }
@@ -201,7 +201,7 @@ RSpec.describe PartiesController, type: :controller do
           end
         end
       end
-      
+
       context 'when there is no session' do
         it 'redirects the user to join party path with an error message' do
           get :show, params: { code: code }

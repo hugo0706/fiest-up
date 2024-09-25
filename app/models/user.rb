@@ -6,7 +6,7 @@ class User < ApplicationRecord
 
   encrypts :access_token
   encrypts :refresh_token
-  
+
   has_many :parties, dependent: :destroy
   has_many :party_users, as: :user, dependent: :destroy
 end
