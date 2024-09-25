@@ -12,7 +12,7 @@ module Oauth
     end
     
     def logout
-      session[:oauth_state] = nil
+      session[:user_id] = nil
       redirect_to start_path
     end
 
@@ -24,7 +24,11 @@ module Oauth
       if code.present? && state.present? && state == session[:oauth_state]
         user = UserFetcherService.new(code).call
         session[:user_id] = user.id
-        redirect_to home_path
+        if session[:joining_party_code]
+          redirect_to join_party_path(code: session[:joining_party_code])
+        else
+          redirect_to home_path
+        end
       else
         show_start_error
       end

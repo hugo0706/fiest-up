@@ -2,10 +2,11 @@
 
 class PartiesController < ApplicationController
   before_action :authorize, only: [ :create, :index ]
-  
+  before_action :user_in_party?, only: :show
+
   class RetriesDepleted < StandardError; end
   class PartyAlreadyExists < StandardError; end
-  
+
   PARTY_CREATION_RETRIES = 3
 
   def create
@@ -34,18 +35,57 @@ class PartiesController < ApplicationController
   end
 
   def join
+    party = Party.find_by(code: code)
+
+    if party.nil?
+      flash[:error] = 'That party does not exist'
+      redirect_to start_path
+      return
+    end
+
+    if logged_in?
+      party.users << current_user
+      redirect_to show_party_path(code: code)
+    else
+      session[:joining_party_code] = code
+      @code = code
+      render 'non_logged_join'
+    end
   end
 
   def show
-    @party = Party.find_by(code: params[:code])
   end
 
   def index
   end
 
   private
+  
+  def party
+    @party ||= Party.find_by(code: code)
+  end
+
+  def user_in_party?
+
+    if current_user
+      user = current_user
+    elsif session[:temporal_session].present?
+      user = TemporalUser.find(session[:temporal_session])
+    else
+      user = nil
+    end
+
+    return true if user.present? && party.party_users.exists?(user: user)
+    
+    flash[:error] = 'You have to join the party first'
+    redirect_to join_party_path(code: code)
+  end
 
   def create_party_params
     params.require(:name)
+  end
+
+  def code
+    params.require(:code)
   end
 end
