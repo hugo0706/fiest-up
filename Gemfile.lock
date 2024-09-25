@@ -113,8 +113,9 @@ GEM
     factory_bot_rails (6.4.3)
       factory_bot (~> 6.4)
       railties (>= 5.0.0)
-    faraday (2.11.0)
+    faraday (2.12.0)
       faraday-net_http (>= 2.0, < 3.4)
+      json
       logger
     faraday-net_http (3.3.0)
       net-http
@@ -359,7 +360,7 @@ DEPENDENCIES
   debug
   dotenv-rails
   factory_bot_rails (~> 6.4)
-  faraday (~> 2.11)
+  faraday (~> 2.12)
   ffaker (~> 2.23)
   importmap-rails
   jbuilder

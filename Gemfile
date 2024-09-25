@@ -73,4 +73,4 @@ group :test do
   gem "selenium-webdriver"
 end
 
-gem "faraday", "~> 2.11"
+gem "faraday", "~> 2.12"
