@@ -4,9 +4,18 @@ class PartiesController < ApplicationController
   before_action :authorize, only: [ :create, :index ]
   before_action :user_in_party?, only: :show
 
+  rate_limit to: 5, within: 3.minutes,
+    by: -> { request.remote_ip },
+    with: -> { rate_limit_exceeded },
+    only: :create
   # TODO: what happens if user is premium but changes to free?
   class RetriesDepleted < StandardError; end
   class PartyAlreadyExists < StandardError; end
+  class RateLimitExceeded < StandardError
+    def initialize(remote_ip)
+      super("Rate Limit Exceeded - remote_ip: #{remote_ip}")
+    end
+  end
 
   PARTY_CREATION_RETRIES = 3
 
@@ -81,6 +90,12 @@ class PartiesController < ApplicationController
 
     flash[:error] = "You have to join the party first"
     redirect_to join_party_path(code: code)
+  end
+
+  def rate_limit_exceeded
+    report_error(RateLimitExceeded.new(request.remote_ip))
+    flash[:error] = 'Too many party creation requests. Please wait some minutes'
+    redirect_to home_path
   end
 
   def create_party_params
