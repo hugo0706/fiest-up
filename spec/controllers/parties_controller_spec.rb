@@ -20,8 +20,8 @@ RSpec.describe PartiesController, type: :controller do
 
       context 'when creating a party' do
         context 'with a code that already exists' do
-          let(:existing_party_code) { 'existing_code' }
-          let(:non_existing_party_code) { 'non_existing_party_code' }
+          let(:existing_party_code) { '123456' }
+          let(:non_existing_party_code) { 'qwerty' }
           let(:existing_party_name) { 'existing_name' }
           let!(:existing_party) do
             create(:party, user: user, code: existing_party_code, name: existing_party_name)
@@ -32,9 +32,10 @@ RSpec.describe PartiesController, type: :controller do
                 .and_return(existing_party_code, existing_party_code, non_existing_party_code)
             end
 
-            it 'creates a party with the non repeated unique party code' do
+            it 'creates a party with the non repeated unique party code and adds the owner to it' do
               expect { post :create, params: params }.to change { Party.count }.from(1).to(2)
               expect(Party.last.code).to eq(non_existing_party_code)
+              expect(Party.last.users).to eq([ user ])
             end
           end
 
@@ -69,21 +70,23 @@ RSpec.describe PartiesController, type: :controller do
         end
 
         context 'with valid attributes' do
-          it 'creates a party' do
+          it 'creates a party and adds the owner to it' do
             post :create, params: params
 
             expect(response).to redirect_to(show_party_path(user.parties.last.code))
             expect(user.parties).to eq([ Party.last ])
+            expect(Party.last.users).to eq([ user ])
           end
 
           context 'with a party name that corresponds to other user' do
             before { create(:party, name: name) }
 
-            it 'creates a party' do
+            it 'creates a party and adds the owner to it' do
               post :create, params: params
 
               expect(response).to redirect_to(show_party_path(user.parties.last.code))
               expect(user.parties).to eq([ Party.last ])
+              expect(Party.last.users).to eq([ user ])
             end
           end
         end
@@ -139,7 +142,7 @@ RSpec.describe PartiesController, type: :controller do
 
   describe 'callbacks' do
     describe 'user_in_party?' do
-      let(:code) { 'code' }
+      let(:code) { 'code12' }
       let!(:party) { create(:party, code: code) }
 
       context 'when the user belongs to the party' do

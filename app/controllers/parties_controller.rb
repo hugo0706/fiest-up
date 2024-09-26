@@ -38,6 +38,8 @@ class PartiesController < ApplicationController
       retries += 1
     end
 
+    party.users << current_user
+
     redirect_to show_party_path(code)
   rescue RetriesDepleted,
         PartyAlreadyExists => e
