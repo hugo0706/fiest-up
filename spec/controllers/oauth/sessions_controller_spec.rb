@@ -32,7 +32,7 @@ RSpec.describe Oauth::SessionsController, type: :controller do
   end
 
   describe 'GET #callback' do
-    let(:params) {
+    let!(:params) {
       {
         code: code,
         state: state
@@ -40,6 +40,7 @@ RSpec.describe Oauth::SessionsController, type: :controller do
     }
     let(:code) { 'code' }
     let(:state) { 'state' }
+
 
     context 'when parameters are correct' do
       shared_examples_for 'redirect to home page with error' do
@@ -60,12 +61,14 @@ RSpec.describe Oauth::SessionsController, type: :controller do
             .and_return(user)
           session[:oauth_state] = state
         end
+
         context 'when the user was creating an account' do
           it "calls UserFetcherService with the code parameter, " \
             "stores the user session and redirects to home" do
             get :callback, params: params
 
             expect(session[:user_id]).to eq(user.id)
+            expect(flash[:notice]).to eq('Logged in!')
             expect(response).to redirect_to(home_path)
           end
         end
@@ -78,13 +81,21 @@ RSpec.describe Oauth::SessionsController, type: :controller do
             get :callback, params: params
 
             expect(session[:user_id]).to eq(user.id)
+            expect(flash[:notice]).to eq('Joining party with your Spotify account!')
             expect(response).to redirect_to(join_party_path(code: code))
+          end
+          
+          it 'empties the joining_party_code session cookie and stores its value' do
+            get :callback, params: params
+            
+            expect(session[:joining_party_code]).to eq(nil)
+            expect(assigns(:joining_party_code)).to eq(code)
           end
         end
       end
 
       context 'when there is an error field in the parameters' do
-        before { params.merge({ error: 'error' }) }
+        let!(:params) { super().merge!({ error: 'error' }) }
 
         it_behaves_like 'redirect to home page with error'
       end
