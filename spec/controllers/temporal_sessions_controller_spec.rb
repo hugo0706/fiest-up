@@ -10,7 +10,7 @@ RSpec.describe TemporalSessionsController, type: :controller do
         code: code
       }
     end
-    let(:code) { 'party_code' }
+    let(:code) { 'party1' }
     let(:name) { 'party' }
     context 'when the party exists' do
       let!(:party) { create(:party, code: code) }
