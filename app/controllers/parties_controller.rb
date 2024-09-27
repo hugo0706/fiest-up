@@ -8,6 +8,7 @@ class PartiesController < ApplicationController
     by: -> { request.remote_ip },
     with: -> { rate_limit_exceeded },
     only: :create
+
   # TODO: what happens if user is premium but changes to free?
   class RetriesDepleted < StandardError; end
   class PartyAlreadyExists < StandardError; end
@@ -20,31 +21,21 @@ class PartiesController < ApplicationController
   PARTY_CREATION_RETRIES = 3
 
   def create
-    retries = 0
-    code = nil
-    party = nil
-    name = create_party_params
-
-    loop do
-      raise RetriesDepleted if retries >= PARTY_CREATION_RETRIES
-      code = SecureRandom.hex(3)
-
-      party = Party.create(user: current_user, name: name, code: code)
-
-      raise PartyAlreadyExists if party.errors[:name].present?
-
-      break if party.valid?
-
-      retries += 1
-    end
+    party = create_party_with_random_code
 
     party.users << current_user
 
-    redirect_to show_party_path(code)
+    flash[:notice] = 'Party created succesfully'
+    redirect_to show_party_path(party.code)
   rescue RetriesDepleted,
-        PartyAlreadyExists => e
+         PartyAlreadyExists => e
 
     report_error(e)
+    if e.class == PartyAlreadyExists
+      flash[:error] = 'You already have a party with that name'
+    else
+      flash[:error] = 'There was an error creating the party'
+    end
     redirect_to home_path
   end
 
@@ -59,6 +50,7 @@ class PartiesController < ApplicationController
 
     if logged_in?
       party.users << current_user
+      flash[:notice] = "Party joined!"
       redirect_to show_party_path(code: code)
     else
       session[:joining_party_code] = code
@@ -74,6 +66,31 @@ class PartiesController < ApplicationController
   end
 
   private
+
+  def create_party_with_random_code
+    retries = 0
+    random_code = nil
+    party = nil
+
+    loop do
+      raise RetriesDepleted if retries >= PARTY_CREATION_RETRIES
+      random_code = SecureRandom.hex(3)
+
+      party = Party.create(user: current_user, name: name, code: random_code)
+
+      raise PartyAlreadyExists if party.errors[:name].present?
+
+      break if party.valid?
+
+      retries += 1
+    end
+
+    party
+  end
+
+  def code
+    @code ||= params.require(:code)
+  end
 
   def party
     @party ||= Party.find_by(code: code)
@@ -100,11 +117,7 @@ class PartiesController < ApplicationController
     redirect_to home_path
   end
 
-  def create_party_params
-    params.require(:name)
-  end
-
-  def code
-    params.require(:code)
+  def name
+    @name ||= params.require(:name)
   end
 end

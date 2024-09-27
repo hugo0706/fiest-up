@@ -51,6 +51,7 @@ RSpec.describe PartiesController, type: :controller do
 
               post :create, params: params
 
+              expect(flash[:error]).to eq('There was an error creating the party')
               expect(response).to redirect_to(home_path)
             end
           end
@@ -65,6 +66,7 @@ RSpec.describe PartiesController, type: :controller do
 
             post :create, params: params
 
+            expect(flash[:error]).to eq('You already have a party with that name')
             expect(response).to redirect_to(home_path)
           end
         end
@@ -73,6 +75,7 @@ RSpec.describe PartiesController, type: :controller do
           it 'creates a party and adds the owner to it' do
             post :create, params: params
 
+            expect(flash[:notice]).to eq('Party created succesfully')
             expect(response).to redirect_to(show_party_path(user.parties.last.code))
             expect(user.parties).to eq([ Party.last ])
             expect(Party.last.users).to eq([ user ])
@@ -84,6 +87,7 @@ RSpec.describe PartiesController, type: :controller do
             it 'creates a party and adds the owner to it' do
               post :create, params: params
 
+              expect(flash[:notice]).to eq('Party created succesfully')
               expect(response).to redirect_to(show_party_path(user.parties.last.code))
               expect(user.parties).to eq([ Party.last ])
               expect(Party.last.users).to eq([ user ])
@@ -124,6 +128,7 @@ RSpec.describe PartiesController, type: :controller do
         it 'adds the user to the party and redirects to party' do
           get :join, params: { code: code }
 
+          expect(flash[:notice]).to eq("Party joined!")
           expect(response).to redirect_to(show_party_path(code: code))
           expect(existing_party.party_users.exists?(user: user)).to eq(true)
         end
