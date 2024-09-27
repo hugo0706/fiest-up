@@ -1,8 +1,13 @@
-<div data-controller="create-party" class="flex flex-col justify-center items-center bg-spotify-gray-secondary rounded-2xl w-80 h-60 gap-3">
+<div data-controller="create-party">
+<%= form_with url: create_party_path, method: :post, class: "flex flex-col justify-center items-center bg-spotify-gray-secondary rounded-2xl w-80 h-60 gap-3" do |form| %>
     <h1 class="font-semibold text-2xl text-center">Create a party!</h1>
-    <input maxlength="15" placeholder="Name" data-create-party-target="name" class="bg-black text-gray-200 text-center text-xl max-w-48 border border-gray-400 hover:border-black focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent font-bold py-3 px-5 rounded">
+    <%= form.text_field :name, 
+        placeholder: "Name", maxlength: 15, minlength: 1, required: true, 
+        class: "bg-black text-gray-200 text-center text-xl max-w-48 border border-gray-400 hover:border-black focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent font-bold py-3 px-5 rounded", 
+        data: { create_party_target: "name" } %>
     <p data-create-party-target="nameError" class="hidden text-xs font font-semibold text-red-500"></p>
-    <input maxlength="6" placeholder="Password" data-create-party-target="password" class="bg-black text-gray-200 text-center text-xl max-w-48 border border-gray-400 hover:border-black focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent font-bold py-3 px-5 rounded">
-    <p data-create-party-target="nameError" class="hidden text-xs font font-semibold text-red-500"></p>
-    <button data-action="click->create-party#create" class="py-2 px-5 rounded font-semibold text-xl text-center bg-spotify-green hover:bg-green-700">Create</button>
+    <%= form.submit "Create", 
+        class: "py-2 px-5 rounded font-semibold text-xl text-center bg-spotify-green hover:bg-green-700", 
+        data: { action: 'click->create-party#validate' } %>
+<% end %>
 </div>
