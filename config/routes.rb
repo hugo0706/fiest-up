@@ -26,7 +26,7 @@ Rails.application.routes.draw do
     get "/:code", to: "parties#show", as: "show_party"
   end
 
-  resources :temporal_sessions, only: [:create, :destroy]
+  resources :temporal_sessions, only: [ :create, :destroy ]
 
   get "/home", to: "home#index"
 

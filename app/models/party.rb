@@ -7,5 +7,5 @@ class Party < ApplicationRecord
   has_many :users, through: :party_users, source: :user, source_type: "User"
 
   validates :name, presence: true, uniqueness: { scope: :user_id }, length: { in: 1..15 }
-  validates :code, presence: true, uniqueness: true, length: { is: 6}
+  validates :code, presence: true, uniqueness: true, length: { is: 6 }
 end

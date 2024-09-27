@@ -28,10 +28,10 @@ module Oauth
       session[:user_id] = user.id
 
       if @joining_party_code.present?
-        flash[:notice] = 'Joining party with your Spotify account!'
+        flash[:notice] = "Joining party with your Spotify account!"
         redirect_to join_party_path(code: @joining_party_code)
       else
-        flash[:notice] = 'Logged in!'
+        flash[:notice] = "Logged in!"
         redirect_to home_path
       end
     rescue UserFetcherService::InvalidUserError,

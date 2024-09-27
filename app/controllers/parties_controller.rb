@@ -25,16 +25,16 @@ class PartiesController < ApplicationController
 
     party.users << current_user
 
-    flash[:notice] = 'Party created succesfully'
+    flash[:notice] = "Party created succesfully"
     redirect_to show_party_path(party.code)
   rescue RetriesDepleted,
          PartyAlreadyExists => e
 
     report_error(e)
     if e.class == PartyAlreadyExists
-      flash[:error] = 'You already have a party with that name'
+      flash[:error] = "You already have a party with that name"
     else
-      flash[:error] = 'There was an error creating the party'
+      flash[:error] = "There was an error creating the party"
     end
     redirect_to home_path
   end
@@ -113,7 +113,7 @@ class PartiesController < ApplicationController
 
   def rate_limit_exceeded
     report_error(RateLimitExceeded.new(request.remote_ip))
-    flash[:error] = 'Too many party creation requests. Please wait some minutes'
+    flash[:error] = "Too many party creation requests. Please wait some minutes"
     redirect_to home_path
   end
 

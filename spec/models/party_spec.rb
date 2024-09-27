@@ -7,7 +7,7 @@ RSpec.describe Party, type: :model do
     let(:party) { create(:party, user: creator) }
     let!(:party_user) { create(:party_user, party: party, user: user) }
     let(:creator) { create(:user) }
-    
+
     context 'when user is a spotify user' do
       let(:user) { create(:user) }
 
@@ -16,7 +16,7 @@ RSpec.describe Party, type: :model do
           .and change { PartyUser.count }.from(1).to(0)
       end
     end
-    
+
     context 'when user is a temporal user' do
       let(:user) { create(:temporal_user) }
 

@@ -84,10 +84,10 @@ RSpec.describe Oauth::SessionsController, type: :controller do
             expect(flash[:notice]).to eq('Joining party with your Spotify account!')
             expect(response).to redirect_to(join_party_path(code: code))
           end
-          
+
           it 'empties the joining_party_code session cookie and stores its value' do
             get :callback, params: params
-            
+
             expect(session[:joining_party_code]).to eq(nil)
             expect(assigns(:joining_party_code)).to eq(code)
           end
