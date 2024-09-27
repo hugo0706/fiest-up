@@ -19,6 +19,8 @@
   </head>
 
   <body class="min-h-screen flex flex-col justify-between">
+    <%= render 'layouts/flash_messages' %>
+
     <main class="animate-party text-gray-200 flex flex-col flex-grow items-center justify-center gap-20">
       <%= yield %>
     </main>

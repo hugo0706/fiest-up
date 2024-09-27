@@ -19,6 +19,8 @@
   </head>
 
   <body>
+      <%= render 'layouts/flash_messages' %>
+
       <div class="bg-black text-gray-200 h-[100vh]">
           <div data-controller="navbar" data-action="resize@window->navbar#closeOnBigScreen keydown.esc@window->navbar#close" class="sticky top-0 z-10 bg-black">
               <nav class="flex justify-between items-center h-20 p-4 ">
