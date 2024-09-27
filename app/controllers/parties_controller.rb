@@ -44,7 +44,8 @@ class PartiesController < ApplicationController
 
     if party.nil?
       flash[:error] = "That party does not exist"
-      redirect_to start_path
+
+      redirect_back(fallback_location: start_path)
       return
     end
 

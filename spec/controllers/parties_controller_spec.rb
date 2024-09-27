@@ -108,11 +108,23 @@ RSpec.describe PartiesController, type: :controller do
 
   describe 'GET #join' do
     context 'when the party does not exist' do
-      it 'redirects to start path with a flash error message' do
-        get :join, params: { code: 'fakecode' }
+      context 'when the request has a referrer' do
+        it 'redirects to referrer path with a flash error message' do
+          request.env['HTTP_REFERER'] = home_path
+          get :join, params: { code: 'fakecode' }
 
-        expect(response).to redirect_to(start_path)
-        expect(flash[:error]).to eq('That party does not exist')
+          expect(response).to redirect_to(home_path)
+          expect(flash[:error]).to eq('That party does not exist')
+        end
+      end
+
+      context 'when the request does not have a referrer' do
+        it 'redirects to fallback start path with a flash error message' do
+          get :join, params: { code: 'fakecode' }
+
+          expect(response).to redirect_to(start_path)
+          expect(flash[:error]).to eq('That party does not exist')
+        end
       end
     end
 
