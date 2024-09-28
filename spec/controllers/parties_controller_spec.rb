@@ -133,26 +133,40 @@ RSpec.describe PartiesController, type: :controller do
       let!(:existing_party) { create(:party, code: code) }
 
       context 'when the user is logged in' do
-        let(:user) { create(:user) }
+        context 'with spotify' do
+          let(:user) { create(:user) }
 
-        before { session[:user_id] = user.id }
+          before { session[:user_id] = user.id }
 
-        it 'adds the user to the party and redirects to party' do
-          get :join, params: { code: code }
+          it 'adds the user to the party and redirects to party' do
+            get :join, params: { code: code }
 
-          expect(flash[:notice]).to eq("Party joined!")
-          expect(response).to redirect_to(show_party_path(code: code))
-          expect(existing_party.party_users.exists?(user: user)).to eq(true)
+            expect(flash[:notice]).to eq("Party joined!")
+            expect(response).to redirect_to(show_party_path(code: code))
+            expect(existing_party.party_users.exists?(user: user)).to eq(true)
+          end
+
+          context 'when the user was already in the party' do
+            it 'does not add it duplicate and redirects to party' do
+              get :join, params: { code: code }
+              get :join, params: { code: code }
+
+              expect(flash[:notice]).to eq("You have already joined!")
+              expect(response).to redirect_to(show_party_path(code: code))
+              expect(existing_party.party_users.map { |pu| pu.user.id }).to eq([ user.id ])
+            end
+          end
         end
 
-        context 'when the user was already in the party' do
-          it 'does not add it duplicate and redirects to party' do
-            get :join, params: { code: code }
+        context 'with a temporal session' do
+          let(:user) { create(:temporal_user) }
+
+          before { session[:temporal_session] = user.id }
+
+          it 'redirects the user to the party' do
             get :join, params: { code: code }
 
-            expect(flash[:notice]).to eq("You have already joined!")
             expect(response).to redirect_to(show_party_path(code: code))
-            expect(existing_party.party_users.map { |pu| pu.user.id }).to eq([ user.id ])
           end
         end
       end
@@ -224,9 +238,10 @@ RSpec.describe PartiesController, type: :controller do
 
           before { session[:temporal_session] = user.id }
 
-          it 'redirects the user to join party path with an error message' do
+          it 'redirects the user to join party path with an error message and destroys session' do
             get :show, params: { code: code }
 
+            expect(session[:temporal_session]).to eq(nil)
             expect(response).to redirect_to(join_party_path(code: code))
             expect(flash[:error]).to eq('You have to join the party first')
           end

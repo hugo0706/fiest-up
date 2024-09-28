@@ -50,9 +50,11 @@ class PartiesController < ApplicationController
     end
 
     if logged_with_spotify?
-      session[:joining_party_code] = nil
+      session[:temporal_session] = nil
       party.users << current_user
       flash[:notice] = "Party joined!"
+      redirect_to show_party_path(code: code)
+    elsif session[:temporal_session].present?
       redirect_to show_party_path(code: code)
     else
       session[:joining_party_code] = code
@@ -104,6 +106,7 @@ class PartiesController < ApplicationController
   end
 
   def user_in_party?
+    # TODO:maybe this query can be optimized
     if current_user
       user = current_user
     elsif session[:temporal_session].present?
@@ -113,7 +116,8 @@ class PartiesController < ApplicationController
     end
 
     return true if user.present? && party.party_users.exists?(user: user)
-
+    
+    session[:temporal_session] = nil
     flash[:error] = "You have to join the party first"
     redirect_to join_party_path(code: code)
   end
