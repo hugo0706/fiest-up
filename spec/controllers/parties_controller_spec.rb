@@ -144,6 +144,17 @@ RSpec.describe PartiesController, type: :controller do
           expect(response).to redirect_to(show_party_path(code: code))
           expect(existing_party.party_users.exists?(user: user)).to eq(true)
         end
+
+        context 'when the user was already in the party' do
+          it 'does not add it duplicate and redirects to party' do
+            get :join, params: { code: code }
+            get :join, params: { code: code }
+
+            expect(flash[:notice]).to eq("You have already joined!")
+            expect(response).to redirect_to(show_party_path(code: code))
+            expect(existing_party.party_users.map { |pu| pu.user.id }).to eq([ user.id ])
+          end
+        end
       end
 
       context 'when the user is not logged in' do

@@ -4,10 +4,10 @@ class PartiesController < ApplicationController
   before_action :authorize, only: [ :create, :index ]
   before_action :user_in_party?, only: :show
 
-  rate_limit to: 5, within: 3.minutes,
+  rate_limit to: 7, within: 3.minutes,
     by: -> { request.remote_ip },
     with: -> { rate_limit_exceeded },
-    only: :create
+    only: [ :create, :join ]
 
   # TODO: what happens if user is premium but changes to free?
   class RetriesDepleted < StandardError; end
@@ -28,7 +28,7 @@ class PartiesController < ApplicationController
     flash[:notice] = "Party created succesfully"
     redirect_to show_party_path(party.code)
   rescue RetriesDepleted,
-         PartyAlreadyExists => e
+    PartyAlreadyExists => e
 
     report_error(e)
     if e.class == PartyAlreadyExists
@@ -59,6 +59,11 @@ class PartiesController < ApplicationController
       @code = code
       render "non_logged_join"
     end
+  rescue ActiveRecord::RecordInvalid,
+    ActiveRecord::RecordNotUnique => e
+    report_error(e)
+    flash[:notice] = "You have already joined!"
+    redirect_to show_party_path(code: code)
   end
 
   def show
