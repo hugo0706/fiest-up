@@ -1,6 +1,6 @@
 <div class="flex flex-wrap justify-center items-center gap-6 w-full h-1/2 p-4 rounded-2xl bg-spotify-gray-clear">
 <%= render 'shared/join_party' %>
-<% if !!logged_in? %>
+<% if !!logged_with_spotify? %>
     <%= render 'shared/create_party' %>
 <% else %>
     <%= render 'shared/login_with_spotify' %>

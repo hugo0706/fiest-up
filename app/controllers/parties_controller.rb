@@ -49,7 +49,8 @@ class PartiesController < ApplicationController
       return
     end
 
-    if logged_in?
+    if logged_with_spotify?
+      session[:joining_party_code] = nil
       party.users << current_user
       flash[:notice] = "Party joined!"
       redirect_to show_party_path(code: code)

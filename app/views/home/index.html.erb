@@ -1,6 +1,6 @@
 <div class="flex flex-col justify-top h-full items-center gap-4">
 <%= render 'home/party_options' %>
-<% if !!logged_in? %>
+<% if !!logged_with_spotify? %>
     <%= render 'parties/index' %>
 <% end %>
 </div>
