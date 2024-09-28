@@ -1,1 +1,30 @@
-<%= @party.inspect %>
+<div class="flex flex-col h-full">
+    <div class="flex flex-wrap-reverse h-[calc(100%-96px)] lg:flex-nowrap">
+        <div class="flex flex-col w-full h-3/4 lg:w-3/4 lg:h-full">
+            <div class="bg-slate-500 w-full h-24">
+                Party name and settings
+            </div>
+            <div class="overflow-y-auto bg-slate-900 w-full h-full custom-scrollbar">
+                <% (1..100).each do |i| %>
+                <p> <%= i %> </p>
+                <% end %>
+            </div>
+        </div>
+        <div class="relative flex flex-col px-2 bg-blue-300 w-full h-1/4 lg:w-1/4 lg:h-full z-10 ">
+            <div class="h-14 bg-red-900">
+                search bar
+            </div>
+            <div class="absolute top-12 lg:top-14 overflow-y-auto left-2 right-2 h-72 bg-red-500 custom-scrollbar">
+                <% (1..100).each do |i| %>
+                <p> <%= i %> </p>
+                <% end %>
+            </div>
+            <div class="h-full bg-blue-900">
+                a aaaaaaa
+            </div>
+        </div>
+    </div>
+    <div class="bg-slate-700 w-full h-24">
+        Currently playing
+    </div>
+</div>

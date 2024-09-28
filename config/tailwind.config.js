@@ -13,8 +13,10 @@ module.exports = {
         sans: ["Inter var", ...defaultTheme.fontFamily.sans],
       },
       colors: {
-        "spotify-gray-secondary": "#121212",
+        "spotify-gray-dark": "#121212",
+        "spotify-gray-secondary": "#212121",
         "spotify-gray-clear": "#191919",
+        "spotify-gray-highlight": '#535353',
         "spotify-separator": "#b3b3b3",
         "spotify-green": "#1DB954",
       },
