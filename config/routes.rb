@@ -29,6 +29,8 @@ Rails.application.routes.draw do
   resources :temporal_sessions, only: [ :create, :destroy ]
 
   get "/home", to: "home#index"
-
+  
+  post '/update_current_song', to: "party_data#update_current_song"
+  
   match "*unmatched", to: "application#not_found_method", via: :all
 end

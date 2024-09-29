@@ -2,4 +2,5 @@
     <%= link_to "Home", home_path, class: "font-semibold text-lg bg-spotify-gray-clear hover:bg-spotify-gray-highlight w-full py-4 rounded-md" %>
     <%= link_to "My Parties", show_party_path(code: 'bad4c9') , class: "font-semibold text-lg bg-spotify-gray-clear hover:bg-spotify-gray-highlight w-full py-4 rounded-md" %>
     <%= link_to "Settings", show_party_path(code: 'bad4c9') , class: "font-semibold text-lg bg-spotify-gray-clear hover:bg-spotify-gray-highlight w-full py-4 rounded-md" %>
+    <%= button_to "Update Saong", update_current_song_path, method: :post, remote: true, form: { data: { turbo_frame: 'currently_playing' } }, class: "text-white" %>
 </nav>
