@@ -11,16 +11,18 @@
             </div>
         </div>
         <div class="relative flex flex-col p-2 rounded-2xl bg-spotify-gray-clear w-full h-1/4 lg:w-1/4 lg:h-full z-10 ">
-            <div class="h-14 bg-spotify-gray-clear">
-                search bar
-            </div>
-            <div class="flex flex-col absolute top-12 lg:top-14 rounded-xl p-2 overflow-y-auto left-4 right-4 h-72 bg-black custom-scrollbar">
-                <% (1..100).each do |i| %>
-                <p> <%= i %> </p>
-                <% end %>
-            </div>
-            <div class="h-full bg-spotify-gray-dark">
-                a aaaaaaa
+            <div data-controller="search">
+                <div class="flex justify-center h-14 bg-spotify-gray-clear items-center">
+                    <input data-search-target="searchInput" data-action="click->search#toggle" class="bg-spotify-gray-dark rounded-3xl w-full " placeholder="Search a song"> </input>
+                </div>
+                <div data-search-target="searchResults" class="flex flex-col absolute hidden top-12 lg:top-14 rounded-xl p-2 overflow-y-auto left-4 right-4 h-72 bg-black custom-scrollbar">
+                    <% (1..100).each do |i| %>
+                    <p> <%= i %> </p>
+                    <% end %>
+                </div>
+            </div>   
+            <div class="h-full p-2 rounded-2xl  bg-spotify-gray-dark">
+                Song recomendations/party stats/whatever
             </div>
         </div>
     </div>
