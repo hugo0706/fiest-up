@@ -2,6 +2,9 @@
 
 class Party < ApplicationRecord
   belongs_to :user
+  
+  has_many :party_songs, dependent: :destroy
+  has_many :songs, through: :party_songs
   has_many :party_users, dependent: :destroy
   has_many :temporal_users, through: :party_users, source: :user, source_type: "TemporalUser"
   has_many :users, through: :party_users, source: :user, source_type: "User"

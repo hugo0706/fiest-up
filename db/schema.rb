@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.2].define(version: 2024_09_28_070843) do
+ActiveRecord::Schema[7.2].define(version: 2024_09_29_082418) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -25,6 +25,17 @@ ActiveRecord::Schema[7.2].define(version: 2024_09_28_070843) do
     t.index ["user_id"], name: "index_parties_on_user_id"
   end
 
+  create_table "party_songs", force: :cascade do |t|
+    t.bigint "song_id", null: false
+    t.bigint "party_id", null: false
+    t.boolean "is_playing", default: false, null: false
+    t.integer "position", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["party_id"], name: "index_party_songs_on_party_id"
+    t.index ["song_id"], name: "index_party_songs_on_song_id"
+  end
+
   create_table "party_users", force: :cascade do |t|
     t.string "user_type", null: false
     t.bigint "user_id", null: false
@@ -34,6 +45,14 @@ ActiveRecord::Schema[7.2].define(version: 2024_09_28_070843) do
     t.index ["party_id", "user_id"], name: "index_party_users_on_party_id_and_user_id", unique: true
     t.index ["party_id"], name: "index_party_users_on_party_id"
     t.index ["user_type", "user_id"], name: "index_party_users_on_user"
+  end
+
+  create_table "songs", force: :cascade do |t|
+    t.string "spotify_song_id", null: false
+    t.string "name", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["spotify_song_id"], name: "index_songs_on_spotify_song_id", unique: true
   end
 
   create_table "temporal_users", force: :cascade do |t|
@@ -57,5 +76,7 @@ ActiveRecord::Schema[7.2].define(version: 2024_09_28_070843) do
   end
 
   add_foreign_key "parties", "users"
+  add_foreign_key "party_songs", "parties"
+  add_foreign_key "party_songs", "songs"
   add_foreign_key "party_users", "parties"
 end
