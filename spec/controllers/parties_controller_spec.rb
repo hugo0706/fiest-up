@@ -107,77 +107,54 @@ RSpec.describe PartiesController, type: :controller do
   end
 
   describe 'GET #join' do
-    context 'when the party does not exist' do
-      context 'when the request has a referrer' do
-        it 'redirects to referrer path with a flash error message' do
-          request.env['HTTP_REFERER'] = home_path
-          get :join, params: { code: 'fakecode' }
+    let(:code) { 'c1o2d3' }
+    let!(:existing_party) { create(:party, code: code) }
 
-          expect(response).to redirect_to(home_path)
-          expect(flash[:error]).to eq('That party does not exist')
+    context 'when the user is logged in' do
+      context 'with spotify' do
+        let(:user) { create(:user) }
+
+        before { session[:user_id] = user.id }
+
+        it 'adds the user to the party and redirects to party' do
+          get :join, params: { code: code }
+
+          expect(flash[:notice]).to eq("Party joined!")
+          expect(response).to redirect_to(show_party_path(code: code))
+          expect(existing_party.party_users.exists?(user: user)).to eq(true)
+        end
+
+        context 'when the user was already in the party' do
+          it 'does not add it duplicate and redirects to party' do
+            get :join, params: { code: code }
+            get :join, params: { code: code }
+
+            expect(flash[:notice]).to eq("You have already joined!")
+            expect(response).to redirect_to(show_party_path(code: code))
+            expect(existing_party.party_users.map { |pu| pu.user.id }).to eq([ user.id ])
+          end
         end
       end
 
-      context 'when the request does not have a referrer' do
-        it 'redirects to fallback start path with a flash error message' do
-          get :join, params: { code: 'fakecode' }
+      context 'with a temporal session' do
+        let(:user) { create(:temporal_user) }
 
-          expect(response).to redirect_to(start_path)
-          expect(flash[:error]).to eq('That party does not exist')
+        before { session[:temporal_session] = user.id }
+
+        it 'redirects the user to the party' do
+          get :join, params: { code: code }
+
+          expect(response).to redirect_to(show_party_path(code: code))
         end
       end
     end
 
-    context 'when the party code exists' do
-      let(:code) { 'c1o2d3' }
-      let!(:existing_party) { create(:party, code: code) }
+    context 'when the user is not logged in' do
+      it 'adds the party code that he is joining to cookies and renders non_logged_join view' do
+        get :join, params: { code: code }
 
-      context 'when the user is logged in' do
-        context 'with spotify' do
-          let(:user) { create(:user) }
-
-          before { session[:user_id] = user.id }
-
-          it 'adds the user to the party and redirects to party' do
-            get :join, params: { code: code }
-
-            expect(flash[:notice]).to eq("Party joined!")
-            expect(response).to redirect_to(show_party_path(code: code))
-            expect(existing_party.party_users.exists?(user: user)).to eq(true)
-          end
-
-          context 'when the user was already in the party' do
-            it 'does not add it duplicate and redirects to party' do
-              get :join, params: { code: code }
-              get :join, params: { code: code }
-
-              expect(flash[:notice]).to eq("You have already joined!")
-              expect(response).to redirect_to(show_party_path(code: code))
-              expect(existing_party.party_users.map { |pu| pu.user.id }).to eq([ user.id ])
-            end
-          end
-        end
-
-        context 'with a temporal session' do
-          let(:user) { create(:temporal_user) }
-
-          before { session[:temporal_session] = user.id }
-
-          it 'redirects the user to the party' do
-            get :join, params: { code: code }
-
-            expect(response).to redirect_to(show_party_path(code: code))
-          end
-        end
-      end
-
-      context 'when the user is not logged in' do
-        it 'adds the party code that he is joining to cookies and renders non_logged_join view' do
-          get :join, params: { code: code }
-
-          expect(session[:joining_party_code]).to eq(code)
-          expect(response).to render_template('non_logged_join')
-        end
+        expect(session[:joining_party_code]).to eq(code)
+        expect(response).to render_template('non_logged_join')
       end
     end
   end
@@ -186,6 +163,11 @@ RSpec.describe PartiesController, type: :controller do
     describe 'user_in_party?' do
       let(:code) { 'code12' }
       let!(:party) { create(:party, code: code) }
+
+      it "calls user_in_party? for show action" do
+        expect(controller).to receive(:user_in_party?).at_least(:once)
+        get :show, params: { code: code }
+      end
 
       context 'when the user belongs to the party' do
         context 'when it is a normal user' do
@@ -254,6 +236,44 @@ RSpec.describe PartiesController, type: :controller do
 
           expect(response).to redirect_to(join_party_path(code: code))
           expect(flash[:error]).to eq('You have to join the party first')
+        end
+      end
+    end
+
+    describe 'party_exists?' do
+      it "calls party_exists? for show and join actions" do
+        expect(controller).to receive(:party_exists?).at_least(:twice)
+        get :show, params: { code: 'a' }
+        get :join, params: { code: 'a' }
+      end
+
+      context 'when the party does not exist' do
+        context 'when the request has a referrer' do
+          it 'redirects to referrer path with a flash error message' do
+            request.env['HTTP_REFERER'] = home_path
+            get :join, params: { code: 'fakecode' }
+
+            expect(response).to redirect_to(home_path)
+            expect(flash[:error]).to eq('That party does not exist')
+          end
+        end
+
+        context 'when the request does not have a referrer' do
+          it 'redirects to fallback start path with a flash error message' do
+            get :join, params: { code: 'fakecode' }
+
+            expect(response).to redirect_to(start_path)
+            expect(flash[:error]).to eq('That party does not exist')
+          end
+        end
+      end
+
+      context 'when the party exists' do
+        let!(:party) { create(:party) }
+        it 'allows access to the action' do
+          get :join, params: { code: party.code }
+
+          expect(response.status).to eq(200)
         end
       end
     end

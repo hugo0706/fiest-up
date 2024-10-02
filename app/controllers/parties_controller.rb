@@ -2,6 +2,7 @@
 
 class PartiesController < ApplicationController
   before_action :authorize, only: [ :create, :index ]
+  before_action :party_exists?, only: [ :show, :join ]
   before_action :user_in_party?, only: :show
 
   rate_limit to: 7, within: 3.minutes,
@@ -40,15 +41,6 @@ class PartiesController < ApplicationController
   end
 
   def join
-    party = Party.find_by(code: code)
-
-    if party.nil?
-      flash[:error] = "That party does not exist"
-
-      redirect_back(fallback_location: start_path)
-      return
-    end
-
     if logged_with_spotify?
       session[:temporal_session] = nil
       party.users << current_user
@@ -97,12 +89,17 @@ class PartiesController < ApplicationController
     party
   end
 
-  def code
-    @code ||= params.require(:code)
-  end
+  def party_exists?
+    @party = Party.find_by(code: code)
 
-  def party
-    @party ||= Party.find_by(code: code)
+    if @party.nil?
+      flash[:error] = "That party does not exist"
+
+      redirect_back(fallback_location: start_path)
+      return
+    end
+
+    true
   end
 
   def user_in_party?
@@ -116,7 +113,7 @@ class PartiesController < ApplicationController
     end
 
     return true if user.present? && party.party_users.exists?(user: user)
-    
+
     session[:temporal_session] = nil
     flash[:error] = "You have to join the party first"
     redirect_to join_party_path(code: code)
@@ -126,6 +123,14 @@ class PartiesController < ApplicationController
     report_error(RateLimitExceeded.new(request.remote_ip))
     flash[:error] = "Too many party creation requests. Please wait some minutes"
     redirect_to home_path
+  end
+
+  def code
+    @code ||= params.require(:code)
+  end
+
+  def party
+    @party ||= Party.find_by(code: code)
   end
 
   def name
