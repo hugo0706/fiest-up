@@ -10,7 +10,7 @@ class UserFetcherService
   end
 
   def call
-    @user_profile = Spotify::Api::CurrentProfileService.new(oauth_data).current_profile
+    @user_profile = Spotify::Api::CurrentProfileService.new(oauth_data["access_token"]).current_profile
     user = get_registered_user
 
     return user if user.present?

@@ -39,7 +39,7 @@ RSpec.describe UserFetcherService do
 
       allow_any_instance_of(Spotify::Oauth::AccessTokenService).to receive(:request_access_token)
         .and_return(access_token_data)
-      expect(Spotify::Api::CurrentProfileService).to receive(:new).with(access_token_data)
+      expect(Spotify::Api::CurrentProfileService).to receive(:new).with(access_token_data["access_token"])
         .and_return(current_profile_service_double)
       allow(current_profile_service_double).to receive(:current_profile)
         .and_return(current_profile_data)
@@ -55,7 +55,7 @@ RSpec.describe UserFetcherService do
       end
     end
 
-    context 'when the user does not exist in databse' do
+    context 'when the user does not exist in database' do
       it 'creates the user and returns it' do
         result = nil
         expect { result = subject.call }.to change { User.count }.from(0).to(1)

@@ -4,17 +4,9 @@ require 'rails_helper'
 require 'webmock/rspec'
 
 RSpec.describe Spotify::Api::CurrentProfileService do
-  let(:oauth_data) {
-    {
-      "access_token" => "mock_access_token",
-      "token_type" => "Bearer",
-      "expires_in" => 3600,
-      "refresh_token" => "mock_refresh_token",
-      "scope" => "user-read-private user-read-email"
-    }
-  }
+  let(:access_token) {"mock_access_token"}
 
-  subject { described_class.new(oauth_data) }
+  subject { described_class.new(access_token) }
 
   describe '#current_profile' do
     let(:current_profile_url) { 'https://api.spotify.com/v1/me' }
@@ -39,7 +31,7 @@ RSpec.describe Spotify::Api::CurrentProfileService do
       stub_request(:get, current_profile_url)
         .with(
           headers: {
-            'Authorization' => "Bearer #{oauth_data["access_token"]}"
+            'Authorization' => "Bearer #{access_token}"
           }
         )
         .to_return(status: 200, body: current_profile_response.to_json, headers: { 'Content-Type' => 'application/json' })
@@ -51,7 +43,7 @@ RSpec.describe Spotify::Api::CurrentProfileService do
       expect(WebMock).to have_requested(:get, current_profile_url)
         .with(
           headers: {
-            'Authorization' => "Bearer #{oauth_data["access_token"]}"
+            'Authorization' => "Bearer #{access_token}"
           }
         )
     end

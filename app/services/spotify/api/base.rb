@@ -3,10 +3,10 @@
 module Spotify
   module Api
     class Base
-      attr_accessor :oauth_data
+      attr_accessor :access_token
 
-      def initialize(oauth_data)
-        self.oauth_data = oauth_data
+      def initialize(access_token)
+        self.access_token = access_token
       end
 
       private
@@ -17,7 +17,7 @@ module Spotify
 
       def conn
         Faraday.new(connection_options) do |f|
-          f.request :authorization, "Bearer", -> { oauth_data["access_token"] }
+          f.request :authorization, "Bearer", -> { access_token }
         end
       end
 
