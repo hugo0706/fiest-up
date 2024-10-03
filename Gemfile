@@ -55,7 +55,7 @@ group :development, :test do
 
   gem "dotenv-rails"
 
-  gem "webmock", "~> 3.23"
+  gem "webmock", "~> 3.24"
 
   gem "ffaker", "~> 2.23"
 
