@@ -13,6 +13,7 @@ module Spotify
 
       def call
         response = conn.post("api/token", refresh_token_params)
+
         JSON.parse(response.body)
       rescue Faraday::Error,
              Faraday::ServerError => e

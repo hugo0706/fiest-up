@@ -21,9 +21,9 @@ RSpec.describe UserCreatorService do
 
   describe '#call' do
     it 'creates the user and returns it' do
-      result = nil
-      expect { result = subject.call }.to change { User.count }.from(0).to(1)
-      expect(result).to eq(User.find_by(spotify_id: spotify_id))
+      user = nil
+      expect { user = subject.call }.to change { User.count }.from(0).to(1)
+      expect(user).to eq(User.find_by(spotify_id: spotify_id))
     end
 
     context 'when the user created is invalid'  do
