@@ -25,6 +25,7 @@ module Oauth
       error, code, state = callback_params
 
       user = UserFetcherService.new(code).call
+      
       session[:user_id] = user.id
 
       if @joining_party_code.present?

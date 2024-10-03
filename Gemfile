@@ -60,6 +60,8 @@ group :development, :test do
   gem "ffaker", "~> 2.23"
 
   gem "rails-controller-testing"
+  
+  gem "timecop"
 end
 
 group :development do

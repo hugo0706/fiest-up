@@ -56,17 +56,23 @@ RSpec.describe UserFetcherService do
     end
 
     context 'when the user does not exist in database' do
-      it 'creates the user and returns it' do
-        result = nil
-        expect { result = subject.call }.to change { User.count }.from(0).to(1)
-        expect(result).to eq(User.find_by(spotify_id: spotify_id))
+      let(:user_info) do
+        {
+          spotify_id: current_profile_data["id"],
+          email: current_profile_data["email"],
+          username: current_profile_data["display_name"],
+          profile_url: current_profile_data["external_urls"]["spotify"],
+          product: current_profile_data["product"],
+          access_token: access_token_data["access_token"],
+          refresh_token: access_token_data["refresh_token"],
+          access_token_expires_at: Time.now + access_token_data["expires_in"]
+        }
       end
-
-      context 'when the user created is invalid' do
-        before { allow(User).to receive(:create!).and_raise(ActiveRecord::RecordInvalid) }
-
-        it 'raises InvalidUserError' do
-          expect { subject.call }.to raise_error(described_class::InvalidUserError)
+      
+      it 'calls UserCreatorService with user_info' do
+        Timecop.freeze(Time.now) do
+          expect(UserCreatorService).to receive(:new).with(user_info).and_call_original
+          subject.call
         end
       end
     end

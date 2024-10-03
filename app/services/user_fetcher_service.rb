@@ -15,10 +15,7 @@ class UserFetcherService
 
     return user if user.present?
 
-    User.create!(user_info)
-  rescue ActiveRecord::RecordInvalid,
-        ActiveRecord::RecordNotUnique => e
-    raise InvalidUserError, e
+    UserCreatorService.new(user_info).call
   end
 
   private
