@@ -35,7 +35,7 @@ module Oauth
         flash[:notice] = "Logged in!"
         redirect_to home_path
       end
-    rescue UserFetcherService::InvalidUserError,
+    rescue UserCreatorService::InvalidUserError,
           Spotify::Oauth::AccessTokenService::Error,
           Spotify::Api::CurrentProfileService::Error => e
       report_error(e)

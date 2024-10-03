@@ -3,8 +3,6 @@
 class UserFetcherService
   attr_accessor :code
 
-  class InvalidUserError < StandardError ; end
-
   def initialize(code)
     self.code = code
   end

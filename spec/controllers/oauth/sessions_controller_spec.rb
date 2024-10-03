@@ -106,9 +106,9 @@ RSpec.describe Oauth::SessionsController, type: :controller do
         it_behaves_like 'redirect to home page with error'
       end
 
-      context 'when UserFetcherService::InvalidUserError is raised' do
-        before { allow(UserFetcherService).to receive(:new)
-                  .and_raise(UserFetcherService::InvalidUserError) }
+      context 'when UserCreatorService::InvalidUserError is raised' do
+        before { allow(UserCreatorService).to receive(:new)
+                  .and_raise(UserCreatorService::InvalidUserError) }
 
         it_behaves_like 'redirect to home page with error'
       end
