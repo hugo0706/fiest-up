@@ -20,6 +20,13 @@ Rails.application.routes.draw do
     get "/callback", to: "sessions#callback"
   end
 
+  namespace :party_data do
+    scope "/settings" do
+      get "/device_list", to: "settings#device_list"
+      post "/party_device", to: "settings#party_device"
+    end
+  end
+
   scope "/party" do
     get "/join/:code", to: "parties#join", as: "join_party"
     post "/create", to: "parties#create", as: "create_party"

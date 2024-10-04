@@ -5,9 +5,9 @@ module Spotify
     class AvailableDevicesService < Base
       class Error < StandardError; end
 
-      def available_devices
+      def call
         response = conn.get("me/player/devices")
-        binding.irb
+
         JSON.parse(response.body)
       rescue Faraday::Error,
              Faraday::ServerError => e
