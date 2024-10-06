@@ -25,7 +25,7 @@ module Oauth
       error, code, state = callback_params
 
       user = UserFetcherService.new(code).call
-      
+
       session[:user_id] = user.id
 
       if @joining_party_code.present?
@@ -35,9 +35,7 @@ module Oauth
         flash[:notice] = "Logged in!"
         redirect_to home_path
       end
-    rescue UserCreatorService::InvalidUserError,
-          Spotify::Oauth::AccessTokenService::Error,
-          Spotify::Api::CurrentProfileService::Error => e
+    rescue UserFetcherService::Error => e
       report_error(e)
       show_start_error
     end

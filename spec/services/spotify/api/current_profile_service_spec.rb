@@ -8,7 +8,7 @@ RSpec.describe Spotify::Api::CurrentProfileService do
 
   subject { described_class.new(access_token) }
 
-  describe '#current_profile' do
+  describe '#call' do
     let(:current_profile_url) { 'https://api.spotify.com/v1/me' }
     let(:current_profile_response) {
       {
@@ -38,7 +38,7 @@ RSpec.describe Spotify::Api::CurrentProfileService do
     end
 
     it 'performs a GET request to Spotify me API endpoint' do
-      subject.current_profile
+      subject.call
 
       expect(WebMock).to have_requested(:get, current_profile_url)
         .with(
@@ -49,7 +49,7 @@ RSpec.describe Spotify::Api::CurrentProfileService do
     end
 
     it 'it returns the body converted to hash' do
-      expect(subject.current_profile).to eq(current_profile_response)
+      expect(subject.call).to eq(current_profile_response)
     end
 
     context 'when Faraday request raises an exception' do
@@ -57,9 +57,29 @@ RSpec.describe Spotify::Api::CurrentProfileService do
 
       before { allow(subject).to receive(:conn).and_return(conn) }
 
-      it 'raises CurrentProfileService::Error' do
+      it 'raises Spotify::ApiError' do
         allow(conn).to receive(:get).and_raise(Faraday::Error)
-        expect { subject.current_profile }.to raise_error(described_class::Error)
+        expect { subject.call }.to raise_error(Spotify::ApiError)
+      end
+    end
+    
+    context 'when the response has status 401' do
+      before do
+        stub_request(:get, current_profile_url)
+          .with(
+            headers: {
+              'Authorization' => "Bearer #{access_token}"
+            }
+          )
+          .to_return(status: 401, body: {'body' => 'body'}.to_json, headers: { 'Content-Type' => 'application/json' })
+      end
+      
+      it 'raises Spotify::ApiError with the response details' do
+        expect { subject.call }.to raise_error(Spotify::ApiError) { |error|
+            expect(error.message).to eq("Bad or expired token")
+            expect(error.body).to eq({'body' => 'body'}.to_json)
+            expect(error.status).to eq(401)
+          }
       end
     end
   end

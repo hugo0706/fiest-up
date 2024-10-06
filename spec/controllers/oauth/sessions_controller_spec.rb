@@ -106,23 +106,9 @@ RSpec.describe Oauth::SessionsController, type: :controller do
         it_behaves_like 'redirect to home page with error'
       end
 
-      context 'when UserCreatorService::InvalidUserError is raised' do
-        before { allow(UserCreatorService).to receive(:new)
-                  .and_raise(UserCreatorService::InvalidUserError) }
-
-        it_behaves_like 'redirect to home page with error'
-      end
-
-      context 'when Spotify::Oauth::AccesTokenService::Error is raised' do
-        before { allow(Spotify::Oauth::AuthorizeService).to receive(:new)
-                  .and_raise(Spotify::Oauth::AccessTokenService::Error) }
-
-        it_behaves_like 'redirect to home page with error'
-      end
-
-      context 'when  Spotify::Api::CurrentProfileService::Error is raised' do
-        before { allow(Spotify::Api::CurrentProfileService).to receive(:new)
-                  .and_raise(Spotify::Api::CurrentProfileService::Error) }
+      context 'when UserFetcherService::Error is raised' do
+        before { allow(UserFetcherService).to receive(:new)
+                  .and_raise(UserFetcherService::Error) }
 
         it_behaves_like 'redirect to home page with error'
       end

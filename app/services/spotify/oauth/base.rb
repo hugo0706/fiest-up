@@ -28,6 +28,10 @@ module Spotify
             }
         }
       end
+
+      def raise_error(message = "Spotify OAuth error", response)
+        raise Spotify::OauthError.new(message: message, body: response.body, status: response.status)
+      end
     end
   end
 end

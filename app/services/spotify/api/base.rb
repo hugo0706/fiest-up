@@ -30,6 +30,10 @@ module Spotify
             }
         }
       end
+
+      def raise_error(message = "Spotify Api error", response)
+        raise Spotify::ApiError.new(message: message, body: response.body, status: response.status)
+      end
     end
   end
 end

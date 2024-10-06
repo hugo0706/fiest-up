@@ -14,7 +14,7 @@ RSpec.describe Spotify::Oauth::AccessTokenService do
     end
   end
 
-  describe '#request_access_token' do
+  describe '#call' do
     let(:access_token_url) { 'https://accounts.spotify.com/api/token' }
     let(:client_id) { 'client_id' }
     let(:client_secret) { 'client_secret' }
@@ -54,13 +54,13 @@ RSpec.describe Spotify::Oauth::AccessTokenService do
     end
 
     it 'sends a POST request to the Spotify API and returns a hash with access token information' do
-      response = subject.request_access_token
+      response = subject.call
 
       expect(response).to eq(JSON.parse(access_token_response))
     end
 
     it 'sends a POST request to the Spotify API with basic auth' do
-      subject.request_access_token
+      subject.call
 
       expect(WebMock).to have_requested(:post, access_token_url)
         .with(
@@ -75,9 +75,31 @@ RSpec.describe Spotify::Oauth::AccessTokenService do
 
       before { allow(subject).to receive(:conn).and_return(conn) }
 
-      it 'raises AccessTokenService::Error' do
+      it 'raises Spotify::OauthError' do
         allow(conn).to receive(:post).and_raise(Faraday::Error)
-        expect { subject.request_access_token }.to raise_error(described_class::Error)
+        expect { subject.call }.to raise_error(Spotify::OauthError)
+      end
+    end
+    
+    context 'when the response has status different to 200' do
+      before do
+        stub_request(:post, access_token_url)
+          .with(
+            body: {
+              grant_type: 'authorization_code',
+              code: authorization_code,
+              redirect_uri: spotify_redirect_uri
+            },
+            headers: {
+              'Authorization' => "Basic #{Base64.strict_encode64("#{client_id}:#{client_secret}")}",
+              'Content-Type' => 'application/x-www-form-urlencoded'
+            }
+          )
+          .to_return(status: 430, body: {'body' => 'body'}.to_json, headers: { 'Content-Type' => 'application/json' })
+      end
+      
+      it 'raises Spotify::ApiError' do
+        expect { subject.call }.to raise_error(Spotify::OauthError)
       end
     end
   end

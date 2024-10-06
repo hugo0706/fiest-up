@@ -5,18 +5,20 @@ module Spotify
     class AccessTokenService < Base
       attr_accessor :code
 
-      class Error < StandardError; end
-
       def initialize(code)
         self.code = code
       end
 
-      def request_access_token
+      def call
         response = conn.post("api/token", access_token_params)
-        JSON.parse(response.body)
-      rescue Faraday::Error,
-             Faraday::ServerError => e
-        raise Error, e
+        case response.status
+        when 200
+          JSON.parse(response.body)
+        else
+          raise_error(response)
+        end
+      rescue Faraday::Error => e
+        raise Spotify::OauthError
       end
 
       private

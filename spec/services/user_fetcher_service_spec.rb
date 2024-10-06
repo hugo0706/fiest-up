@@ -37,11 +37,11 @@ RSpec.describe UserFetcherService do
     before do
       current_profile_service_double = double(Spotify::Api::CurrentProfileService)
 
-      allow_any_instance_of(Spotify::Oauth::AccessTokenService).to receive(:request_access_token)
+      allow_any_instance_of(Spotify::Oauth::AccessTokenService).to receive(:call)
         .and_return(access_token_data)
       expect(Spotify::Api::CurrentProfileService).to receive(:new).with(access_token_data["access_token"])
         .and_return(current_profile_service_double)
-      allow(current_profile_service_double).to receive(:current_profile)
+      allow(current_profile_service_double).to receive(:call)
         .and_return(current_profile_data)
     end
 

@@ -2,24 +2,30 @@
 
 class UserFetcherService
   attr_accessor :code
-
+  include ErrorHandler
+  
+  class Error < StandardError; end
+  
   def initialize(code)
     self.code = code
   end
 
   def call
-    @user_profile = Spotify::Api::CurrentProfileService.new(oauth_data["access_token"]).current_profile
+    @user_profile = Spotify::Api::CurrentProfileService.new(oauth_data["access_token"]).call
     user = get_registered_user
 
     return user if user.present?
 
     UserCreatorService.new(user_info).call
+  rescue Spotify::ApiError, Spotify::OauthError => e
+    report_error(e)
+    raise Error
   end
 
   private
 
   def oauth_data
-    @oauth_data ||= Spotify::Oauth::AccessTokenService.new(code).request_access_token
+    @oauth_data ||= Spotify::Oauth::AccessTokenService.new(code).call
   end
 
   def get_registered_user
