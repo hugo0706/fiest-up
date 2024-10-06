@@ -4,7 +4,7 @@ require 'rails_helper'
 require 'webmock/rspec'
 
 RSpec.describe Spotify::Api::CurrentProfileService do
-  let(:access_token) {"mock_access_token"}
+  let(:access_token) { "mock_access_token" }
 
   subject { described_class.new(access_token) }
 
@@ -62,7 +62,7 @@ RSpec.describe Spotify::Api::CurrentProfileService do
         expect { subject.call }.to raise_error(Spotify::ApiError)
       end
     end
-    
+
     context 'when the response has status 401' do
       before do
         stub_request(:get, current_profile_url)
@@ -71,13 +71,13 @@ RSpec.describe Spotify::Api::CurrentProfileService do
               'Authorization' => "Bearer #{access_token}"
             }
           )
-          .to_return(status: 401, body: {'body' => 'body'}.to_json, headers: { 'Content-Type' => 'application/json' })
+          .to_return(status: 401, body: { 'body' => 'body' }.to_json, headers: { 'Content-Type' => 'application/json' })
       end
-      
+
       it 'raises Spotify::ApiError with the response details' do
         expect { subject.call }.to raise_error(Spotify::ApiError) { |error|
             expect(error.message).to eq("Bad or expired token")
-            expect(error.body).to eq({'body' => 'body'}.to_json)
+            expect(error.body).to eq({ 'body' => 'body' }.to_json)
             expect(error.status).to eq(401)
           }
       end

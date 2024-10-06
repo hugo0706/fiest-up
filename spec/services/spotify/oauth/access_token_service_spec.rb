@@ -80,7 +80,7 @@ RSpec.describe Spotify::Oauth::AccessTokenService do
         expect { subject.call }.to raise_error(Spotify::OauthError)
       end
     end
-    
+
     context 'when the response has status different to 200' do
       before do
         stub_request(:post, access_token_url)
@@ -95,9 +95,9 @@ RSpec.describe Spotify::Oauth::AccessTokenService do
               'Content-Type' => 'application/x-www-form-urlencoded'
             }
           )
-          .to_return(status: 430, body: {'body' => 'body'}.to_json, headers: { 'Content-Type' => 'application/json' })
+          .to_return(status: 430, body: { 'body' => 'body' }.to_json, headers: { 'Content-Type' => 'application/json' })
       end
-      
+
       it 'raises Spotify::ApiError' do
         expect { subject.call }.to raise_error(Spotify::OauthError)
       end

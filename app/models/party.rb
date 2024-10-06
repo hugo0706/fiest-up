@@ -2,7 +2,7 @@
 
 class Party < ApplicationRecord
   belongs_to :user
-  
+
   has_many :party_songs, dependent: :destroy
   has_many :songs, through: :party_songs
   has_many :party_users, dependent: :destroy

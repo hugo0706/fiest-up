@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class CreatePartySongs < ActiveRecord::Migration[7.2]
   def change
     create_table :party_songs do |t|

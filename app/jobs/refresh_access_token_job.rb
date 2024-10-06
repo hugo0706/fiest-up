@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class RefreshAccessTokenJob < ApplicationJob
   def perform(user_id)
     AccessTokenRefresherService.new(user_id).call

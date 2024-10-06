@@ -68,7 +68,7 @@ RSpec.describe UserFetcherService do
           access_token_expires_at: Time.now + access_token_data["expires_in"]
         }
       end
-      
+
       it 'calls UserCreatorService with user_info' do
         Timecop.freeze(Time.now) do
           expect(UserCreatorService).to receive(:new).with(user_info).and_call_original

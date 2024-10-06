@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class Spotify::ApiError < StandardError
   attr_reader :status, :body
 

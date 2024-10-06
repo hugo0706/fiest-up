@@ -38,7 +38,7 @@ RSpec.describe Spotify::Oauth::RefreshTokenService do
         .with(
           body: {
             grant_type: 'refresh_token',
-            refresh_token: refresh_token,
+            refresh_token: refresh_token
           },
           headers: {
             'Authorization' => "Basic #{Base64.strict_encode64("#{client_id}:#{client_secret}")}",
@@ -50,7 +50,7 @@ RSpec.describe Spotify::Oauth::RefreshTokenService do
 
     it 'sends a POST request to the Spotify API and returns a hash with access token information' do
       response = subject.call
-      
+
       expect(response).to eq(JSON.parse(refresh_token_response))
     end
 

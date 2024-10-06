@@ -6,7 +6,7 @@ require 'webmock/rspec'
 RSpec.describe Spotify::Api::Base do
   subject { described_class.new(access_token) }
 
-  let(:access_token) { 'mock_access_token'}
+  let(:access_token) { 'mock_access_token' }
 
   describe '#conn' do
     subject { described_class.new(access_token) }

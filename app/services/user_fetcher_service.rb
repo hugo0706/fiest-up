@@ -3,9 +3,9 @@
 class UserFetcherService
   attr_accessor :code
   include ErrorHandler
-  
+
   class Error < StandardError; end
-  
+
   def initialize(code)
     self.code = code
   end

@@ -5,7 +5,7 @@ class PartyUser < ApplicationRecord
   belongs_to :party
 
   validates :user_id, uniqueness:  { scope: :party_id, message: "has already joined this party" }
-  
+
   before_destroy :destroy_temporal_user
 
   private

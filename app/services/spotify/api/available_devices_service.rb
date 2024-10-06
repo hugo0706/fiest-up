@@ -9,7 +9,7 @@ module Spotify
         response = conn.get("me/player/devices")
 
         JSON.parse(response.body)
-        #TODO: when receive 401, refresh token?
+        # TODO: when receive 401, refresh token?
       rescue Faraday::Error,
              Faraday::ServerError => e
         raise Error, e

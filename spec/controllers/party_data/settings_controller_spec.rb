@@ -23,33 +23,33 @@ RSpec.describe PartyData::SettingsController, type: :controller do
       expect(party.reload.device_id).to eq(device_id)
       expect(response).to redirect_to(show_party_path(code: party.code))
     end
-    
+
     context 'when party update raises an error' do
       before do
         allow_any_instance_of(Party).to receive(:update!).and_raise(ActiveRecord::RecordInvalid)
       end
-      
+
       it 'redirects to home_page' do
         post :party_device, params: params
-        
+
         expect(response).to redirect_to(home_path)
       end
     end
   end
-  
+
   describe "callbacks" do
     context 'requires party to exist' do
       it 'returns 404 not found' do
         get :device_list, params: { code: 'fake' }
-        
+
         expect(response.status).to eq(404)
       end
     end
-    
+
     context 'requires user to be owner of the party' do
       it 'returns 401' do
         get :device_list, params: { code: party.code }
-        
+
         expect(response.status).to eq(401)
       end
     end

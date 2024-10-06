@@ -2,7 +2,7 @@
 
 class AccessTokenRefresherService
   attr_accessor :user_id
-  
+
   class RefreshTokenError < StandardError; end
 
   def initialize(user_id)
@@ -14,7 +14,7 @@ class AccessTokenRefresherService
     oauth_data = Spotify::Oauth::RefreshTokenService.new(user.refresh_token).call
 
     refresh_in = (oauth_data["expires_in"].to_i * 0.9).seconds
-    
+
     user.update!(access_token: oauth_data["access_token"])
     RefreshAccessTokenJob.set(wait: refresh_in).perform_later(user_id)
   rescue ActiveRecord::RecordInvalid,
