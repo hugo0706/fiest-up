@@ -1,9 +1,11 @@
 # frozen_string_literal: true
 
 class PartiesController < ApplicationController
-  before_action :authorize, only: [ :create, :index ]
-  before_action :party_exists?, only: [ :show, :join ]
+  before_action :authorize, only: [ :create, :index, :select_device, :settings ]
+  before_action :party_exists?, only: [ :show, :join, :select_device, :settings ]
+  before_action :party_has_device?, only: [ :show, :join, :settings ]
   before_action :user_in_party?, only: :show
+  before_action :user_owns_party?, only: [ :settings, :select_device ]
 
   rate_limit to: 7, within: 3.minutes,
     by: -> { request.remote_ip },
@@ -26,8 +28,7 @@ class PartiesController < ApplicationController
 
     party.users << current_user
 
-    flash[:notice] = "Party created succesfully"
-    redirect_to show_party_path(party.code)
+    redirect_to select_device_path(code: party.code)
   rescue RetriesDepleted,
     PartyAlreadyExists => e
 
@@ -61,6 +62,14 @@ class PartiesController < ApplicationController
   end
 
   def show
+  end
+
+  def settings
+  end
+
+  def select_device
+    @devices = Spotify::Api::AvailableDevicesService.new(current_user.access_token).call
+    @devices = @devices["devices"]&.map { |device| DevicePresenter.new(device) }
   end
 
   def index
@@ -100,6 +109,22 @@ class PartiesController < ApplicationController
     end
 
     true
+  end
+
+  def party_has_device?
+    if party.device_id.nil?
+      if party.user_id == current_user&.id
+        flash[:error] = "You have to add a device to the party"
+        redirect_to select_device_path(code: code)
+      else
+        flash[:error] = "The party is being created. Try again"
+        redirect_back(fallback_location: start_path)
+      end
+    end
+  end
+
+  def user_owns_party?
+    redirect_to show_party_path(code: code) unless party.user_id == current_user&.id
   end
 
   def user_in_party?

@@ -18,7 +18,7 @@ RSpec.describe Spotify::Oauth::RefreshTokenService do
     let(:refresh_token_url) { 'https://accounts.spotify.com/api/token' }
     let(:client_id) { 'client_id' }
     let(:client_secret) { 'client_secret' }
-    let(:user_scopes) { %w[user-read-private user-read-email] }
+    let(:user_scopes) { %w[user-read-private user-read-email user-read-playback-state] }
     let(:refresh_token_response) do
       {
         "access_token" => "mock_access_token",

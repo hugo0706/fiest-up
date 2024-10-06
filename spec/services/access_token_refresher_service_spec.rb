@@ -6,7 +6,7 @@ RSpec.describe AccessTokenRefresherService do
   subject { described_class.new(user.id) }
 
   let(:user) { create(:user) }
-  let(:user_scopes) { %w[user-read-private user-read-email] }
+  let(:user_scopes) { %w[user-read-private user-read-email user-read-playback-state] }
   let(:expires_in) { 3600 }
   let(:oauth_data) do
     {

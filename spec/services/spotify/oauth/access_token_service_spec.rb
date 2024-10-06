@@ -19,7 +19,7 @@ RSpec.describe Spotify::Oauth::AccessTokenService do
     let(:client_id) { 'client_id' }
     let(:client_secret) { 'client_secret' }
     let(:spotify_redirect_uri) { 'http://spotify.com' }
-    let(:user_scopes) { %w[user-read-private user-read-email] }
+    let(:user_scopes) { %w[user-read-private user-read-email user-read-playback-state] }
 
     let(:access_token_response) do
       {

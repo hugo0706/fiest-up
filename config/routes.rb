@@ -21,13 +21,15 @@ Rails.application.routes.draw do
   end
 
   namespace :party_data do
-    scope "/settings" do
-      get "/device_list", to: "settings#device_list"
-      post "/party_device", to: "settings#party_device"
+    scope "/:code/settings" do
+      get "/device_list", to: "settings#device_list", as: "party_device_list"
+      post "/party_device", to: "settings#party_device", as: "set_party_device"
     end
   end
 
   scope "/party" do
+    get "/:code/select_device", to: "parties#select_device", as: "select_device"
+    get "/settings/:code", to: "parties#settings", as: "party_settings"
     get "/join/:code", to: "parties#join", as: "join_party"
     post "/create", to: "parties#create", as: "create_party"
     get "/list", to: "parties#index", as: "party_list"

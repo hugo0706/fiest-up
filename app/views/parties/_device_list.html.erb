@@ -1,0 +1,8 @@
+<div class="grid grid-cols-2 <%= 'lg:grid-cols-3' if devices.count > 2 %> gap-4 w-full h-full max-h-screen p-4 overflow-y-auto overflow-hidden custom-scrollbar">
+    <% devices.each do |device| %>
+        <div data-device-id="<%= device.id %>" class="flex flex-col justify-center items-center gap-2 bg-spotify-gray-secondary hover:bg-spotify-gray-highlight w-full relative" data-action="click->select-device#selectDevice">
+            <p class="text-white text-5xl"><%= device.icon %></p>
+            <p class="text-white text-2xl text-center break-words px-4"><%= device.name %></p>
+        </div>
+    <% end %>
+</div>

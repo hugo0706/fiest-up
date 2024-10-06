@@ -4,7 +4,7 @@ require 'rails_helper'
 
 RSpec.describe Oauth::SessionsController, type: :controller do
   describe 'GET #login' do
-    let(:user_scopes) { %w[user-read-private user-read-email] }
+    let(:user_scopes) { %w[user-read-private user-read-email user-read-playback-state] }
     let(:state) { 'securerandomstat' }
     let(:redirect_uri) { 'http://localhost:3000/auth/callback' }
     let(:client_id) { 'test_client_id' }

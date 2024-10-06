@@ -72,11 +72,10 @@ RSpec.describe PartiesController, type: :controller do
         end
 
         context 'with valid attributes' do
-          it 'creates a party and adds the owner to it' do
+          it 'creates a party, adds the owner to it and redirects to select device page' do
             post :create, params: params
 
-            expect(flash[:notice]).to eq('Party created succesfully')
-            expect(response).to redirect_to(show_party_path(user.parties.last.code))
+            expect(response).to redirect_to(select_device_path(user.parties.last.code))
             expect(user.parties).to eq([ Party.last ])
             expect(Party.last.users).to eq([ user ])
           end
@@ -84,11 +83,10 @@ RSpec.describe PartiesController, type: :controller do
           context 'with a party name that corresponds to other user' do
             before { create(:party, name: name) }
 
-            it 'creates a party and adds the owner to it' do
+            it 'creates a party, adds the owner to it and redirects to select device page' do
               post :create, params: params
 
-              expect(flash[:notice]).to eq('Party created succesfully')
-              expect(response).to redirect_to(show_party_path(user.parties.last.code))
+              expect(response).to redirect_to(select_device_path(user.parties.last.code))
               expect(user.parties).to eq([ Party.last ])
               expect(Party.last.users).to eq([ user ])
             end
@@ -164,9 +162,16 @@ RSpec.describe PartiesController, type: :controller do
       let(:code) { 'code12' }
       let!(:party) { create(:party, code: code) }
 
-      it "calls user_in_party? for show action" do
-        expect(controller).to receive(:user_in_party?).at_least(:once)
-        get :show, params: { code: code }
+      it 'applies user_in_party? only to show' do
+        authorize_callback = controller._process_action_callbacks.select do |callback|
+          callback.kind == :before && callback.filter == :user_in_party?
+        end
+  
+        expected_actions = Set["show"]
+
+        authorize_callback.each do |callback|
+          expect(callback.instance_variable_get(:@if).first.instance_variable_get(:@actions)).to eq(expected_actions)
+        end
       end
 
       context 'when the user belongs to the party' do
@@ -241,10 +246,16 @@ RSpec.describe PartiesController, type: :controller do
     end
 
     describe 'party_exists?' do
-      it "calls party_exists? for show and join actions" do
-        expect(controller).to receive(:party_exists?).at_least(:twice)
-        get :show, params: { code: 'a' }
-        get :join, params: { code: 'a' }
+      it 'applies party_exists only to show, join, select_device, and settings' do
+        authorize_callback = controller._process_action_callbacks.select do |callback|
+          callback.kind == :before && callback.filter == :party_exists?
+        end
+  
+        expected_actions = Set["show","join","select_device","settings"]
+
+        authorize_callback.each do |callback|
+          expect(callback.instance_variable_get(:@if).first.instance_variable_get(:@actions)).to eq(expected_actions)
+        end
       end
 
       context 'when the party does not exist' do
@@ -274,6 +285,20 @@ RSpec.describe PartiesController, type: :controller do
           get :join, params: { code: party.code }
 
           expect(response.status).to eq(200)
+        end
+      end
+    end
+    
+    describe 'authorize' do
+      it 'applies authorize only to create, index, select_device, and settings' do
+        authorize_callback = controller._process_action_callbacks.select do |callback|
+          callback.kind == :before && callback.filter == :authorize
+        end
+  
+        expected_actions = Set["create","index","select_device","settings"]
+
+        authorize_callback.each do |callback|
+          expect(callback.instance_variable_get(:@if).first.instance_variable_get(:@actions)).to eq(expected_actions)
         end
       end
     end

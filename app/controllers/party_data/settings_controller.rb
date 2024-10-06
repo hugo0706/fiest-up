@@ -8,16 +8,18 @@ module PartyData
     def party_device
       @party.update!(device_id: device_id)
       
-      render json: {}, status: :ok
+      flash[:notice] = "Party created succesfully!"
+      redirect_to show_party_path(code: @party.code)
     rescue ActiveRecord::RecordInvalid => e
       report_error e
-      render json: {}, status: 400
+      flash[:error] = "There was an error creating the party"
+      redirect_to home_path
     end
 
     def device_list
       devices = Spotify::Api::AvailableDevicesService.new(current_user.access_token).call
-      
-      render json: devices, status: :ok
+      devices = devices["devices"]&.map { |device| DevicePresenter.new(device) }
+      render partial: 'parties/device_list', locals: { devices: devices }
     end
 
     private

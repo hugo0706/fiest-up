@@ -7,7 +7,7 @@ RSpec.describe Spotify::Oauth::AuthorizeService do
     let(:client_id) { 'client_id' }
     let(:spotify_redirect_uri) { 'http://spotify.com' }
     let(:state) { 'state' }
-    let(:user_scopes) { %w[user-read-private user-read-email] }
+    let(:user_scopes) { %w[user-read-private user-read-email user-read-playback-state] }
 
     before do
       stub_const('Spotify::Oauth::AuthorizeService::CLIENT_ID', client_id)
