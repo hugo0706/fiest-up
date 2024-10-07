@@ -20,6 +20,9 @@ module PartyData
       devices = Spotify::Api::AvailableDevicesService.new(current_user.access_token).call
       devices = devices["devices"]&.map { |device| DevicePresenter.new(device) }
       render partial: "parties/device_list", locals: { devices: devices }
+    rescue Spotify::ApiError => e
+      report_error(e)
+      render plain: "There was an error loading your devices, we are working on it"
     end
 
     private

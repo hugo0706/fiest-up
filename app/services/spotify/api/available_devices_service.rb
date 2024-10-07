@@ -3,8 +3,6 @@
 module Spotify
   module Api
     class AvailableDevicesService < Base
-      class Error < StandardError; end
-
       def call
         response = conn.get("me/player/devices")
 
@@ -16,9 +14,8 @@ module Spotify
         else
           raise_error(response)
         end
-      rescue Faraday::Error,
-             Faraday::ServerError => e
-        raise Error, e
+      rescue Faraday::Error => e
+        raise Spotify::ApiError
       end
     end
   end
