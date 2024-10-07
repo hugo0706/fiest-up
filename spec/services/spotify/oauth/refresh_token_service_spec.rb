@@ -70,9 +70,9 @@ RSpec.describe Spotify::Oauth::RefreshTokenService do
 
       before { allow(subject).to receive(:conn).and_return(conn) }
 
-      it 'raises AccessTokenService::Error' do
+      it 'raises Spotify::OauthError' do
         allow(conn).to receive(:post).and_raise(Faraday::Error)
-        expect { subject.call }.to raise_error(described_class::Error)
+        expect { subject.call }.to raise_error(Spotify::OauthError)
       end
     end
   end

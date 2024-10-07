@@ -5,8 +5,6 @@ module Spotify
     class RefreshTokenService < Base
       attr_accessor :refresh_token
 
-      class Error < StandardError; end
-
       def initialize(refresh_token)
         self.refresh_token = refresh_token
       end
@@ -14,10 +12,14 @@ module Spotify
       def call
         response = conn.post("api/token", refresh_token_params)
 
-        JSON.parse(response.body)
-      rescue Faraday::Error,
-             Faraday::ServerError => e
-        raise Error, e
+        case response.status
+        when 200
+          JSON.parse(response.body)
+        else
+          raise_error(response)
+        end
+      rescue Faraday::Error => e
+        raise Spotify::OauthError
       end
 
       private

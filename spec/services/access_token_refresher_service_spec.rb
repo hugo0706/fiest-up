@@ -49,7 +49,7 @@ RSpec.describe AccessTokenRefresherService do
     context 'when the refresh token request to spotify fails' do
       before do
         allow(refresh_token_service).to receive(:call)
-          .and_raise(Spotify::Oauth::RefreshTokenService::Error)
+          .and_raise(Spotify::OauthError)
       end
       it 'raises RefreshTokenError' do
         expect { subject.call }.to raise_error(described_class::RefreshTokenError)

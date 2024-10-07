@@ -20,7 +20,7 @@ class AccessTokenRefresherService
   rescue ActiveRecord::RecordInvalid,
     ActiveRecord::RecordNotFound => e
     raise RefreshTokenError, "Database error: #{e.message}"
-  rescue Spotify::Oauth::RefreshTokenService::Error => e
+  rescue Spotify::OauthError => e
     raise RefreshTokenError, "There was an error with Spotify's api"
   end
 end
