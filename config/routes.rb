@@ -21,9 +21,12 @@ Rails.application.routes.draw do
   end
 
   namespace :party_data do
-    scope "/:code/settings" do
-      get "/device_list", to: "settings#device_list", as: "party_device_list"
-      post "/party_device", to: "settings#party_device", as: "set_party_device"
+    scope "/:code" do
+      scope "/settings" do
+        get "/device_list", to: "settings#device_list", as: "party_device_list"
+        post "/party_device", to: "settings#party_device", as: "set_party_device"
+      end
+      get "/search", to: "search#search", as: "search"
     end
   end
 
