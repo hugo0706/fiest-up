@@ -1,22 +1,34 @@
 # frozen_string_literal: true
 
 module PartyData
-  class SearchController < ApplicationController
+  class QueuesController < ApplicationController
     before_action :party_exists?
     before_action :user_in_party?
 
-    def search
+    def add_song_to_queue
       party_owner = User.find(@party.user_id)
-      songs = Spotify::Api::SearchService.new(party_owner.access_token).call(query)
-      parsed_songs = songs.map { |song| SearchResultsPresenter.new(song).as_json }
+      song = Spotify::Api::TrackService.new(party_owner.access_token).call(spotify_song_id)
+      parsed_song = SearchResultsPresenter.new(song).as_json
 
-      render json: parsed_songs, status: :ok
-    rescue Spotify::ApiError => e
+      song = Song.find_or_create_by!(spotify_song_id: parsed_song[:spotify_song_id]) do |s|
+        s.name = parsed_song[:name].strip
+        s.artists = parsed_song[:artists]
+        s.image = parsed_song[:image]
+      end
+
+      PartySong.add_song_to_queue(party_id: @party.id, song_id: song.id)
+
+      head :created
+    rescue ActiveRecord::RecordInvalid, Spotify::ApiError => e
       report_error(e)
-      render json: {}, status: 500
+      render json: { error: "Invalid song" }, status: 404
     end
 
     private
+
+    def spotify_song_id
+      @spotify_song_id ||= params.require(:spotify_song_id)
+    end
 
     def code
       @code ||= params.require(:code)

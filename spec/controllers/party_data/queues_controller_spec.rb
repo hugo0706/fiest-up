@@ -2,10 +2,10 @@
 
 require 'rails_helper'
 
-RSpec.describe PartyData::SearchController, type: :controller do
-  describe "GET #search" do
+RSpec.describe PartyData::QueuesController, type: :controller do
+  describe "POST #add_song_to_queue" do
     let(:search_results) do
-      [ {
+      {
         "album"=>
         { "album_type"=>"album",
          "artists"=>
@@ -18,7 +18,7 @@ RSpec.describe PartyData::SearchController, type: :controller do
          "available_markets"=>[],
          "external_urls"=>{ "spotify"=>"https://open.spotify.com/album/2R2BtdlMg4A44CzaQdmFfa" },
          "href"=>"https://api.spotify.com/v1/albums/2R2BtdlMg4A44CzaQdmFfa",
-         "id"=>"2R2BtdlMg4A44CzaQdmFfa",
+         "id"=> "id",
          "images"=>
           [ { "height"=>640, "url"=>"https://i.scdn.co/image/ab67616d0000b2734a7f4cf67c5f1c07701846e6", "width"=>640 },
            { "height"=>300, "url"=>"https://i.scdn.co/image/ab67616d00001e024a7f4cf67c5f1c07701846e6", "width"=>300 },
@@ -43,7 +43,7 @@ RSpec.describe PartyData::SearchController, type: :controller do
        "external_ids"=>{ "isrc"=>"CA5KR2475590" },
        "external_urls"=>{ "spotify"=>"https://open.spotify.com/track/6BIxglmdOjzfDqdjokHobF" },
        "href"=>"https://api.spotify.com/v1/tracks/6BIxglmdOjzfDqdjokHobF",
-       "id"=>"6BIxglmdOjzfDqdjokHobF",
+       "id"=>spotify_song_id,
        "is_local"=>false,
        "name"=>"Lights On",
        "popularity"=>42,
@@ -51,42 +51,41 @@ RSpec.describe PartyData::SearchController, type: :controller do
        "track_number"=>9,
        "type"=>"track",
        "uri"=>"spotify:track:6BIxglmdOjzfDqdjokHobF"
-      } ]
+      }
     end
 
-    let(:parsed_response) { [ { spotify_song_id: "6BIxglmdOjzfDqdjokHobF", name: "Lights On", artists: [ "MPH" ], image: "https://i.scdn.co/image/ab67616d000048514a7f4cf67c5f1c07701846e6" } ] }
+    let(:party) { create(:party) }
+    let(:user) { create(:user) }
+    let(:spotify_song_id) { "song_id" }
 
-    context "when the party exists and the user is in the party" do
-      let(:party) { create(:party) }
-      let(:user) { create(:user) }
+    before do
+      allow_any_instance_of(Spotify::Api::TrackService).to receive(:call).and_return(search_results)
+      party.users << user
+      session[:user_id] = user.id
+    end
 
-      before do
-        allow_any_instance_of(Spotify::Api::SearchService).to receive(:call).and_return(search_results)
-        party.users << user
-        session[:user_id] = user.id
-      end
+    it 'returns 204 created' do
+      post :add_song_to_queue, params: { code: party.code, spotify_song_id: spotify_song_id }
 
-      it 'returns the parsed Spotify search results' do
-        get :search, params: { code: party.code, query: "mph" }
+      expect(response.status).to eq(201)
+    end
 
-        expect(response.body).to eq(parsed_response.to_json)
-      end
+    context 'when the song already exists in db' do
+      let(:party_song) { create(:party_song, song: song) }
+      let!(:song) { create(:song, spotify_song_id: spotify_song_id) }
 
-      context "when spotify api call raises an error" do
-        before { allow_any_instance_of(Spotify::Api::SearchService).to receive(:call).and_raise(Spotify::ApiError) }
+      it 'does not create a new song' do
+        post :add_song_to_queue, params: { code: party.code, spotify_song_id: song.spotify_song_id }
 
-        it 'returns an empty json with status 500' do
-          get :search, params: { code: party.code, query: "mph" }
-
-          expect(response.body).to eq({}.to_json)
-          expect(response.status).to eq(500)
-        end
+        expect(Song.count).to eq(1)
+        expect(Song.first.id).to eq(song.id)
+        expect(response.status).to eq(201)
       end
     end
 
     context "when the party does not exist" do
       it 'returns an json with status not_found' do
-        get :search, params: { code: 'code', query: "mph" }
+        post :add_song_to_queue, params: { code: 'a', spotify_song_id: spotify_song_id }
 
         expect(response.body).to eq({ error: "Party not found" }.to_json)
         expect(response.status).to eq(404)
@@ -94,13 +93,12 @@ RSpec.describe PartyData::SearchController, type: :controller do
     end
 
     context "when the user has not joined the party" do
-      let(:party) { create(:party) }
-      let(:user) { create(:user) }
+      let(:party2) { create(:party) }
 
       before { session[:user_id] = user.id }
 
       it 'returns an json with status not_found' do
-        get :search, params: { code: party.code, query: "mph" }
+        post :add_song_to_queue, params: { code: party2.code, spotify_song_id: spotify_song_id }
 
         expect(response.body).to eq({ error: "User not in party" }.to_json)
         expect(response.status).to eq(404)

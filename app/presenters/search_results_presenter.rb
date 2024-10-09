@@ -10,10 +10,10 @@ class SearchResultsPresenter
 
   def as_json
     {
-      id: data["id"],
+      spotify_song_id: data["id"],
       name: data["name"],
-      artists: data["artists"].map { |artist| artist["name"]},
-      image: data.dig("album", "images").min_by { |image| image["height"]}["url"]
+      artists: data["artists"].map { |artist| artist["name"] },
+      image: data.dig("album", "images").min_by { |image| image["height"] }["url"]
     }
   end
 end

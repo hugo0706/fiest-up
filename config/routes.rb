@@ -26,6 +26,9 @@ Rails.application.routes.draw do
         get "/device_list", to: "settings#device_list", as: "party_device_list"
         post "/party_device", to: "settings#party_device", as: "set_party_device"
       end
+      scope "/queue" do
+        post "/add", to: "queues#add_song_to_queue", as: "add_to_queue"
+      end
       get "/search", to: "search#search", as: "search"
     end
   end

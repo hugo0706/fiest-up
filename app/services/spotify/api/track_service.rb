@@ -2,13 +2,13 @@
 
 module Spotify
   module Api
-    class SearchService < Base
-      def call(query)
-        response = conn.get("search?q=#{query.gsub(" ", "+")}&type=track")
+    class TrackService < Base
+      def call(spotify_song_id)
+        response = conn.get("tracks/#{spotify_song_id}")
 
         case response.status
         when 200
-          JSON.parse(response.body)["tracks"]["items"]
+          JSON.parse(response.body)
         when 401
           raise_error("Bad or expired token", response)
         when 403
