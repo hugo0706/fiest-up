@@ -5,9 +5,9 @@
                 Party name and settings
             </div>
             <div class="flex flex-col p-2 rounded-2xl overflow-y-auto bg-spotify-gray-clear w-full h-full custom-scrollbar">
-                <% (1..100).each do |i| %>
-                <p> <%= i %> </p>
-                <% end %>
+                <%= turbo_stream_from "party_#{@party.code}_songs" %>
+                <ul id="party_songs_list" class="flex flex-col w-full h-full p-2 overflow-y-auto bg-black custom-scrollbar">
+                </ul>    
             </div>
         </div>
         <div class="relative flex flex-col p-2 rounded-2xl bg-spotify-gray-clear w-full h-1/4 lg:w-1/4 lg:h-full z-10 ">

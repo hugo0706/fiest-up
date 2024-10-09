@@ -5,6 +5,8 @@ class PartySong < ApplicationRecord
   belongs_to :party
 
   validates :position, uniqueness: { scope: :party_id }
+  
+  after_create_commit -> { broadcast_append_later_to "party_#{party.code}_songs", target: "party_songs_list", locals: { song: song } }
 
   ADD_TO_QUEUE_RETRIES = 3
 
