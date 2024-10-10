@@ -9,8 +9,12 @@ module PartyData
       party_owner = User.find(@party.user_id)
       songs = Spotify::Api::SearchService.new(party_owner.access_token).call(query)
       parsed_songs = songs.map { |song| SearchResultsPresenter.new(song).as_json }
-
-      render json: parsed_songs, status: :ok
+      
+      respond_to do |format|
+        format.html { render partial: "party_data/search_results", locals: { songs: parsed_songs } }
+        format.json { render json: parsed_songs, status: :ok } 
+      end
+      
     rescue Spotify::ApiError => e
       report_error(e)
       render json: {}, status: 500

@@ -67,9 +67,11 @@ RSpec.describe PartyData::SearchController, type: :controller do
       end
 
       it 'returns the parsed Spotify search results' do
+        allow(controller).to receive(:render).and_call_original
+
         get :search, params: { code: party.code, query: "mph" }
 
-        expect(response.body).to eq(parsed_response.to_json)
+        expect(controller).to have_received(:render).with(partial: 'party_data/search_results', locals: { songs: parsed_songs, party_code: party.code })
       end
 
       context "when spotify api call raises an error" do
