@@ -11,6 +11,22 @@ export default class extends Controller {
     
   }
   
+  addToQueue(event){
+    const song = event.currentTarget;
+    const addToQueueUrl = song.getAttribute('data-add-to-queue-url');
+    
+    fetch(addToQueueUrl, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        "X-CSRF-Token": document
+          .querySelector('meta[name="csrf-token"]')
+          .getAttribute("content"),
+      },
+    })
+    
+    this.close();
+  }
   
   checkInput() {
     const inputValue = this.searchInputTarget.value.trim()
@@ -29,7 +45,7 @@ export default class extends Controller {
     fetch(searchUrl + '?query=' + encodeURIComponent(query))
     .then(response => response.text())
     .then(html => {
-      document.getElementById("searchResults").innerHTML = html;
+      this.searchResultsTarget.innerHTML = html;
     });
   }
 

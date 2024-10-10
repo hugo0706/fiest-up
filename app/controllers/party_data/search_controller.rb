@@ -11,7 +11,7 @@ module PartyData
       parsed_songs = songs.map { |song| SearchResultsPresenter.new(song).as_json }
       
       respond_to do |format|
-        format.html { render partial: "party_data/search_results", locals: { songs: parsed_songs } }
+        format.html { render partial: "party_data/search_results", locals: { songs: parsed_songs, party_code: @party.code } }
         format.json { render json: parsed_songs, status: :ok } 
       end
       
