@@ -1,12 +1,32 @@
 <div class="flex flex-col h-full gap-2">
     <div class="flex flex-wrap-reverse gap-2 h-[calc(100%-96px)] lg:flex-nowrap">
         <div class="flex flex-col w-full gap-2 h-3/4 lg:w-3/4 lg:h-full">
-            <div class="flex items-center rounded-2xl p-2 bg-spotify-gray-clear w-full h-24">
-                Party name and settings
+            <div class="flex items-center rounded-2xl justify-between p-2 bg-spotify-gray-clear w-full h-24">
+                <h1 class="text-2xl font-bold mx-4"><%= @party.name.capitalize %> </h1>
+                <div data-controller="invite">
+                  <div class="flex flex-col lg:flex-row items-center invite-container">
+                    <div class="w-full max-w-[16rem]">
+                        <div data-controller="party" class="relative">
+                            <input data-party-target="input" class="col-span-6 bg-spotify-gray-clear border border-spotify-gray-highlight text-gray-300 font-semibold text-xl rounded-lg block w-full px-2.5 py-3" value="<%= join_party_url(code: @party.code)%>" disabled readonly>
+                            <button data-party-target="copyButton" data-action="click->party#copy" class="absolute bg-spotify-gray-clear end-2.5 top-1/2 -translate-y-1/2 text-gray-300 hover:bg-spotify-gray-highlight rounded-lg py-2 px-2.5 inline-flex items-center justify-center border-spotify-gray-highlight border">
+                                <svg class="w-3 h-3 me-1.5" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 18 20">
+                                    <path d="M16 1h-3.278A1.992 1.992 0 0 0 11 0H7a1.993 1.993 0 0 0-1.722 1H2a2 2 0 0 0-2 2v15a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V3a2 2 0 0 0-2-2Zm-3 14H5a1 1 0 0 1 0-2h8a1 1 0 0 1 0 2Zm0-4H5a1 1 0 0 1 0-2h8a1 1 0 1 1 0 2Zm0-5H5a1 1 0 0 1 0-2h2V2h4v2h2a1 1 0 1 1 0 2Z"/>
+                                </svg>
+                                <span data-party-target="copyButtonText" class="text-xs font-semibold">Copy Invite</span>
+                            </button>
+                        </div>
+                    </div>
+                    <span data-invite-target="feedback" class="feedback-msg"></span>
+                  </div>
+                </div>
+
+                <%= link_to "⚙", party_settings_path(code: @party.code ), class: "font-semibold text-lg mx-4 " %>
             </div>
-            <div class="flex flex-col p-2 rounded-2xl overflow-y-auto bg-spotify-gray-clear w-full h-full custom-scrollbar">
+            <div class="flex flex-col gap-2 p-2 rounded-2xl overflow-y-auto bg-spotify-gray-clear w-full h-full custom-scrollbar">
                 <%= turbo_stream_from "party_#{@party.code}_songs" %>
-                <ul id="party_songs_list" class="flex flex-col w-full h-full p-2 overflow-y-auto bg-black custom-scrollbar">
+                <h2 class="text-2xl font-bold">Song Queue</h2>
+                <ul id="party_songs_list" class="flex flex-col w-full h-full p-3 gap-4 overflow-y-auto rounded-2xl bg-spotify-gray-dark custom-scrollbar">
+                  <%= render partial: "party_songs/party_song", collection: @songs, as: :song%>
                 </ul>    
             </div>
         </div>

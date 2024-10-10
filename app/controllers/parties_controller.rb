@@ -62,6 +62,7 @@ class PartiesController < ApplicationController
   end
 
   def show
+    @songs = @party.songs
   end
 
   def settings

@@ -72,7 +72,7 @@ export default class extends Controller {
 
       const plusSignP = document.createElement('p');
       plusSignP.textContent = '+';
-      plusSignP.classList.add('font-bold', 'text-xl', 'flex-shrink-0');
+      plusSignP.classList.add('font-bold', 'text-3xl', 'flex-shrink-0');
   
 
       resultDiv.appendChild(innerDiv);

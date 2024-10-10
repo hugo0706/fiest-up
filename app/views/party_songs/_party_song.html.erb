@@ -1,9 +1,9 @@
-<li class="flex items-center justify-between p-1 gap-3 h-14">
-    <div class="flex items-center gap-2 flex-grow min-w-0">
-        <img src="<%= song.image %>" class="w-12 h-12">
+<li class="flex items-center justify-between h-14 hover:bg-spotify-gray-clear">
+    <div id="<%= song.spotify_song_id %>" class="flex items-center gap-2 flex-grow min-w-0">
+        <img src="<%= song.image %>" class="w-14 h-14">
         <div class="overflow-hidden text-ellipsis whitespace-nowrap">
-          <p class="font-semibold text-sm truncate"><%= song.name %></p>
-            <p class="font-semibold text-gray-500 text-xs truncate"><%= song.artists.join(',') %></p>
+          <p class="font-semibold text-md truncate"><%= song.name %></p>
+            <p class="font-semibold text-gray-500 text-sm truncate"><%= song.artists.join(',') %></p>
         </div>
     </div>
 </li>
