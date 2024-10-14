@@ -9,9 +9,7 @@
                         <div data-controller="party" class="relative">
                             <input data-party-target="input" class="col-span-6 bg-spotify-gray-clear border border-spotify-gray-highlight text-gray-300 font-semibold text-xl rounded-lg block w-full px-2.5 py-3" value="<%= join_party_url(code: @party.code)%>" disabled readonly>
                             <button data-party-target="copyButton" data-action="click->party#copy" class="absolute bg-spotify-gray-clear end-2.5 top-1/2 -translate-y-1/2 text-gray-300 hover:bg-spotify-gray-highlight rounded-lg py-2 px-2.5 inline-flex items-center justify-center border-spotify-gray-highlight border">
-                                <svg class="w-3 h-3 me-1.5" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 18 20">
-                                    <path d="M16 1h-3.278A1.992 1.992 0 0 0 11 0H7a1.993 1.993 0 0 0-1.722 1H2a2 2 0 0 0-2 2v15a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V3a2 2 0 0 0-2-2Zm-3 14H5a1 1 0 0 1 0-2h8a1 1 0 0 1 0 2Zm0-4H5a1 1 0 0 1 0-2h8a1 1 0 1 1 0 2Zm0-5H5a1 1 0 0 1 0-2h2V2h4v2h2a1 1 0 1 1 0 2Z"/>
-                                </svg>
+                                 <%= image_tag 'copy-icon.svg', class: 'w-5 h-5' %>
                                 <span data-party-target="copyButtonText" class="text-xs font-semibold">Copy Invite</span>
                             </button>
                         </div>
@@ -20,7 +18,9 @@
                   </div>
                 </div>
 
-                <%= link_to "⚙", party_settings_path(code: @party.code ), class: "font-semibold text-lg mx-4 " %>
+                <%= link_to party_settings_path(code: @party.code ), class: "font-semibold text-lg mx-4 " do %>
+                    <%= image_tag 'party-settings-icon.svg', class: 'w-8 h-8' %>
+                <% end %>
             </div>
             <div class="flex flex-col gap-2 p-2 rounded-2xl overflow-y-auto bg-spotify-gray-clear w-full h-full custom-scrollbar">
                 <%= turbo_stream_from "party_#{@party.code}_songs" %>
