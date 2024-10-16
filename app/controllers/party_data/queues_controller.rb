@@ -14,6 +14,8 @@ module PartyData
         s.name = parsed_song[:name].strip
         s.artists = parsed_song[:artists]
         s.image = parsed_song[:image]
+        s.uri = parsed_song[:uri]
+        s.duration = parsed_song[:duration]
       end
 
       PartySong.add_song_to_queue(party_id: @party.id, song_id: song.id)

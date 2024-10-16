@@ -54,7 +54,7 @@ RSpec.describe PartyData::SearchController, type: :controller do
       } ]
     end
 
-    let(:parsed_response) { [ { spotify_song_id: "6BIxglmdOjzfDqdjokHobF", name: "Lights On", artists: [ "MPH" ], image: "https://i.scdn.co/image/ab67616d000048514a7f4cf67c5f1c07701846e6" } ] }
+    let(:parsed_songs) { [ { spotify_song_id: "6BIxglmdOjzfDqdjokHobF", name: "Lights On", artists: [ "MPH" ], image: "https://i.scdn.co/image/ab67616d000048514a7f4cf67c5f1c07701846e6", uri: "spotify:track:6BIxglmdOjzfDqdjokHobF", duration: 193185 } ] }
 
     context "when the party exists and the user is in the party" do
       let(:party) { create(:party) }
