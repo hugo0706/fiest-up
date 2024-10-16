@@ -69,7 +69,7 @@ class PartiesController < ApplicationController
   end
 
   def select_device
-    @devices = Spotify::Api::AvailableDevicesService.new(current_user.access_token).call
+    @devices = Spotify::Api::Playback::AvailableDevicesService.new(current_user.access_token).call
     @devices = @devices["devices"]&.map { |device| DevicePresenter.new(device) }
   rescue Spotify::ApiError => e
     report_error(e)
