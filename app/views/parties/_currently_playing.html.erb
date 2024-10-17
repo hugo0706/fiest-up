@@ -1,0 +1,7 @@
+<% if party.songs.count > 1 && !party.started? %>
+    <%= render partial: "party_songs/start_button", locals: { party: party} %>
+<% else %>
+<div id="currently_playing">
+    Currently playing
+</div>
+<% end %>

@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.2].define(version: 2024_10_14_195345) do
+ActiveRecord::Schema[7.2].define(version: 2024_10_16_210150) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -21,6 +21,7 @@ ActiveRecord::Schema[7.2].define(version: 2024_10_14_195345) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.string "device_id"
+    t.boolean "started", default: false, null: false
     t.index ["code"], name: "index_parties_on_code", unique: true
     t.index ["user_id", "name"], name: "index_parties_on_user_id_and_name", unique: true
     t.index ["user_id"], name: "index_parties_on_user_id"
@@ -33,6 +34,8 @@ ActiveRecord::Schema[7.2].define(version: 2024_10_14_195345) do
     t.integer "position", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.boolean "next_song", default: false, null: false
+    t.boolean "played", default: false
     t.index ["party_id", "position"], name: "index_party_songs_on_party_id_and_position", unique: true
     t.index ["party_id"], name: "index_party_songs_on_party_id"
     t.index ["song_id"], name: "index_party_songs_on_song_id"

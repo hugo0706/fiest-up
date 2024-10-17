@@ -3,7 +3,7 @@
 module Spotify
   module Oauth
     class AuthorizeService < Base
-      USER_SCOPE = %w[user-read-private user-read-email user-read-playback-state]
+      USER_SCOPE = %w[user-read-currently-playing user-read-private user-read-email user-read-playback-state user-modify-playback-state]
 
       attr_accessor :code
 

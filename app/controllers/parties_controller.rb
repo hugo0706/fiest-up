@@ -1,11 +1,11 @@
 # frozen_string_literal: true
 
 class PartiesController < ApplicationController
-  before_action :authorize, only: [ :create, :index, :select_device, :settings ]
-  before_action :party_exists?, only: [ :show, :join, :select_device, :settings ]
-  before_action :party_has_device?, only: [ :show, :join, :settings ]
+  before_action :authorize, only: [ :create, :index, :select_device, :settings, :start ]
+  before_action :party_exists?, only: [ :show, :join, :select_device, :settings, :start ]
+  before_action :party_has_device?, only: [ :show, :join, :settings, :start ]
   before_action :user_in_party?, only: :show
-  before_action :user_owns_party?, only: [ :settings, :select_device ]
+  before_action :user_owns_party?, only: [ :settings, :select_device, :start ]
 
   rate_limit to: 7, within: 3.minutes,
     by: -> { request.remote_ip },
@@ -63,6 +63,19 @@ class PartiesController < ApplicationController
 
   def show
     @songs = @party.songs
+  end
+
+  def start
+    party_owner = User.find(party.user_id)
+    Spotify::Api::Playback::TransferPlaybackService.new(party_owner.access_token, party.device_id).call
+    
+    if party.party_songs.where(is_playing: true).present?
+      Spotify::Api::Playback::StartService.new(party_owner.access_token, party.device_id).call
+    else
+      party_song_to_play = party.party_songs.where(next_song: true).first
+                                            
+      PlaySongAndEnqueueNextService.new(party_song: party_song_to_play, party: party).call
+    end
   end
 
   def settings

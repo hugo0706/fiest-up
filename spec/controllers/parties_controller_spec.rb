@@ -246,12 +246,12 @@ RSpec.describe PartiesController, type: :controller do
     end
 
     describe 'party_exists?' do
-      it 'applies party_exists only to show, join, select_device, and settings' do
+      it 'applies party_exists only to show, join, select_device, start and settings' do
         authorize_callback = controller._process_action_callbacks.select do |callback|
           callback.kind == :before && callback.filter == :party_exists?
         end
 
-        expected_actions = Set["show", "join", "select_device", "settings"]
+        expected_actions = Set["show", "join", "select_device", "settings", "start"]
 
         authorize_callback.each do |callback|
           expect(callback.instance_variable_get(:@if).first.instance_variable_get(:@actions)).to eq(expected_actions)
@@ -290,12 +290,12 @@ RSpec.describe PartiesController, type: :controller do
     end
 
     describe 'authorize' do
-      it 'applies authorize only to create, index, select_device, and settings' do
+      it 'applies authorize only to create, index, select_device, start and settings' do
         authorize_callback = controller._process_action_callbacks.select do |callback|
           callback.kind == :before && callback.filter == :authorize
         end
 
-        expected_actions = Set["create", "index", "select_device", "settings"]
+        expected_actions = Set["create", "index", "select_device", "settings", "start"]
 
         authorize_callback.each do |callback|
           expect(callback.instance_variable_get(:@if).first.instance_variable_get(:@actions)).to eq(expected_actions)

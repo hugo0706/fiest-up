@@ -7,7 +7,7 @@ RSpec.describe Spotify::Oauth::AuthorizeService do
     let(:client_id) { 'client_id' }
     let(:spotify_redirect_uri) { 'http://spotify.com' }
     let(:state) { 'state' }
-    let(:user_scopes) { %w[user-read-private user-read-email user-read-playback-state] }
+    let(:user_scopes) { %w[user-read-currently-playing user-read-private user-read-email user-read-playback-state user-modify-playback-state] }
 
     before do
       stub_const('Spotify::Oauth::AuthorizeService::CLIENT_ID', client_id)
@@ -17,6 +17,7 @@ RSpec.describe Spotify::Oauth::AuthorizeService do
 
     it 'returns the state value and the url to redirect the user' do
       result = subject.get_state_and_authorize_url
+
       expect([ result.first, result.second.to_s ]).to eq([ state,
                                                         "https://accounts.spotify.com/authorize?" \
                                                           "client_id=#{client_id}" \
