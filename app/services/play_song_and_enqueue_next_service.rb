@@ -17,6 +17,7 @@ class PlaySongAndEnqueueNextService
     
     PlayNextSongJob.set(wait: playing_song_countdown(song)).perform_later(current_party_song: party_song)
     UpdateCurrentlyPlayingService.new(party: party).call
+    RemoveFirstFromQueueService.new(party: party, spotify_song_id: song.spotify_song_id).call
   end
   
   private

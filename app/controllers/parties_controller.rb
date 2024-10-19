@@ -62,7 +62,7 @@ class PartiesController < ApplicationController
   end
 
   def show
-    @songs = @party.songs
+    @songs = @party.non_played_songs
   end
 
   def start

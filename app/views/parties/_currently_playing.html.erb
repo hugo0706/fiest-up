@@ -1,9 +1,9 @@
-<% if party.songs.count > 1 && !party.started? %>
+<% if party.has_pending_songs? && !party.started? %>
     <%= render partial: "party_songs/start_button", locals: { party: party} %>
 <% elsif party.started? %>
     <%= render partial: "party_songs/currently_playing", locals: { song: party.currently_playing_song } %>
 <% else %>
     <div id="currently_playing" class="flex h-full w-full items-center justify-center">
-        <p class="animate-pulse text-spotify-green font-bold text-2xl">Add 2 songs to start</p>
+        <p class="animate-pulse text-spotify-green font-bold text-2xl">Add a song to start</p>
     </div>
 <% end %>

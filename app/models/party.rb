@@ -16,4 +16,16 @@ class Party < ApplicationRecord
   def currently_playing_song
     party_songs.where(is_playing: true).first.song
   end
+  
+  def non_played_songs
+    songs.joins(:party_songs).where(party_songs: { played: false })
+  end
+  
+  def has_pending_songs?
+    non_played_songs.count > 0
+  end
+  
+  def queue_count
+    non_played_songs.count
+  end
 end

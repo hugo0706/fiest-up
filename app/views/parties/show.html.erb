@@ -1,6 +1,7 @@
 <div class="flex flex-col h-full gap-2">
     <div class="flex flex-wrap-reverse gap-2 h-[calc(100%-96px)] lg:flex-nowrap">
         <div class="flex flex-col w-full gap-2 h-3/4 lg:w-3/4 lg:h-full">
+            <%= turbo_stream_from "party_#{@party.code}_songs" %>
             <div class="flex items-center rounded-2xl justify-between p-2 bg-spotify-gray-clear w-full h-24">
                 <h1 class="text-2xl font-bold mx-4"><%= @party.name.capitalize %> </h1>
                 <div data-controller="invite">
@@ -17,18 +18,11 @@
                     <span data-invite-target="feedback" class="feedback-msg"></span>
                   </div>
                 </div>
-
                 <%= link_to party_settings_path(code: @party.code ), class: "font-semibold text-lg mx-4 " do %>
                     <%= image_tag 'party-settings-icon.svg', class: 'w-8 h-8' %>
                 <% end %>
             </div>
-            <div class="flex flex-col gap-2 p-2 rounded-2xl overflow-y-auto bg-spotify-gray-clear w-full h-full custom-scrollbar">
-                <%= turbo_stream_from "party_#{@party.code}_songs" %>
-                <h2 class="text-2xl font-bold">Song Queue</h2>
-                <ul id="party_songs_list" class="flex flex-col w-full h-full p-3 gap-4 overflow-y-auto rounded-2xl bg-spotify-gray-dark custom-scrollbar">
-                  <%= render partial: "party_songs/party_song", collection: @songs, as: :song%>
-                </ul>    
-            </div>
+            <%= render partial: "parties/song_queue", locals: { songs: @songs} %>
         </div>
         <div class="relative flex flex-col p-2 rounded-2xl bg-spotify-gray-clear w-full h-1/4 lg:w-1/4 lg:h-full z-10 ">
           <div data-search-url="<%= party_data_search_path(code: @party.code)%>" data-controller="search" class="relative">
