@@ -11,4 +11,9 @@ class Party < ApplicationRecord
 
   validates :name, presence: true, uniqueness: { scope: :user_id }, length: { in: 1..15 }
   validates :code, presence: true, uniqueness: true, length: { is: 6 }
+
+  
+  def currently_playing_song
+    party_songs.where(is_playing: true).first.song
+  end
 end

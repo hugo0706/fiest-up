@@ -31,7 +31,7 @@ class PartySong < ApplicationRecord
     broadcast_append_later_to "party_#{party.code}_songs", target: "party_songs_list", locals: { song: song }
 
     if party.songs.count > 1 && !party.started?
-      broadcast_replace_later_to "party_#{party.code}_songs", target: "currently_playing", partial: "party_songs/start_button", locals: { party: party }
+      UpdateCurrentlyPlayingService.new(party: party).call
     end
   end
 end

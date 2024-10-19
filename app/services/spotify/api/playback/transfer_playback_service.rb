@@ -4,6 +4,8 @@ module Spotify
   module Api
     module Playback
       class TransferPlaybackService < Base
+        include RetriableRequest
+
         attr_accessor :device_id
 
         def initialize(access_token, device_id)
@@ -12,7 +14,9 @@ module Spotify
         end
 
         def call
-          response = conn.put("me/player", transfer_playback_body)
+          response = with_retries(on: [ 404, 500 ], times: 3) do
+            conn.put("me/player", transfer_playback_body)
+          end
 
           case response.status
           when 200
@@ -32,7 +36,7 @@ module Spotify
 
         def transfer_playback_body
           {
-            device_ids: [device_id],
+            device_ids: [ device_id ],
             play: true
           }.to_json
         end

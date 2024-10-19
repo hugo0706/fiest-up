@@ -68,12 +68,13 @@ class PartiesController < ApplicationController
   def start
     party_owner = User.find(party.user_id)
     Spotify::Api::Playback::TransferPlaybackService.new(party_owner.access_token, party.device_id).call
-    
+    party.update(started: true)
+
     if party.party_songs.where(is_playing: true).present?
       Spotify::Api::Playback::StartService.new(party_owner.access_token, party.device_id).call
     else
       party_song_to_play = party.party_songs.where(next_song: true).first
-                                            
+
       PlaySongAndEnqueueNextService.new(party_song: party_song_to_play, party: party).call
     end
   end

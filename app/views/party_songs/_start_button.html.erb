@@ -1,3 +1,5 @@
-<button data-action="click->party#start" data-start-url="<%= start_party_path(code: party.code)%>" id="start_button" class="text-center font-bold text-lg lg:text-2xl bg-spotify-green hover:bg-green-700 w-2/6 py-4 rounded-md">
-    "Start the party!"
-</button>
+<div id="currently_playing" class="flex h-full w-full items-center justify-center">
+    <button data-action="click->party#start" data-start-url="<%= start_party_path(code: party.code)%>"class="text-center font-bold text-lg lg:text-2xl bg-spotify-green hover:bg-green-700 w-2/6 py-4 rounded-md">
+        Start the party!
+    </button>
+</div>

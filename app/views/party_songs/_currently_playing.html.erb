@@ -1,0 +1,17 @@
+<div id="currently_playing" class="relative flex h-full items-center justify-between">
+    <div class="flex items-center gap-2  min-w-0">
+        <img src="<%= song.image %>" class="w-14 h-14">
+        <div class="overflow-hidden text-ellipsis whitespace-nowrap">
+            <p class="font-semibold text-md truncate"><%= song.name %></p>
+            <p class="font-semibold text-gray-500 text-sm truncate"><%= song.artists.join(',') %></p>
+        </div>
+    </div>
+    <div class="flex absolute left-2/3 w-32 transform -translate-x-full bg-black h-full items-center">
+        <%= image_tag 'play-button-icon.svg', class: 'w-9 h-9' %> 
+        <p class="animate-pulse font-bold">Playing</p>
+    </div>
+    
+    <div class="flex items-center bg-gray-200 text-black font-extrabold p-2 h-3/5 rounded-xl hover:bg-spotify-gray-clear hover:border-spotify-green hover:text-spotify-green">
+        Vote to skip
+    </div>
+</div>
