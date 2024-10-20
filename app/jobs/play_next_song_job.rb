@@ -4,11 +4,11 @@ class PlayNextSongJob < ApplicationJob
   def perform(current_party_song:)
     @party = current_party_song.party
     current_party_song.update(is_playing: false)
-    if next_party_song.present?
+    if next_party_song.present? && !@party.stopped?
       next_party_song.update(next_song: true)
       PlaySongAndEnqueueNextService.new(party_song: next_party_song, party: @party).call
     else
-      @party.update(started: false)
+      @party.update(started: false) unless @party.stopped?
     end
   rescue => e
     report_error(e)

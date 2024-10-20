@@ -16,6 +16,10 @@ class ErrorReporter
         Context: #{context}
         Source: #{source || 'Unknown'}
         Cause: [#{error.cause.class}] #{error.cause}
+        Request: {
+          status: #{error&.respond_to?(:status) ? error&.status : 'N/A'},
+          body: #{error&.respond_to?(:body) ? error&.body : 'N/A'}
+        }
         Backtrace:
           | #{error.backtrace&.take(8)&.join("\n\t| ") || '| No backtrace available'}
     MESSAGE

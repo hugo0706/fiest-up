@@ -62,21 +62,25 @@ class PartiesController < ApplicationController
   end
 
   def show
-    @songs = @party.non_played_songs
+    @party_songs = @party.party_songs.includes(:song).where(played: false).load
   end
 
   def start
     party_owner = User.find(party.user_id)
     Spotify::Api::Playback::TransferPlaybackService.new(party_owner.access_token, party.device_id).call
-    party.update(started: true)
 
-    if party.party_songs.where(is_playing: true).present?
+    if party.party_songs.where(is_playing: true).present? && party.stopped? # When user has stopped on his device
       Spotify::Api::Playback::StartService.new(party_owner.access_token, party.device_id).call
+      party.update(stopped: false)
+      UpdateCurrentlyPlayingService.new(party: party).call
     else
       party_song_to_play = party.party_songs.where(next_song: true).first
 
       PlaySongAndEnqueueNextService.new(party_song: party_song_to_play, party: party).call
+      PartyStatusUpdaterJob.set(wait: 15.seconds).perform_later(party: party)
     end
+    
+    party.update(started: true)
   end
 
   def settings

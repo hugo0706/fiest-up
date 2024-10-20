@@ -22,7 +22,7 @@
                     <%= image_tag 'party-settings-icon.svg', class: 'w-8 h-8' %>
                 <% end %>
             </div>
-            <%= render partial: "parties/song_queue", locals: { songs: @songs} %>
+            <%= render partial: "parties/song_queue", locals: { party_songs: @party_songs} %>
         </div>
         <div class="relative flex flex-col p-2 rounded-2xl bg-spotify-gray-clear w-full h-1/4 lg:w-1/4 lg:h-full z-10 ">
           <div data-search-url="<%= party_data_search_path(code: @party.code)%>" data-controller="search" class="relative">

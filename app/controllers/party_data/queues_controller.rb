@@ -6,17 +6,7 @@ module PartyData
     before_action :user_in_party?
 
     def add_song_to_queue
-      party_owner = User.find(@party.user_id)
-      song = Spotify::Api::TrackService.new(party_owner.access_token).call(spotify_song_id)
-      parsed_song = SearchResultsPresenter.new(song).as_json
-
-      song = Song.find_or_create_by!(spotify_song_id: parsed_song[:spotify_song_id]) do |s|
-        s.name = parsed_song[:name].strip
-        s.artists = parsed_song[:artists]
-        s.image = parsed_song[:image]
-        s.uri = parsed_song[:uri]
-        s.duration = parsed_song[:duration]
-      end
+      song = FindOrCreateSongService.new(party_owner: @party.user, spotify_song_id: spotify_song_id).call
 
       PartySong.add_song_to_queue(party_id: @party.id, song_id: song.id)
 

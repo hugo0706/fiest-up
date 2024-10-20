@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.2].define(version: 2024_10_16_210150) do
+ActiveRecord::Schema[7.2].define(version: 2024_10_19_172732) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -22,6 +22,8 @@ ActiveRecord::Schema[7.2].define(version: 2024_10_16_210150) do
     t.datetime "updated_at", null: false
     t.string "device_id"
     t.boolean "started", default: false, null: false
+    t.integer "next_song_job_id"
+    t.boolean "stopped", default: false, null: false
     t.index ["code"], name: "index_parties_on_code", unique: true
     t.index ["user_id", "name"], name: "index_parties_on_user_id_and_name", unique: true
     t.index ["user_id"], name: "index_parties_on_user_id"

@@ -12,19 +12,18 @@ class Party < ApplicationRecord
   validates :name, presence: true, uniqueness: { scope: :user_id }, length: { in: 1..15 }
   validates :code, presence: true, uniqueness: true, length: { is: 6 }
 
-  
   def currently_playing_song
     party_songs.where(is_playing: true).first.song
   end
-  
+
   def non_played_songs
-    songs.joins(:party_songs).where(party_songs: { played: false })
+    songs.where(party_songs: { played: false })
   end
-  
+
   def has_pending_songs?
     non_played_songs.count > 0
   end
-  
+
   def queue_count
     non_played_songs.count
   end

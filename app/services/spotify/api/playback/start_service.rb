@@ -4,6 +4,8 @@ module Spotify
   module Api
     module Playback
       class StartService < Base
+        include RetriableRequest
+
         attr_accessor :device_id, :uri
 
         def initialize(access_token, device_id, uri = nil)
@@ -13,7 +15,9 @@ module Spotify
         end
 
         def call
-          response = conn.put("me/player/play", start_body)
+          response = with_retries(on: [ 404, 500 ], times: 3) do
+            conn.put("me/player/play", start_body)
+          end
 
           case response.status
           when 200
@@ -35,7 +39,7 @@ module Spotify
           body = {
             device_id: device_id
           }
-          body.merge!({ uris: [uri] }) if uri
+          body.merge!({ uris: [ uri ] }) if uri
           body.to_json
         end
       end
