@@ -68,6 +68,7 @@ class PartiesController < ApplicationController
   def start
     party_owner = User.find(party.user_id)
     Spotify::Api::Playback::TransferPlaybackService.new(party_owner.access_token, party.device_id).call
+    sleep(0.1)
 
     if party.party_songs.where(is_playing: true).present? && party.stopped? # When user has stopped on his device
       Spotify::Api::Playback::StartService.new(party_owner.access_token, party.device_id).call

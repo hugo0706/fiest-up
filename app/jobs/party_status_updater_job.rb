@@ -9,7 +9,7 @@ class PartyStatusUpdaterJob < ApplicationJob
         handle_unexpected_user_action
       end
     else
-      if status["is_playing"]        
+      if status["is_playing"]
         handle_unexpected_user_action
       else
         @party.update(stopped: true) if status.present?
@@ -29,8 +29,8 @@ class PartyStatusUpdaterJob < ApplicationJob
     if song_changed_by_user?
       song = FindOrCreateSongService.new(party_owner: @party.user, spotify_song_id: status["item"]["id"]).call
       current_party_song.update(is_playing: false)
-      user_song = PartySong.create(party: @party, song: song, is_playing: true, played: true, position: party.songs.count + 1)
-      reenqueue_job_with_song(user_song)
+      user_song = PartySong.create(party: @party, song: song, is_playing: true, played: true, position: @party.songs.count + 1)
+      reenqueue_job_with_song(user_song, pending_song_time)
     elsif time_gap > 3
       reenqueue_job_with_song(current_party_song, pending_song_time)
     end
@@ -44,9 +44,9 @@ class PartyStatusUpdaterJob < ApplicationJob
     [pending_song_time, time_gap]
   end
   
-  def reenqueue_job_with_song(song, wait)
+  def reenqueue_job_with_song(party_song, wait)
     next_song_job.destroy
-    job = PlayNextSongJob.set(wait: wait - next_song_margin ).perform_later(current_party_song: song)
+    job = PlayNextSongJob.set(wait: wait - next_song_margin ).perform_later(current_party_song: party_song)
     @party.update(next_song_job_id: job.provider_job_id)
   end
   
