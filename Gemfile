@@ -80,3 +80,5 @@ gem "faraday", "~> 2.12"
 gem "solid_queue", "~> 1.0"
 
 gem "mission_control-jobs"
+
+gem "kamal", "~> 2.2"
