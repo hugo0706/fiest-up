@@ -70,10 +70,11 @@ Rails.application.configure do
   config.log_level = ENV.fetch("RAILS_LOG_LEVEL", "info")
 
   # Use a different cache store in production.
-  config.cache_store = :redis_cache_store, {
-    url: ENV["REDIS_URL"],
-    password: ENV["REDIS_PASSWORD"]
-  }
+  if ENV['REDIS_URL'].present?
+    config.cache_store = :redis_cache_store, { url: ENV.fetch('REDIS_URL') }
+  else
+    config.cache_store = :null_store  # Fallback during asset precompilation
+  end
 
   # Use a real queuing backend for Active Job (and separate queues per environment).
   config.active_job.queue_adapter = :solid_queue

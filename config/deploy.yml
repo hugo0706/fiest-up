@@ -1,20 +1,41 @@
 # Name of your application. Used to uniquely configure containers.
-service: spoty-fest
+service: spoty_fest
 
 # Name of the container image.
-image: hugo0706/spoty-fest
+image: hugo0706/spoty_fest
 
 # Deploy to these servers.
 servers:
-  - #pending
+  web:
+    hosts:
+      - 167.71.8.170
+    labels:
+      traefik.http.routers.example_app_secure.entrypoints: websecure
+      traefik.http.routers.example_app_secure.rule: Host(`spotyfest.com`)
+      traefik.http.routers.example_app_secure.tls: true
+    options:
+          network: "private"
+  jobs:
+    hosts:
+      - 167.71.8.170
+    cmd: bin/jobs
+    options:
+         network: "private"
+volumes:
+  - "spoty_fest_data:/data"
 
+traefik:
+  options:
+    publish:
+      - "443:443"
+    network: "private"
+  args:
+    entryPoints.websecure.address: ":443"
+  
+      
 # Credentials for your image host.
 registry:
-  # Specify the registry server, if you're not using Docker Hub
-  # server: registry.digitalocean.com / ghcr.io / ...
   username: hugo0706
-
-  # Always use an access token rather than real password when possible.
   password:
     - KAMAL_REGISTRY_PASSWORD
 
@@ -22,11 +43,20 @@ registry:
 # Remember to run `kamal env push` after making changes!
 env:
   clear:
-    DB_HOST: #pending
+    POSTGRES_HOST: spoty_fest-db
+    POSTGRES_USER: postgres
+    REDIS_URL: "redis://spoty_fest-redis:6379/0"
   secret:
     - RAILS_MASTER_KEY
     - POSTGRES_PASSWORD
-    
+    - REDIS_URL
+    - SPOTIFY_CLIENT_ID
+    - SPOTIFY_CLIENT_SECRET
+    - SPOTIFY_REDIRECT_URI
+    - RAILS_ACTIVE_RECORD_ENCRYPTION_PRIMARY_KEY
+    - RAILS_ACTIVE_RECORD_ENCRYPTION_DETERMINISTIC_KEY
+    - RAILS_ACTIVE_RECORD_ENCRYPTION_KEY_DERIVATION_SALT
+
 # Use a different ssh user than root
 # ssh:
 #   user: app
@@ -44,25 +74,24 @@ env:
 # Use accessory services (secrets come from .env).
 accessories:
   db:
-    image: postgres:15
-    host: #pending
-    port: 5432
+    image: postgres:16.1
+    host: 167.71.8.170
     env:
       clear:
-        POSTGRES_HOST_AUTH_METHOD: 'trust'
+        POSTGRES_USER: postgres
       secret:
         - POSTGRES_PASSWORD
-    files:
-      #- config/postgres/production.conf:/etc/postgresql/postgresql.conf
-      - db/production.sql:/docker-entrypoint-initdb.d/setup.sql
     directories:
-      - data:/var/lib/postgresql/data
+      - postgres_data:/var/lib/postgresql/data
+    options:
+          network: "private"
   redis:
     image: redis:7.0
-    host: 192.168.0.2
-    port: 6379
+    host: 167.71.8.170
     directories:
-      - data:/data
+      - redis_data:/var/lib/redis/data
+    options:
+          network: "private"
 
 # Configure custom arguments for Traefik. Be sure to reboot traefik when you modify it.
 # traefik:
