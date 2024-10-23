@@ -18,14 +18,17 @@
     <%= javascript_importmap_tags %>
   </head>
 
-  <body class="min-h-screen flex flex-col justify-between">
-    <%= render 'layouts/flash_messages' %>
+  <body class="relative min-h-screen bg-black flex flex-col">
+    <div class="absolute inset-0 bg-gradient-to-b from-spotify-green via-black to-black opacity-10"></div>
+    <div class="relative flex flex-col flex-grow">
+        <%= render 'layouts/flash_messages' %>
 
-    <main class="animate-party text-gray-200 flex flex-col flex-grow items-center justify-center gap-20">
-      <%= yield %>
-    </main>
+        <main class="flex-grow flex items-center justify-center">
+            <%= yield %>
+        </main>
+    </div>
 
-    <footer class="bg-spotify-gray-dark py-4">
+    <footer class="fixed bottom-0 w-full bg-spotify-gray-dark py-4">
         <div class="text-center text-gray-200">
             <p>&copy; 2024 Spotifest. All rights reserved.</p>
         </div>

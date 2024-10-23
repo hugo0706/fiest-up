@@ -1,6 +1,5 @@
-<div data-controller="join-party" class="flex flex-col justify-center items-center bg-spotify-gray-dark rounded-2xl w-80 h-60 gap-3">
-    <h1 class="font-semibold text-2xl text-center">Join a party!</h1>
-    <input maxlength="6" minlength="6" placeholder="Code" data-join-party-target="code" class="bg-black text-gray-200 text-center text-3xl max-w-48 border border-gray-400 hover:border-black focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent font-bold py-3 px-5 rounded">
+<div data-controller="join-party" class="flex flex-col justify-center bg-spotify-gray-dark items-center rounded-lg w-80 p-4 gap-3">
+    <input maxlength="6" minlength="6" placeholder="Code" data-join-party-target="code" class="bg-black text-gray-200 text-center text-3xl w-full border border-gray-400 hover:border-black focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent font-bold py-3 px-5 rounded">
     <p data-join-party-target="codeError" class="hidden text-xs font font-semibold text-red-500"></p>
-    <button data-action="click->join-party#join" class="py-2 px-5 rounded font-semibold text-xl text-center bg-spotify-green hover:bg-green-700">Join</button>
+    <button data-action="click->join-party#join" class="py-2 w-full rounded font-extrabold text-xl text-center bg-spotify-green hover:bg-green-700">Join party</button>
 </div>

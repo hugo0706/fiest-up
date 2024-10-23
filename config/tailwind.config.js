@@ -1,6 +1,7 @@
 const defaultTheme = require("tailwindcss/defaultTheme");
 
 module.exports = {
+  mode: "jit",
   content: [
     "./public/*.html",
     "./app/helpers/**/*.rb",
@@ -16,38 +17,23 @@ module.exports = {
         "spotify-gray-dark": "#121212",
         "spotify-gray-secondary": "#212121",
         "spotify-gray-clear": "#191919",
-        "spotify-gray-highlight": '#535353',
+        "spotify-gray-highlight": "#535353",
         "spotify-separator": "#b3b3b3",
         "spotify-green": "#1DB954",
       },
       animation: {
-        party: "backlightEffect 8s linear infinite",
+        tilt: "tilt 7s linear infinite",
       },
       keyframes: {
-        backlightEffect: {
-          "0%": {
-            background:
-              "radial-gradient(circle, rgba(255, 0, 0, 0.2) 0%, transparent 38%), #000000",
+        tilt: {
+          "0%, 50%, 100%": {
+            transform: "rotate(0deg)",
           },
           "25%": {
-            background:
-              "radial-gradient(circle, rgba(0, 255, 0, 0.2) 0%, transparent 38%), #000000",
-          },
-          "50%": {
-            background:
-              "radial-gradient(circle, rgba(0, 0, 255, 0.2) 0%, transparent 38%), #000000",
+            transform: "rotate(1.5deg)",
           },
           "75%": {
-            background:
-              "radial-gradient(circle, rgba(255, 0, 255, 0.2) 0%, transparent 38%), #000000",
-          },
-          "85%": {
-            background:
-              "radial-gradient(circle, rgba(150, 150, 150, 0.2) 0%, transparent 38%), #000000",
-          },
-          "100%": {
-            background:
-              "radial-gradient(circle, rgba(255, 0, 0, 0.2) 0%, transparent 38%), #000000",
+            transform: "rotate(-1.5deg)",
           },
         },
       },

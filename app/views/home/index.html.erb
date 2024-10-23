@@ -1,10 +1,5 @@
-<div class="flex flex-col justify-top h-full items-center gap-4">
-    <div class="flex flex-wrap justify-center items-center gap-6 w-full h-full p-4 rounded-2xl bg-spotify-gray-clear">
-    <%= render 'shared/join_party' %>
-    <% if !!logged_with_spotify? %>
-        <%= render 'shared/create_party' %>
-    <% else %>
-        <%= render 'shared/login_with_spotify' %>
-    <% end %>
+<div class="flex flex-col justify-center h-full rounded-xl bg-black items-center gap-4">
+    <div class="flex flex-col justify-center gap-4 items-center">
+        <%= render 'shared/user_actions' %>
     </div>
 </div>

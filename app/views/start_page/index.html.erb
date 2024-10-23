@@ -1,20 +1,9 @@
-<div class="flex flex-col gap-5 justify-center items-center">
-    <h1 class="text-8xl font-bold text-gray-200"> SPOTIFEST </h1>
-    <h2 class="text-xl font-bold text-gray-200"> Organise a party anywhere </h2>
-</div> 
-<div class="flex flex-wrap justify-center items-center gap-6 ">
-    <div data-controller="join-party" class="flex flex-col justify-center items-center bg-spotify-gray-dark rounded-2xl w-80 h-60 gap-3">
-        <h1 class="font-semibold text-2xl text-center">Join a party!</h1>
-        <input maxlength="6" minlength="6" placeholder="Code" data-join-party-target="code" class="bg-black text-gray-200 text-center text-3xl max-w-48 border border-gray-400 hover:border-black focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent font-bold py-3 px-5 rounded">
-        <p data-join-party-target="codeError" class="hidden text-xs font font-semibold text-red-500"></p>
-        <button data-action="click->join-party#join" class="py-2 px-5 rounded font-semibold text-xl text-center bg-spotify-green hover:bg-green-700">Join</button>
+<div class="text-gray-200 flex flex-col items-center justify-center gap-20">
+    <div class="flex flex-col gap-5 justify-center items-center">
+        <span class="text-6xl font-extrabold text-gray-300">SPOTYFEST</span>
     </div>
-    <div class="flex flex-col justify-center items-center bg-spotify-gray-dark rounded-2xl w-80 h-60 gap-3">
-        <h1 class="font-semibold text-2xl text-center">Or create one!</h1>
-        <%= link_to oauth_login_path, class: 'flex bg-black text-gray-200 border border-gray-400 hover:border-black font-semibold py-3 px-5 rounded' do %>
-          <%= image_tag 'spotify-icon.svg', class: 'w-6 h-6 mr-2' %>
-          Login with Spotify
-        <% end %>
+    <div class="flex flex-col justify-center gap-4 items-center">
+        <%= render 'shared/user_actions' %>
     </div>
+    <h2 class="text-base font-semibold underline text-gray-200"> How it works? </h2>
 </div>
-<h2 class="text-base font-semibold underline text-gray-200"> How it works? </h2>
