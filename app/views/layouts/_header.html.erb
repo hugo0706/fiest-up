@@ -1,0 +1,21 @@
+<div data-controller="navbar" data-action="resize@window->navbar#closeOnBigScreen keydown.esc@window->navbar#close" class="sticky top-0 z-10 bg-black">
+    <nav class="flex justify-between items-center h-20 p-4 ">
+        <div class="p-4 flex items-center gap-2">
+            <%= image_tag 'spotify-icon.svg', class: 'w-8 h-8' %>
+            <p class="text-xl font-bold">SPOTIFEST</p>
+        </div>
+        <div class="flex gap-2">
+            <div class="p-4">
+                <p class="text-xl font-bold">User</p>
+            </div>
+            <div role="button" data-navbar-target="dropdownButton" data-action="click->navbar#toggle" class="md:hidden p-4">
+                <p class="text-xl font-bold">Dropdown</p>
+            </div>
+        </div>
+    </nav>
+    <nav data-navbar-target="content" class="absolute hidden w-full h-80 overflow-y-auto custom-scrollbar bg-spotify-gray-clear">
+        <% (1..100).each do |i| %>
+        <p> <%= i %> </p>
+        <% end %>
+    </nav>
+</div>

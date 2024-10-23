@@ -1,9 +1,16 @@
-<div data-controller="select-device" data-device-set-url="<%= party_data_set_party_device_path(code: @party.code)%>"  data-device-fetch-url="<%= party_data_party_device_list_path(code: @party.code)%>" class="flex flex-col h-full justify-center gap-4">
-    <div class="flex flex-col gap-2 items-center justify-center">
-        <h2 class="font-semibold text-3xl lg:text-5xl">Select a device to play the music</h2>
-        <p class="font-semibold text-sm lg:text-xl">Open Spotify app and your device should appear here soon :)</p>
+<div data-controller="select-device" data-device-set-url="<%= party_data_set_party_device_path(code: @party.code)%>"  data-device-fetch-url="<%= party_data_party_device_list_path(code: @party.code)%>" class="flex flex-col h-full justify-between items-center">
+    <div class="flex flex-col flex-grow justify-between my-2 items-center">
+        <div class="flex flex-col items-center justify-center">
+            <h1 class="text-4xl font-bold whitespace-normal break-words">Select a device</h1>
+            <p class="text-lg text-gray-400  text-center">
+                To reproduce the music
+            </p>
+        </div>
+        <p class="text-md text-gray-600 text-left whitespace-normal break-words">
+            🔎 <span class="text-gray-500 font-semibold">Dont see your device?</span> Open the Spotify app and your device should appear soon
+        </p>
     </div>
-    <div data-select-device-target="devicesGrid" class="h-full">
+    <div data-select-device-target="devicesGrid" class="h-3/4 md:h-full">
         <%= render partial: 'parties/device_list', locals: { devices: @devices } %>
     </div>
     <p data-select-device-target="setDeviceButton"
