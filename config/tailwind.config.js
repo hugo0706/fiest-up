@@ -20,6 +20,7 @@ module.exports = {
         "spotify-gray-highlight": "#535353",
         "spotify-separator": "#b3b3b3",
         "spotify-green": "#1DB954",
+        "spotify-green-complement": "#008f84",
       },
       animation: {
         tilt: "tilt 7s linear infinite",
