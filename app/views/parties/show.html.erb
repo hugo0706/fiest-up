@@ -1,43 +1,25 @@
+<%= turbo_stream_from "party_#{@party.code}_songs" %>
 <div class="flex flex-col h-full gap-2">
-    <div class="flex flex-wrap-reverse gap-2 h-[calc(100%-96px)] lg:flex-nowrap">
-        <div class="flex flex-col w-full gap-2 h-3/4 lg:w-3/4 lg:h-full">
-            <%= turbo_stream_from "party_#{@party.code}_songs" %>
-            <div class="flex items-center rounded-2xl justify-between p-2 bg-spotify-gray-clear w-full h-24">
-                <h1 class="text-2xl font-bold mx-4"><%= @party.name.capitalize %> </h1>
-                <div data-controller="invite">
-                  <div class="flex flex-col lg:flex-row items-center invite-container">
-                    <div class="w-full max-w-[16rem]">
-                        <div data-controller="party" class="relative">
-                            <input data-party-target="input" class="col-span-6 bg-spotify-gray-clear border border-spotify-gray-highlight text-gray-300 font-semibold text-xl rounded-lg block w-full px-2.5 py-3" value="<%= join_party_url(code: @party.code)%>" disabled readonly>
-                            <button data-party-target="copyButton" data-action="click->party#copy" class="absolute bg-spotify-gray-clear end-2.5 top-1/2 -translate-y-1/2 text-gray-300 hover:bg-spotify-gray-highlight rounded-lg py-2 px-2.5 inline-flex items-center justify-center border-spotify-gray-highlight border">
-                                 <%= image_tag 'copy-icon.svg', class: 'w-5 h-5' %>
-                                <span data-party-target="copyButtonText" class="text-xs font-semibold">Copy Invite</span>
-                            </button>
-                        </div>
-                    </div>
-                    <span data-invite-target="feedback" class="feedback-msg"></span>
-                  </div>
-                </div>
-                <%= link_to party_settings_path(code: @party.code ), class: "font-semibold text-lg mx-4 " do %>
-                    <%= image_tag 'party-settings-icon.svg', class: 'w-8 h-8' %>
-                <% end %>
-            </div>
-            <%= render partial: "parties/song_queue", locals: { party_songs: @party_songs} %>
-        </div>
-        <div class="relative flex flex-col p-2 rounded-2xl bg-spotify-gray-clear w-full h-1/4 lg:w-1/4 lg:h-full z-10 ">
-          <div data-search-url="<%= party_data_search_path(code: @party.code)%>" data-controller="search" class="relative">
+    <div class="flex flex-col gap-2 h-[calc(100%-80px)] md:h-[calc(100%-96px)] overflow-hidden">
+        <!-- First child div -->
+        <div class="relative flex flex-col px-2 py-1 rounded-2xl bg-spotify-gray-clear w-full h-fit z-10">
+            <div data-search-url="<%= party_data_search_path(code: @party.code)%>" data-controller="search" class="relative">
                 <div class="flex justify-center h-14 bg-spotify-gray-clear items-center">
-                    <input data-search-target="searchInput" data-action="click->search#open input->search#checkInput" class="bg-spotify-gray-dark rounded-3xl w-full focus:outline-none focus:border-spotify-green focus:ring-spotify-green" placeholder="Search a song"> </input>
+                    <input data-search-target="searchInput" data-action="click->search#open input->search#checkInput" class="bg-spotify-gray-dark rounded-3xl w-full focus:outline-none focus:border-spotify-green focus:ring-spotify-green" placeholder="Search a song">
+                    </input>
                 </div>
                 <div data-search-target="searchResults" class="hidden flex flex-col absolute top-14 w-full opacity-90 rounded-xl p-2 overflow-y-auto h-72 bg-black custom-scrollbar">
                 </div>
-            </div>   
-            <div class="h-full p-2 rounded-2xl  bg-spotify-gray-dark">
-                Song recomendations/party stats/whatever
             </div>
         </div>
+        
+        <!-- Second child div with flex-grow -->
+        <div class="flex flex-col w-full gap-2 flex-grow overflow-y-auto">
+            <%= render partial: "parties/party_banner", locals: { party: @party} %>
+            <%= render partial: "parties/song_queue", locals: { party_songs: @party_songs} %>
+        </div>
     </div>
-    <div data-controller="party" class="p-2 bg-black rounded-2xl w-full h-24">
+    <div data-controller="party" class="p-2 bg-black rounded-2xl w-full md:h-24 h-20">
       <%= render partial: "parties/currently_playing", locals: { party: @party} %>
     </div>
 </div>

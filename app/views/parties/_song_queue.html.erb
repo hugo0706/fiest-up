@@ -1,5 +1,5 @@
 <div class="flex flex-col gap-2 p-2 rounded-2xl overflow-y-auto bg-spotify-gray-clear w-full h-full custom-scrollbar">
-    <h2 class="text-2xl font-bold">Song Queue</h2>
+    <h2 class="ml-2 mt-1 text-xl md:text-2xl font-bold">Next songs</h2>
     <ul id="party_songs_list" class="flex flex-col w-full h-full p-3 gap-4 overflow-y-auto rounded-2xl bg-spotify-gray-dark custom-scrollbar">
         <% party_songs.each_with_index do |party_song| %>
           <%= render partial: "party_songs/party_song", locals: { song: party_song.song, party_song_id: party_song.id } %>
