@@ -1,16 +1,12 @@
 <div class="flex items-center rounded-2xl justify-between p-2 bg-spotify-gray-clear w-full h-24">
-    <h1 class="text-2xl font-bold mx-4"><%= party.name.capitalize %> </h1>
+    <h1 class="text-2xl font-bold mx-4 truncate max-w-40"><%= party.name.capitalize %> </h1>
     <div data-controller="invite">
       <div class="flex flex-col lg:flex-row items-center invite-container">
-        <div class="w-full max-w-[16rem]">
-            <div data-controller="party" class="relative">
-                <input data-party-target="input" class="col-span-6 bg-spotify-gray-clear border border-spotify-gray-highlight text-gray-300 font-semibold text-xl rounded-lg block w-full px-2.5 py-3" value="<%= join_party_url(code: @party.code)%>" disabled readonly>
-                <button data-party-target="copyButton" data-action="click->party#copy" class="absolute bg-spotify-gray-clear end-2.5 top-1/2 -translate-y-1/2 text-gray-300 hover:bg-spotify-gray-highlight rounded-lg py-2 px-2.5 inline-flex items-center justify-center border-spotify-gray-highlight border">
-                     <%= image_tag 'copy-icon.svg', class: 'w-5 h-5' %>
-                    <span data-party-target="copyButtonText" class="text-xs font-semibold">Copy Invite</span>
-                </button>
-            </div>
-        </div>
+        <button data-controller="party" data-party-target="copyButton" data-action="click->party#copy" data-invite-url="<%= join_party_url(code: @party.code)%>" 
+            class="bg-spotify-gray-clear text-gray-300 hover:bg-spotify-gray-highlight rounded-lg py-2 px-2.5 gap-1 inline-flex items-center justify-center border-spotify-gray-highlight border">
+                <%= image_tag 'share-icon.svg', class: 'w-5 h-5' %>
+            <span data-party-target="copyButtonText" class="text-xs font-semibold">Invite</span>
+        </button>
         <span data-invite-target="feedback" class="feedback-msg"></span>
       </div>
     </div>

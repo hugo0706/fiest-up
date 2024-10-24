@@ -3,18 +3,19 @@ import { Controller } from "@hotwired/stimulus";
 export default class extends Controller {
    static targets = ["input","copyButton","copyButtonText", "startButton"]
 
-  copy() {
-    const inputValue = this.inputTarget.value;
+  copy(event) {
+    const button = event.currentTarget;
+    const inviteUrl = button.getAttribute('data-invite-url');
 
-    navigator.clipboard.writeText(inputValue)
+    navigator.clipboard.writeText(inviteUrl)
     .then(() => {
       this.copyButtonTarget.classList.remove('border', 'hover:bg-spotify-gray-highlight', 'bg-spotify-gray-clear')
-      this.copyButtonTarget.classList.add('bg-spotify-green')
+      this.copyButtonTarget.classList.add('bg-spotify-green', 'font-bold')
       this.copyButtonTextTarget.innerHTML="Copied!"
       setTimeout(() => {
-        this.copyButtonTextTarget.innerHTML="Copy Invite"
+        this.copyButtonTextTarget.innerHTML="Invite"
         this.copyButtonTarget.classList.remove('bg-spotify-green')
-        this.copyButtonTarget.classList.add('bg-spotify-gray-clear', 'hover:bg-spotify-gray-highlight', 'border')
+        this.copyButtonTarget.classList.add('bg-spotify-gray-clear', 'border')
       }, 6000);
     })
     .catch(err => {
