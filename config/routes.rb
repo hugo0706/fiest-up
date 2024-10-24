@@ -42,6 +42,10 @@ Rails.application.routes.draw do
     get "/list", to: "parties#index", as: "party_list"
     get "/:code", to: "parties#show", as: "show_party"
   end
+  
+  scope '/accounts' do
+    get '', to: "accounts#index", as: "account_settings"
+  end
 
   resources :temporal_sessions, only: [ :create, :destroy ]
 
