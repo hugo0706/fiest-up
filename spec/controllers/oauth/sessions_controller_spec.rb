@@ -54,11 +54,15 @@ RSpec.describe Oauth::SessionsController, type: :controller do
 
       context 'when there is no error field in parameters' do
         let(:user) { create(:user) }
-
+        let(:user_session) { create(:session, user: user) }
+      
         before do
           expect(UserFetcherService).to receive(:new).with(code).and_call_original
           expect_any_instance_of(UserFetcherService).to receive(:call)
             .and_return(user)
+          expect(SessionCreatorService).to receive(:new).with(user).and_call_original
+          expect_any_instance_of(SessionCreatorService).to receive(:call)
+            .and_return(user_session.session_token)
           session[:oauth_state] = state
         end
 
@@ -66,8 +70,8 @@ RSpec.describe Oauth::SessionsController, type: :controller do
           it "calls UserFetcherService with the code parameter, " \
             "stores the user session and redirects to home" do
             get :callback, params: params
-
-            expect(session[:user_id]).to eq(user.id)
+            
+            expect(session[:session_token]).to eq(user_session.session_token)
             expect(flash[:notice]).to eq('Logged in!')
             expect(response).to redirect_to(home_path)
           end
@@ -80,7 +84,7 @@ RSpec.describe Oauth::SessionsController, type: :controller do
              "stores the user session and redirects to the join party path" do
             get :callback, params: params
 
-            expect(session[:user_id]).to eq(user.id)
+            expect(session[:session_token]).to eq(user_session.session_token)
             expect(flash[:notice]).to eq('Joining party with your Spotify account!')
             expect(response).to redirect_to(join_party_path(code: code))
           end

@@ -63,7 +63,8 @@ RSpec.describe PartyData::SearchController, type: :controller do
       before do
         allow_any_instance_of(Spotify::Api::SearchService).to receive(:call).and_return(search_results)
         party.users << user
-        session[:user_id] = user.id
+        user_session = create(:session, user: user)
+        session[:session_token] = user_session.session_token
       end
 
       it 'returns the parsed Spotify search results' do

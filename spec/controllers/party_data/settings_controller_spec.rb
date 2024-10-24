@@ -15,7 +15,10 @@ RSpec.describe PartyData::SettingsController, type: :controller do
       }
     end
 
-    before { session[:user_id] = user.id }
+    before do 
+      user_session = create(:session, user: user)
+      session[:session_token] = user_session.session_token
+    end
 
     it 'returns ok and redirects to the party' do
       post :party_device, params: params

@@ -16,11 +16,18 @@ class ApplicationController < ActionController::Base
 
   private
 
+  def current_session
+    @current_session ||= Session.find_by(session_token: session[:session_token]) if session[:session_token]
+  end
+
   def current_user
-    @current_user ||= User.find_by(id: session[:user_id]) if session[:user_id]
+    @current_user ||= current_session.user if current_session.present? && !current_session.expired?
   end
 
   def authorize
-    redirect_to start_path unless current_user
+    unless current_user
+      flash[:error] = 'You need to log in with Spotify'
+      redirect_to start_path 
+    end
   end
 end

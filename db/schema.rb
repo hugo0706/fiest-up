@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.2].define(version: 2024_10_19_172732) do
+ActiveRecord::Schema[7.2].define(version: 2024_10_24_161848) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -54,6 +54,21 @@ ActiveRecord::Schema[7.2].define(version: 2024_10_19_172732) do
     t.index ["user_type", "user_id"], name: "index_party_users_on_user"
   end
 
+  create_table "sessions", force: :cascade do |t|
+    t.bigint "user_id", null: false
+    t.string "session_token", null: false
+    t.text "data"
+    t.datetime "expires_at", null: false
+    t.string "ip_address"
+    t.string "user_agent"
+    t.boolean "expired", default: false
+    t.datetime "logout_at"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["session_token"], name: "index_sessions_on_session_token", unique: true
+    t.index ["user_id"], name: "index_sessions_on_user_id"
+  end
+
   create_table "songs", force: :cascade do |t|
     t.string "spotify_song_id", null: false
     t.string "name", null: false
@@ -90,4 +105,5 @@ ActiveRecord::Schema[7.2].define(version: 2024_10_19_172732) do
   add_foreign_key "party_songs", "parties"
   add_foreign_key "party_songs", "songs"
   add_foreign_key "party_users", "parties"
+  add_foreign_key "sessions", "users"
 end

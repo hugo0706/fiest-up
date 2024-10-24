@@ -14,7 +14,8 @@ module Oauth
     end
 
     def logout
-      session[:user_id] = nil
+      current_session.expire!
+      session[:session_token] = nil
       redirect_to start_path
     end
 
@@ -26,7 +27,9 @@ module Oauth
 
       user = UserFetcherService.new(code).call
 
-      session[:user_id] = user.id
+      session_token = SessionCreatorService.new(user).call
+      
+      session[:session_token] = session_token
 
       if @joining_party_code.present?
         flash[:notice] = "Joining party with your Spotify account!"

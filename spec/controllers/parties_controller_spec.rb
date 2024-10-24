@@ -15,7 +15,8 @@ RSpec.describe PartiesController, type: :controller do
       let(:user) { create(:user) }
 
       before do
-        session[:user_id] = user.id
+        user_session = create(:session, user: user)
+        session[:session_token] = user_session.session_token
       end
 
       context 'when creating a party' do
@@ -112,7 +113,10 @@ RSpec.describe PartiesController, type: :controller do
       context 'with spotify' do
         let(:user) { create(:user) }
 
-        before { session[:user_id] = user.id }
+        before do
+          user_session = create(:session, user: user)
+          session[:session_token] = user_session.session_token
+        end
 
         it 'adds the user to the party and redirects to party' do
           get :join, params: { code: code }
@@ -179,7 +183,8 @@ RSpec.describe PartiesController, type: :controller do
           let(:user) { create(:user) }
 
           before do
-            session[:user_id] = user.id
+            user_session = create(:session, user: user)
+            session[:session_token] = user_session.session_token
             party.users << user
           end
 
@@ -210,7 +215,10 @@ RSpec.describe PartiesController, type: :controller do
         context 'when it is a normal user' do
           let(:user) { create(:user) }
 
-          before { session[:user_id] = user.id }
+          before do
+            user_session = create(:session, user: user)
+            session[:session_token] = user_session.session_token
+          end
 
           it 'redirects the user to join party path with an error message' do
             get :show, params: { code: code }

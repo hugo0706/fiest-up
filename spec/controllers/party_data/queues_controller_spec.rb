@@ -61,7 +61,8 @@ RSpec.describe PartyData::QueuesController, type: :controller do
     before do
       allow_any_instance_of(Spotify::Api::TrackService).to receive(:call).and_return(search_results)
       party.users << user
-      session[:user_id] = user.id
+      user_session = create(:session, user: user)
+      session[:session_token] = user_session.session_token
     end
 
     it 'returns 204 created' do
@@ -95,7 +96,10 @@ RSpec.describe PartyData::QueuesController, type: :controller do
     context "when the user has not joined the party" do
       let(:party2) { create(:party) }
 
-      before { session[:user_id] = user.id }
+      before do
+        user_session = create(:session, user: user)
+        session[:session_token] = user_session.session_token
+      end
 
       it 'returns an json with status not_found' do
         post :add_song_to_queue, params: { code: party2.code, spotify_song_id: spotify_song_id }
