@@ -6,10 +6,11 @@ module Spotify
       class TransferPlaybackService < Base
         include RetriableRequest
 
-        attr_accessor :device_id
+        attr_accessor :device_id, :play
 
-        def initialize(access_token, device_id)
+        def initialize(access_token, device_id, play:)
           self.device_id = device_id
+          self.play = play
           super(access_token)
         end
 
@@ -37,7 +38,7 @@ module Spotify
         def transfer_playback_body
           {
             device_ids: [ device_id ],
-            play: true
+            play: play
           }.to_json
         end
       end

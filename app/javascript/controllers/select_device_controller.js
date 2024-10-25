@@ -65,7 +65,10 @@ export default class extends Controller {
       body: JSON.stringify(data)
     })
     .then(response => {
-      window.location.href = response.url;
+        return response.json();
+      })
+    .then(data => {
+      window.location.href = data.redirect_url;
     })
   }
 }

@@ -9,11 +9,11 @@ module PartyData
       @party.update!(device_id: device_id)
 
       flash[:notice] = "Party created succesfully!"
-      redirect_to show_party_path(code: @party.code)
+      render json: { redirect_url: show_party_path(code: @party.code) }, status: :ok
     rescue ActiveRecord::RecordInvalid => e
       report_error e
       flash[:error] = "There was an error creating the party"
-      redirect_to home_path
+      render json: { redirect_url: home_path }, status: :unprocessable_entity
     end
 
     def device_list

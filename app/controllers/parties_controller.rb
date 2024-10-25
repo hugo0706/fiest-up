@@ -62,26 +62,26 @@ class PartiesController < ApplicationController
   end
 
   def show
-    @party_songs = @party.party_songs.includes(:song).where(played: false).load
+    @user_is_owner = current_user == party.user
+    @party_songs = party.party_songs.includes(:song).where(played: false).load
   end
 
   def start
-    party_owner = User.find(party.user_id)
-    Spotify::Api::Playback::TransferPlaybackService.new(party_owner.access_token, party.device_id).call
-    sleep(0.1)
+    Spotify::Api::Playback::TransferPlaybackService.new(party.user.access_token, party.device_id, play: false).call
+    party_song_to_play = party.party_songs.where(next_song: true).first
 
-    if party.party_songs.where(is_playing: true).present? && party.stopped? # When user has stopped on his device
-      Spotify::Api::Playback::StartService.new(party_owner.access_token, party.device_id).call
-      party.update(stopped: false)
-      UpdateCurrentlyPlayingService.new(party: party).call
-    else
-      party_song_to_play = party.party_songs.where(next_song: true).first
+    PlaySongAndEnqueueNextService.new(party_song: party_song_to_play, party: party).call
+    PartyStatusUpdaterJob.set(wait: 15.seconds).perform_later(party_id: party.id)
+    UpdateCurrentlyPlayingService.new(party: party).call
 
-      PlaySongAndEnqueueNextService.new(party_song: party_song_to_play, party: party).call
-      PartyStatusUpdaterJob.set(wait: 15.seconds).perform_later(party: party)
-    end
-    
     party.update(started: true)
+  end
+
+  def resume
+    Spotify::Api::Playback::TransferPlaybackService.new(party.user.access_token, party.device_id, play: false).call
+    Spotify::Api::Playback::StartService.new(party.user.access_token, party.device_id).call
+
+    party.update(stopped: false)
   end
 
   def settings
@@ -123,9 +123,7 @@ class PartiesController < ApplicationController
   end
 
   def party_exists?
-    @party = Party.find_by(code: code)
-
-    if @party.nil?
+    if party.nil?
       flash[:error] = "That party does not exist"
 
       redirect_back(fallback_location: start_path)

@@ -17,7 +17,7 @@ module PartyData
       
     rescue Spotify::ApiError => e
       report_error(e)
-      render json: {}, status: 500
+      head 500
     end
 
     private

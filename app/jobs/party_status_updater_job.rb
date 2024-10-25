@@ -1,12 +1,13 @@
 # frozen_string_literal: true
 
 class PartyStatusUpdaterJob < ApplicationJob  
-  def perform(party:)
-    @party = party
+  def perform(party_id:)
+    @party = Party.find(party_id)
     if @party.stopped?
       if status["is_playing"]
         @party.update(stopped: false)
         handle_unexpected_user_action
+        UpdateCurrentlyPlayingService.new(party: @party).call
       end
     else
       if status["is_playing"]
@@ -14,9 +15,10 @@ class PartyStatusUpdaterJob < ApplicationJob
       else
         @party.update(stopped: true) if status.present?
       end
+      UpdateCurrentlyPlayingService.new(party: @party).call
     end
-    UpdateCurrentlyPlayingService.new(party: @party).call
-    PartyStatusUpdaterJob.set(wait: 15.seconds).perform_later(party: @party)
+    
+    PartyStatusUpdaterJob.set(wait: 15.seconds).perform_later(party_id: @party.id)
   rescue => e
     report_error(e)
   end

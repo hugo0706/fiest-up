@@ -29,10 +29,11 @@ class PartySong < ApplicationRecord
 
   def broadcast_queue_change
     unless self.is_playing
-      broadcast_append_later_to "party_#{party.code}_songs", target: "party_songs_list", locals: { song: song, party_song_id: self.id }
+      broadcast_append_later_to "party_#{party.code}_guest", target: "party_songs_list", locals: { song: song, party_song_id: self.id }
+      broadcast_append_later_to "party_#{party.code}_owner", target: "party_songs_list", locals: { song: song, party_song_id: self.id }
     end
 
-    if party.songs.count > 0 && !party.started?
+    if party.queue_count == 1
       UpdateCurrentlyPlayingService.new(party: party).call
     end
   end

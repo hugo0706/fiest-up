@@ -13,7 +13,7 @@ class Party < ApplicationRecord
   validates :code, presence: true, uniqueness: true, length: { is: 6 }
 
   def currently_playing_song
-    party_songs.where(is_playing: true).first.song
+    party_songs.where(is_playing: true).first&.song
   end
 
   def non_played_songs

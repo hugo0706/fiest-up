@@ -8,7 +8,8 @@ class PlayNextSongJob < ApplicationJob
       next_party_song.update(next_song: true)
       PlaySongAndEnqueueNextService.new(party_song: next_party_song, party: @party).call
     else
-      @party.update(started: false) unless @party.stopped?
+      @party.update(stopped: true)
+      UpdateCurrentlyPlayingService.new(party: @party).call
     end
   rescue => e
     report_error(e)

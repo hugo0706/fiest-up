@@ -1,4 +1,8 @@
-<%= turbo_stream_from "party_#{@party.code}_songs" %>
+<% if @user_is_owner %>
+<%= turbo_stream_from "party_#{@party.code}_owner" %>    
+<% else %>
+<%= turbo_stream_from "party_#{@party.code}_guest" %>
+<% end %>
 <div class="flex flex-col h-full gap-2">
     <div class="flex flex-col gap-2 h-[calc(100%-80px)] md:h-[calc(100%-96px)] overflow-hidden">
         <!-- First child div -->
@@ -20,6 +24,6 @@
         </div>
     </div>
     <div data-controller="party" class="p-2 bg-black rounded-2xl w-full md:h-24 h-20">
-      <%= render partial: "parties/currently_playing", locals: { party: @party} %>
+      <%= render partial: "parties/currently_playing", locals: { party: @party, user_is_owner: @user_is_owner} %>
     </div>
 </div>
