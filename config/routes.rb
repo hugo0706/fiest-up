@@ -46,6 +46,7 @@ Rails.application.routes.draw do
   scope '/accounts' do
     get '', to: "accounts#index", as: "account_settings"
     post '/destroy', to: "accounts#destroy", as: "account_destroy"
+    post '/logout', to: "accounts#logout", as: "logout"
   end
 
   resources :temporal_sessions, only: [ :create, :destroy ]

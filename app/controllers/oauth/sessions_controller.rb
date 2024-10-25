@@ -2,7 +2,6 @@
 
 module Oauth
   class SessionsController < ApplicationController
-    before_action :authorize, only: :logout
     before_action :check_user_joining_party, only: :callback
     before_action :validate_oauth_state, only: :callback
 
@@ -11,12 +10,6 @@ module Oauth
       session[:oauth_state] = state
 
       redirect_to oauth_url, allow_other_host: true
-    end
-
-    def logout
-      current_session.expire!
-      session[:session_token] = nil
-      redirect_to start_path
     end
 
     def callback

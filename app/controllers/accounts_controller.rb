@@ -13,4 +13,11 @@ class AccountsController < ApplicationController
     flash[:notice] = 'Account deleted'
     redirect_to start_path
   end
+  
+  def logout
+    current_session.expire!
+    session[:session_token] = nil
+    flash[:notice] = 'Session closed'
+    redirect_to start_path
+  end
 end

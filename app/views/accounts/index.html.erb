@@ -11,6 +11,6 @@
     <hr class="border-t border-spotify-gray-highlight opacity-30">
   </div>
   <div class="flex justify-center items-center w-full">
-  <%= link_to "Close session", home_path, class: "text-xl text-center w-fit rounded-2xl px-2.5 py-1 font-semibold bg-red-500" %>
+  <%= button_to "Close session", logout_path, method: :post, class: "text-xl text-center w-fit rounded-2xl px-2.5 py-1 font-semibold bg-red-500" %>
   </div>
 </nav>
