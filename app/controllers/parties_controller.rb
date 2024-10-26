@@ -118,7 +118,7 @@ class PartiesController < ApplicationController
       raise RetriesDepleted if retries >= PARTY_CREATION_RETRIES
       random_code = SecureRandom.hex(3)
 
-      party = Party.create(user: current_user, name: name, code: random_code)
+      party = Party.create(user: current_user, name: name, code: random_code, ends_at: Time.now + Party::MAX_DURATION)
 
       raise PartyAlreadyExists if party.errors[:name].present?
 

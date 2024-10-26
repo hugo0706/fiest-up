@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 
 class Party < ApplicationRecord
+  MAX_DURATION = 6.hours
+
   belongs_to :user
 
   has_many :party_songs, dependent: :destroy
