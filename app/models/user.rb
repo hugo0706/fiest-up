@@ -10,5 +10,6 @@ class User < ApplicationRecord
 
   has_many :parties, dependent: :destroy
   has_many :party_users, as: :user, dependent: :destroy
+  has_many :joined_parties, through: :party_users, source: :party
   has_many :sessions, dependent: :destroy
 end

@@ -40,7 +40,7 @@ module PartyData
       if current_user
         user = current_user
       elsif session[:temporal_session].present?
-        user = TemporalUser.find(session[:temporal_session])
+        user = TemporalUser.find_by(id: session[:temporal_session])
       else
         user = nil
       end
