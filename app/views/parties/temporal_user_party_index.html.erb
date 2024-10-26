@@ -1,0 +1,10 @@
+<div class="flex flex-col w-full h-full p-4 rounded-2xl gap-2 bg-spotify-gray-clear">
+    <div class="flex flex-col justify-center items-center h-1/2">
+      <%= render 'shared/login_with_spotify'%>
+    </div>
+    <hr class="border-t border-spotify-gray-highlight opacity-30">
+    <p class="text-xl sticky top-0 bg-spotify-gray-clear font-semibold">Ongoing joined parties</p>
+    <div class="h-1/2 overflow-y-auto custom-scrollbar">
+        <%= render partial: 'party_preview', locals: { party: @currently_joined, owner: false }%>
+    </div>
+</div>

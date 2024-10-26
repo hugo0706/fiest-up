@@ -1,0 +1,15 @@
+<div class="flex flex-col w-full h-full p-4 rounded-2xl gap-2 bg-spotify-gray-clear">
+    <p class="text-xl sticky top-0 bg-spotify-gray-clear font-semibold">Your ongoing parties</p>
+    <div class="flex flex-col h-1/2 overflow-y-auto custom-scrollbar">
+      <% @my_parties.each do |party| %>
+          <%= render partial: 'party_preview', locals: { party: party, owner: true }%>
+      <% end %>
+    </div>
+    <hr class="border-t border-spotify-gray-highlight opacity-30">
+    <p class="text-xl sticky top-0 bg-spotify-gray-clear font-semibold">Ongoing joined parties</p>
+    <div class="h-1/2 overflow-y-auto custom-scrollbar">
+        <% @currently_joined.each do |party| %>
+            <%= render partial: 'party_preview', locals: { party: party, owner: false }%>
+        <% end %>
+    </div>
+</div>

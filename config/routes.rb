@@ -40,6 +40,7 @@ Rails.application.routes.draw do
     get "/settings/:code", to: "parties#settings", as: "party_settings"
     get "/join/:code", to: "parties#join", as: "join_party"
     post "/create", to: "parties#create", as: "create_party"
+    post "/:code/end", to: "parties#end", as: "end_party"
     get "/list", to: "parties#index", as: "party_list"
     get "/:code", to: "parties#show", as: "show_party"
   end

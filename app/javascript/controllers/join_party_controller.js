@@ -49,14 +49,13 @@ export default class extends Controller {
       if (response.status === 201) {
         return;
       } else {
-        throw new Error("Failed to join the party.");
+        throw new Error();
       }
     })
     .then((data) => {
       window.location.href = this.partyShowUrlValue;
     })
     .catch((error) => {
-      alert("Error: " + error.message);
     });
   }
 }

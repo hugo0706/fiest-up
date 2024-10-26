@@ -29,4 +29,8 @@ class Party < ApplicationRecord
   def queue_count
     non_played_songs.count
   end
+  
+  def ended?
+    self.ended_at != nil
+  end
 end

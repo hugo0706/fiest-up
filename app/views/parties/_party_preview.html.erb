@@ -1,0 +1,10 @@
+<div class="flex items-center justify-between p-4 hover:bg-spotify-gray-highlight">
+    <span class="text-xl font-semibold truncate"><%=party.name%></span>
+    <div class="flex gap-3">
+    <% if owner %>
+        <%= button_to 'End', end_party_path(code: party.code), method: :post, class: "font-bold bg-red-500 px-2.5 py-1.5 rounded" %>
+    <% end %>
+    <%= link_to 'Join', show_party_path(code: party.code), method: :post, class: "font-bold bg-spotify-green px-2.5 py-1.5 rounded" %>
+    </div>
+</div>
+
