@@ -72,16 +72,24 @@ class PartiesController < ApplicationController
 
     PlaySongAndEnqueueNextService.new(party_song: party_song_to_play, party: party).call
     PartyStatusUpdaterJob.set(wait: 15.seconds).perform_later(party_id: party.id)
-    UpdateCurrentlyPlayingService.new(party: party).call
 
     party.update(started: true)
+    UpdateCurrentlyPlayingService.new(party: party).call
+    head :ok
   end
 
   def resume
     Spotify::Api::Playback::TransferPlaybackService.new(party.user.access_token, party.device_id, play: false).call
-    Spotify::Api::Playback::StartService.new(party.user.access_token, party.device_id).call
+    if party.currently_playing_song
+      Spotify::Api::Playback::StartService.new(party.user.access_token, party.device_id).call
+    elsif party.queue_count > 0
+      party_song_to_play = party.party_songs.where(next_song: true).first
+      PlaySongAndEnqueueNextService.new(party_song: party_song_to_play, party: party).call
+    end
 
     party.update(stopped: false)
+    UpdateCurrentlyPlayingService.new(party: party).call
+    head :ok
   end
 
   def settings

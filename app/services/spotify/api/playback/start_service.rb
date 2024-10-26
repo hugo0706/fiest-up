@@ -21,7 +21,7 @@ module Spotify
 
           case response.status
           when 200
-            JSON.parse(response.body)
+            response.body
           when 204
             {}
           when 401
