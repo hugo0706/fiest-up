@@ -1,7 +1,7 @@
 import { Controller } from "@hotwired/stimulus";
 
 export default class extends Controller {
-   static targets = ["input","copyButton","copyButtonText", "startButton"]
+   static targets = ["input","copyButton","copyButtonText", "startButton","spotifyError", "spinner"]
 
   copy(event) {
     const button = event.currentTarget;
@@ -27,6 +27,11 @@ export default class extends Controller {
     const button = event.currentTarget;
     const startUrl = button.getAttribute('data-start-url');
     
+    const currentlyPlayingElement = document.getElementById("currently_playing");
+    currentlyPlayingElement.classList.add("hidden")
+    
+    this.toggleSpinner();
+    
     fetch(startUrl, {
       method: "POST",
       headers: {
@@ -36,5 +41,41 @@ export default class extends Controller {
           .getAttribute("content"),
       },
     })
+    .then(response => {
+      if ([404,500,422].includes(response.status)) {
+        throw new Error();
+      }
+      this.toggleSpinner();
+      currentlyPlayingElement.classList.remove("hidden");
+      })
+    .catch(error => {
+      this.toggleSpinner();
+      this.toggleSpotifyError();
+      setTimeout(() => {
+        this.toggleSpotifyError();
+        const currentlyPlayingElement = document.getElementById("currently_playing");
+        currentlyPlayingElement.classList.remove("hidden");
+      }, 3000);
+     });
+  }
+  
+  toggleSpinner() {
+    let spinner = this.spinnerTarget 
+
+    if (spinner.classList.contains("hidden")) {
+      spinner.classList.remove("hidden");
+    } else {
+      spinner.classList.add("hidden")
+    }
+  }
+  
+  toggleSpotifyError() {
+    let error = this.spotifyErrorTarget 
+
+    if (error.classList.contains("hidden")) {
+      error.classList.remove("hidden");
+    } else {
+      error.classList.add("hidden")
+    }
   }
 }

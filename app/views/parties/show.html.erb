@@ -24,6 +24,12 @@
         </div>
     </div>
     <div data-controller="party" class="p-2 bg-black rounded-2xl w-full md:h-24 h-20">
-      <%= render partial: "parties/currently_playing", locals: { party: @party, user_is_owner: @user_is_owner} %>
+        <div class="flex hidden justify-center items-center" data-party-target="spinner">
+            <div class="animate-spin rounded-full h-14 w-14 border-2 border-t-8 border-zinc-400"></div>
+        </div>
+        <div class="flex hidden justify-center items-center" data-party-target="spotifyError">
+            <span class="p-2 rounded-2xl w-fit bg-red-500 items-center font-semibold text-md lg:text-lg break-words whitespace-normal">We couldnt connect to your device. Open your Spotify app and try again</span>
+        </div>        
+        <%= render partial: "parties/currently_playing", locals: { party: @party, user_is_owner: @user_is_owner} %>
     </div>
 </div>

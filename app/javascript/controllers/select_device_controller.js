@@ -83,7 +83,7 @@ export default class extends Controller {
       window.location.href = data.redirect_url;
     })
     .catch(error => {
-      this.toggleSpinner(event);
+      this.toggleSpinner();
       this.showOpenSpotifyError(event);
      });
   }
