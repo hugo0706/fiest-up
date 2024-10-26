@@ -1,7 +1,7 @@
 import { Controller } from "@hotwired/stimulus";
 
 export default class extends Controller {
-  static targets = ["devicesGrid", "setDeviceButton"];
+  static targets = ["devicesGrid", "setDeviceButton", "spinner"];
 
   connect() {
     this.interval = setInterval(() => {
@@ -24,7 +24,7 @@ export default class extends Controller {
             this.selectedDeviceElement.classList.add('border-4', 'border-green-500');
           }
         }
-        this.toggleSetDeviceButton();
+        this.renderSetDeviceButton();
       });
   }
   
@@ -40,10 +40,10 @@ export default class extends Controller {
 
     this.selectedDeviceId = deviceId;
     this.selectedDeviceElement = clickedElement;
-    this.toggleSetDeviceButton();
+    this.renderSetDeviceButton();
   }
   
-  toggleSetDeviceButton() { 
+  renderSetDeviceButton() { 
     if (this.selectedDeviceId && this.selectedDeviceElement) {
       this.setDeviceButtonTarget.classList.remove("hidden");
     } else { 
@@ -51,7 +51,15 @@ export default class extends Controller {
     }
   }
   
-  setDevice(event) { 
+  removeSetDeviceButton() { 
+    if(!this.setDeviceButtonTarget.classList.contains("hidden")){
+      this.setDeviceButtonTarget.classList.add("hidden");
+    }
+  }
+  
+  setDevice(event) {
+    this.removeSetDeviceButton();
+    this.toggleSpinner();
     const data = {
       device_id: this.selectedDeviceId
     };
@@ -65,10 +73,54 @@ export default class extends Controller {
       body: JSON.stringify(data)
     })
     .then(response => {
+      if ([404,500,422].includes(response.status)) {
+        throw new Error();
+      } else {
         return response.json();
+      } 
       })
     .then(data => {
       window.location.href = data.redirect_url;
     })
+    .catch(error => {
+      this.toggleSpinner(event);
+      this.showOpenSpotifyError(event);
+     });
+  }
+  
+  toggleSpinner() {
+    let spinner = this.spinnerTarget 
+
+    if (spinner.classList.contains("hidden")) {
+      spinner.classList.remove("hidden");
+    } else {
+      spinner.classList.add("hidden")
+    }
+  }
+  
+  showOpenSpotifyError(event) { 
+    const span = document.createElement("span");
+
+    span.textContent = "We couldnt connect to your device. Open your Spotify app and try again";
+    span.classList.add(
+      "absolute",
+      "bottom-20",
+      "z-50",
+      "p-4",
+      "rounded-2xl",
+      "w-auto",
+      "place-self-center",
+      "bg-red-500",
+      "items-center",
+      "font-semibold",
+      "text-md",
+      "lg:text-lg"
+    );
+    event.target.parentElement.appendChild(span);
+    
+    setTimeout(() => {
+      span.remove();
+      this.renderSetDeviceButton();
+    }, 3000);
   }
 }
