@@ -1,11 +1,11 @@
 # frozen_string_literal: true
 
 class PartiesController < ApplicationController
-  before_action :authorize, only: [ :create, :select_device, :settings, :end, :start ]
-  before_action :party_exists?, only: [ :show, :join, :select_device, :settings, :start ]
-  before_action :party_has_device?, only: [ :show, :join, :settings, :start ]
+  before_action :authorize, except: [ :index, :join, :show ]
+  before_action :party_exists?, except: [ :index, :create ]
+  before_action :party_has_device?, except: [ :create, :settings, :select_device, :index ]
   before_action :user_in_party?, only: :show
-  before_action :user_owns_party?, only: [ :settings, :select_device, :start, :end ]
+  before_action :user_owns_party?, only: [ :settings, :select_device, :start, :end, :resume, :stop ]
 
   rate_limit to: 7, within: 3.minutes,
     by: -> { request.remote_ip },
@@ -172,7 +172,7 @@ class PartiesController < ApplicationController
     if party.nil? || party.ended?
       flash[:error] = "That party does not exist"
 
-      redirect_back(fallback_location: start_path)
+      redirect_to(start_path)
       return
     end
 
