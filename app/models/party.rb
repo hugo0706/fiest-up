@@ -18,6 +18,10 @@ class Party < ApplicationRecord
     party_songs.where(is_playing: true).first&.song
   end
 
+  def currently_playing_party_song
+    party_songs.where(is_playing: true).first
+  end
+
   def non_played_songs
     songs.where(party_songs: { played: false })
   end
@@ -29,7 +33,7 @@ class Party < ApplicationRecord
   def queue_count
     non_played_songs.count
   end
-  
+
   def ended?
     self.ended_at != nil
   end
