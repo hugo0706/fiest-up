@@ -87,4 +87,11 @@ Rails.application.configure do
   config.logger = ActiveSupport::Logger.new(Rails.root.join("log", "development.log"))
     .tap  { |logger| logger.formatter = ::Logger::Formatter.new }
     .then { |logger| ActiveSupport::TaggedLogging.new(logger) }
+  
+  config.solid_errors.connects_to = { database: { writing: :errors } }
+  config.solid_errors.send_emails = true
+  config.solid_errors.email_from = ""
+  config.solid_errors.email_to = ""
+  config.solid_errors.username = 'a'#Rails.application.credentials.dig(:solid_errors, :username)
+  config.solid_errors.password = 'a'#Rails.application.credentials.dig(:solid_errors, :password)
 end
