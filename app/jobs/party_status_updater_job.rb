@@ -3,22 +3,24 @@
 class PartyStatusUpdaterJob < ApplicationJob  
   def perform(party_id:)
     @party = Party.find(party_id)
-    if @party.stopped?
-      if status["is_playing"]
-        @party.update(stopped: false)
-        handle_unexpected_user_action
+    unless @party.ended?
+      if @party.stopped?
+        if status["is_playing"]
+          @party.update(stopped: false)
+          handle_unexpected_user_action
+          UpdateCurrentlyPlayingService.new(party: @party).call
+        end
+      else
+        if status["is_playing"]
+          handle_unexpected_user_action
+        else
+          @party.update(stopped: true) if status.present?
+        end
         UpdateCurrentlyPlayingService.new(party: @party).call
       end
-    else
-      if status["is_playing"]
-        handle_unexpected_user_action
-      else
-        @party.update(stopped: true) if status.present?
-      end
-      UpdateCurrentlyPlayingService.new(party: @party).call
+      
+      PartyStatusUpdaterJob.set(wait: 5.seconds).perform_later(party_id: @party.id)
     end
-    
-    PartyStatusUpdaterJob.set(wait: 5.seconds).perform_later(party_id: @party.id)
   rescue => e
     report_error(e)
   end
