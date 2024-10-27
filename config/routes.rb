@@ -36,6 +36,7 @@ Rails.application.routes.draw do
 
   scope "/party" do
     post "/start/:code", to: "parties#start", as: "start_party"
+    post "/stop/:code", to: "parties#stop", as: "stop_party"
     post "/resume/:code", to: "parties#resume", as: "resume_party"
     get "/:code/select_device", to: "parties#select_device", as: "select_device"
     get "/settings/:code", to: "parties#settings", as: "party_settings"

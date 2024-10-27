@@ -81,10 +81,22 @@ class PartiesController < ApplicationController
     head 500
   end
 
+  def stop
+    Spotify::Api::Playback::TransferPlaybackService.new(party.user.access_token, party.device_id, play: false).call
+  
+    Spotify::Api::Playback::StopService.new(party.user.access_token, party.device_id).call
+    party.update(stopped: true)
+    UpdateCurrentlyPlayingService.new(party: party).call
+    head :ok
+  rescue Spotify::ApiError => e
+    report_error(e)
+    head 500
+  end
+
   def resume
     Spotify::Api::Playback::TransferPlaybackService.new(party.user.access_token, party.device_id, play: false).call
     next_party_song = party.party_songs.where(next_song: true).first
-    
+
     if party.currently_playing_song
       Spotify::Api::Playback::StartService.new(party.user.access_token, party.device_id).call
       party.update(stopped: false)
@@ -122,7 +134,7 @@ class PartiesController < ApplicationController
     if current_user
       @currently_joined = current_user.joined_parties.where.not(user_id: current_user.id).where(ended_at: nil)
       @my_parties = current_user.parties.where(ended_at: nil)
-    elsif 
+    elsif
       @currently_joined = TemporalUser.find_by(id: session[:temporal_session]).party
       render 'temporal_user_party_index'
     end

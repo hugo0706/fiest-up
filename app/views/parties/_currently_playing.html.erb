@@ -1,5 +1,11 @@
 <% if party.has_pending_songs? && !party.started? %>
+    <% if user_is_owner %>
     <%= render partial: "party_songs/start_button", locals: { party: party} %>
+    <% else %>
+    <div id="currently_playing" class="flex h-full w-full items-center justify-center">
+        <p class="animate-pulse text-spotify-green font-bold text-xl">Wait for the creator to start the party</p>
+    </div>
+    <% end %>
 <% elsif (party.currently_playing_song || party.has_pending_songs?) && party.stopped? %>
     <% if user_is_owner %>
     <div id="currently_playing" class="flex h-full w-full items-center justify-center">
@@ -13,7 +19,7 @@
     </div>
     <% end %>
 <% elsif party.started? && !party.stopped?%>
-    <%= render partial: "party_songs/currently_playing", locals: { song: party.currently_playing_song } %>
+    <%= render partial: "party_songs/currently_playing", locals: { song: party.currently_playing_song, user_is_owner: user_is_owner, party: party } %>
 <% else %>
     <div id="currently_playing" class="flex h-full w-full items-center justify-center">
         <p class="animate-pulse text-spotify-green font-bold text-2xl">Add a song to start</p>

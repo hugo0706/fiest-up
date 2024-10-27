@@ -6,12 +6,20 @@
             <p class="font-semibold text-gray-500 text-sm truncate"><%= song.artists.join(',') %></p>
         </div>
     </div>
-    <div class="flex absolute left-2/3 w-32 transform -translate-x-full bg-black h-full items-center">
+    
+    <% if user_is_owner %>
+    <div class="flex items-center h-full bg-blackZ gap-2">
+        <div data-action="click->party#stop" data-stop-url="<%= stop_party_path(code: party.code)%>"class="flex items-center bg-gray-200 text-black font-extrabold p-2 h-3/5 rounded-xl hover:bg-spotify-gray-clear hover:border-spotify-green hover:text-spotify-green">
+            Stop
+        </div>
+        <div class="flex items-center bg-gray-200 text-black font-extrabold p-2 h-3/5 rounded-xl hover:bg-spotify-gray-clear hover:border-spotify-green hover:text-spotify-green">
+            Skip
+        </div>
+    </div>
+    <% else %>
+    <div class="flex w-32 bg-black h-full items-center">
         <%= image_tag 'play-button-icon.svg', class: 'w-9 h-9' %> 
         <p class="animate-pulse font-bold">Playing</p>
     </div>
-    
-    <div class="flex items-center bg-gray-200 text-black font-extrabold p-2 h-3/5 rounded-xl hover:bg-spotify-gray-clear hover:border-spotify-green hover:text-spotify-green">
-        Vote to skip
-    </div>
+    <% end %>
 </div>
