@@ -1,1 +1,20 @@
-settings
+<div data-controller="select-device" data-device-set-url="<%= party_data_set_party_device_path(code: @party.code)%>"  data-device-fetch-url="<%= party_data_party_device_list_path(code: @party.code)%>" class="flex flex-col h-full justify-between items-center">
+    <div class="flex flex-col flex-grow justify-between my-2 items-center">
+        <div class="flex flex-col items-center justify-center">
+            <h1 class="text-4xl font-bold whitespace-normal break-words">Change the party device</h1>
+        </div>
+        <p class="text-md text-gray-600 text-left whitespace-normal break-words">
+            🔎 <span class="text-gray-500 font-semibold">Dont see your device?</span> Open the Spotify app and your device should appear soon
+        </p>
+    </div>
+    <div data-select-device-target="devicesGrid" class="h-3/4 md:h-full">
+        <%= render partial: 'parties/device_list', locals: { devices: @devices } %>
+    </div>
+    <div class="animate-spin hidden rounded-full h-14 w-14 border-2 border-t-8 border-zinc-400 absolute bottom-20 z-50 place-self-center items-center" data-select-device-target="spinner"></div>
+    <p data-select-device-target="setDeviceButton"
+       data-action="click->select-device#setDevice"
+       class="hidden absolute bottom-20 z-50 p-4 rounded-2xl w-auto place-self-center bg-spotify-green items-center font-semibold text-xl hover:bg-green-700 hover:cursor-pointer"
+       >
+           Use this device
+       </p>
+</div>

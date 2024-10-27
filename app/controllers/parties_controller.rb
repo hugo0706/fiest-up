@@ -101,6 +101,8 @@ class PartiesController < ApplicationController
   end
 
   def settings
+    @devices = Spotify::Api::Playback::AvailableDevicesService.new(current_user.access_token).call
+    @devices = @devices["devices"]&.map { |device| DevicePresenter.new(device) }
   end
 
   def select_device
