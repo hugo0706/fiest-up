@@ -3,9 +3,9 @@
 <% elsif (party.currently_playing_song || party.has_pending_songs?) && party.stopped? %>
     <% if user_is_owner %>
     <div id="currently_playing" class="flex h-full w-full items-center justify-center">
-        <%= button_to resume_party_path(code: party.code), method: :post, class: "border-2 border-slate-400 flex items-center gap-1" do %>
-            <%= image_tag 'play-button-icon.svg', class: 'w-8 h-8' %><span class"text-xl">Start</span>
-        <% end %>
+        <button data-action="click->party#resume" data-resume-url="<%= resume_party_path(code: party.code) %>"class="border-2 rounded-xl px-2 py-1 border-slate-400 flex items-center gap-1">
+           <%= image_tag 'play-button-icon.svg', class: 'w-8 h-8' %><span class="text-xl">Resume</span>
+        </button>
     </div>
     <% else %>
     <div id="currently_playing" class="flex h-full w-full items-center justify-center">

@@ -59,6 +59,42 @@ export default class extends Controller {
      });
   }
   
+  resume(event) {
+    const button = event.currentTarget;
+    const resumeUrl = button.getAttribute('data-resume-url');
+    
+    const currentlyPlayingElement = document.getElementById("currently_playing");
+    currentlyPlayingElement.classList.add("hidden")
+    
+    this.toggleSpinner();
+    
+    fetch(resumeUrl, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        "X-CSRF-Token": document
+          .querySelector('meta[name="csrf-token"]')
+          .getAttribute("content"),
+      },
+    })
+    .then(response => {
+      if ([404,500,422].includes(response.status)) {
+        throw new Error();
+      }
+      this.toggleSpinner();
+      currentlyPlayingElement.classList.remove("hidden");
+      })
+    .catch(error => {
+      this.toggleSpinner();
+      this.toggleSpotifyError();
+      setTimeout(() => {
+        this.toggleSpotifyError();
+        const currentlyPlayingElement = document.getElementById("currently_playing");
+        currentlyPlayingElement.classList.remove("hidden");
+      }, 3000);
+     });
+  }
+  
   toggleSpinner() {
     let spinner = this.spinnerTarget 
 

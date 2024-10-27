@@ -76,6 +76,9 @@ class PartiesController < ApplicationController
     party.update(started: true)
     UpdateCurrentlyPlayingService.new(party: party).call
     head :ok
+  rescue Spotify::ApiError => e
+    report_error(e)
+    head 500
   end
 
   def resume
@@ -92,6 +95,9 @@ class PartiesController < ApplicationController
 
     UpdateCurrentlyPlayingService.new(party: party).call
     head :ok
+  rescue Spotify::ApiError => e
+    report_error(e)
+    head 500
   end
 
   def settings
