@@ -1,16 +1,20 @@
+<% if @user %>
 <nav class="flex flex-col justify-start gap-6 p-4">
-  <div class="flex flex-col gap-4">
+    <div class="flex flex-col gap-4">
     <h1 class="text-2xl font-bold">Settings</h1>  
     <%= link_to home_path, class: "flex items-center gap-1" do %>
-      <%= image_tag 'information-icon.svg', class: 'w-7 h-7' %><span class"text-xl">Information</span>
+        <%= image_tag 'information-icon.svg', class: 'w-7 h-7' %><span class"text-xl">Information</span>
     <% end %>
     <hr class="border-t border-spotify-gray-highlight opacity-30">
     <%= button_to account_destroy_path, method: :post, class: "flex items-center gap-1" do %>
         <%= image_tag 'trash-icon.svg', class: 'w-7 h-7' %><span class"text-xl">Delete account</span>
     <% end %>
     <hr class="border-t border-spotify-gray-highlight opacity-30">
-  </div>
-  <div class="flex justify-center items-center w-full">
-  <%= button_to "Close session", logout_path, method: :post, class: "text-xl text-center w-fit rounded-2xl px-2.5 py-1 font-semibold bg-red-500" %>
-  </div>
+    </div>
+    <div class="flex justify-center items-center w-full">
+    <%= button_to "Close session", logout_path, method: :post, class: "text-xl text-center w-fit rounded-2xl px-2.5 py-1 font-semibold bg-red-500" %>
+    </div>
 </nav>
+<% else %>
+<%= render partial: 'shared/need_login' %>
+<% end %>

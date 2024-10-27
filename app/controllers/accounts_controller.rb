@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 class AccountsController < ApplicationController
-  before_action :authorize
+  before_action :authorize, except: [:index]
 
   def index
     @user = current_user
