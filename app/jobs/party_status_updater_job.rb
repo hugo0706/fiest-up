@@ -18,7 +18,7 @@ class PartyStatusUpdaterJob < ApplicationJob
       UpdateCurrentlyPlayingService.new(party: @party).call
     end
     
-    PartyStatusUpdaterJob.set(wait: 15.seconds).perform_later(party_id: @party.id)
+    PartyStatusUpdaterJob.set(wait: 5.seconds).perform_later(party_id: @party.id)
   rescue => e
     report_error(e)
   end
@@ -30,9 +30,12 @@ class PartyStatusUpdaterJob < ApplicationJob
     
     if song_changed_by_user?
       song = FindOrCreateSongService.new(party_owner: @party.user, spotify_song_id: status["item"]["id"]).call
-      current_party_song.update(is_playing: false)
-      user_song = PartySong.create(party: @party, song: song, is_playing: true, played: true, position: @party.songs.count + 1)
-      reenqueue_job_with_song(user_song, pending_song_time)
+      user_song = nil
+      ActiveRecord::Base.transaction do
+        current_party_song.update(is_playing: false)
+        user_song = PartySong.create(party: @party, song: song, is_playing: true, played: true, position: @party.party_songs.count + 1)
+      end
+      reenqueue_job_with_song(user_song, pending_song_time) if user_song
     elsif time_gap > 3
       reenqueue_job_with_song(current_party_song, pending_song_time)
     end
@@ -66,7 +69,7 @@ class PartyStatusUpdaterJob < ApplicationJob
   end
   
   def next_song_job
-    @next_song_job ||= next_song_job = SolidQueue::Job.find_by(id: @party.next_song_job_id)
+    @next_song_job ||= SolidQueue::Job.find_by(id: @party.next_song_job_id)
   end
   
   def next_song_margin

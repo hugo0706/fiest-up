@@ -15,6 +15,7 @@ class PlaySongAndEnqueueNextService
 
     Spotify::Api::Playback::StartService.new(party.user.access_token, party.device_id, song.uri).call
     party_song.update(next_song: false, is_playing: true, played: true)
+    next_party_song.update(next_song: true) if next_party_song.present?
     remove_next_song_job
     job = PlayNextSongJob.set(wait: playing_song_countdown(song)).perform_later(current_party_song: party_song)
     party.update(next_song_job_id: job.provider_job_id)
@@ -32,5 +33,11 @@ class PlaySongAndEnqueueNextService
     if party.next_song_job_id
       SolidQueue::Job.find_by(id: party.next_song_job_id).destroy
     end
+  end
+  
+  def next_party_song
+    @next_party_song ||= @party.party_songs.where(played: false)
+                                            .order(:position)
+                                            .limit(1).first
   end
 end
