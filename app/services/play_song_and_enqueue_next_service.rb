@@ -31,7 +31,7 @@ class PlaySongAndEnqueueNextService
   
   def remove_next_song_job
     if party.next_song_job_id
-      SolidQueue::Job.find_by(id: party.next_song_job_id).destroy
+      SolidQueue::Job.find_by(id: party.next_song_job_id).try(:destroy)
     end
   end
   

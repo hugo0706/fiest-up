@@ -99,11 +99,10 @@ class PartiesController < ApplicationController
 
     if party.currently_playing_song
       Spotify::Api::Playback::StartService.new(party.user.access_token, party.device_id).call
-      party.update(stopped: false)
     elsif next_party_song.present?
       PlaySongAndEnqueueNextService.new(party_song: next_party_song, party: party).call
-      party.update(stopped: false)
     end
+    party.update(stopped: false)
 
     UpdateCurrentlyPlayingService.new(party: party).call
     head :ok

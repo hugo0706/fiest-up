@@ -29,18 +29,24 @@ class PartyStatusUpdaterJob < ApplicationJob
   private
 
   def handle_unexpected_user_action
-    pending_song_time, time_gap  = calculate_times
-
-    if song_changed_by_user?
-      song = FindOrCreateSongService.new(party_owner: @party.user, spotify_song_id: status["item"]["id"]).call
-      user_song = nil
-      ActiveRecord::Base.transaction do
-        current_party_song.update(is_playing: false)
-        user_song = PartySong.create(party: @party, song: song, is_playing: true, played: true, position: @party.party_songs.count + 1)
+    if next_song_job.present?
+      pending_song_time, time_gap  = calculate_times
+  
+      if song_changed_by_user?
+        song = FindOrCreateSongService.new(party_owner: @party.user, spotify_song_id: status["item"]["id"]).call
+        user_song = nil
+        ActiveRecord::Base.transaction do
+          current_party_song.update(is_playing: false)
+          user_song = PartySong.create(party: @party, song: song, is_playing: true, played: true, position: @party.party_songs.count + 1)
+        end
+        reenqueue_job_with_song(user_song, pending_song_time) if user_song
+      elsif time_gap > 3
+        reenqueue_job_with_song(current_party_song, pending_song_time)
       end
-      reenqueue_job_with_song(user_song, pending_song_time) if user_song
-    elsif time_gap > 3
-      reenqueue_job_with_song(current_party_song, pending_song_time)
+    else
+      pending_song_time = ((status["item"]["duration_ms"] - status["progress_ms"])/ 1000).seconds
+      job = PlayNextSongJob.set(wait: pending_song_time - next_song_margin).perform_later(current_party_song: current_party_song)
+      @party.update(next_song_job_id: job.provider_job_id)
     end
   end
 
