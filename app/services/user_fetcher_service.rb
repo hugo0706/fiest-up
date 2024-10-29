@@ -42,7 +42,8 @@ class UserFetcherService
       product: @user_profile["product"],
       access_token: oauth_data["access_token"],
       refresh_token: oauth_data["refresh_token"],
-      access_token_expires_at: Time.now + oauth_data["expires_in"]
+      access_token_expires_at: Time.now + oauth_data["expires_in"],
+      image: @user_profile["images"].min_by { |image| image["height"] }["url"]
     }
   end
 end

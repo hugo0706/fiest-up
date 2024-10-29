@@ -5,6 +5,7 @@ class ApplicationController < ActionController::Base
   allow_browser versions: :modern
   include ErrorHandler
   helper_method :logged_with_spotify?
+  helper_method :current_user
 
   def not_found_method
     render file: Rails.public_path.join("404.html"), status: :not_found, layout: false
