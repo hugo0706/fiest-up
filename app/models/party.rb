@@ -37,4 +37,8 @@ class Party < ApplicationRecord
   def ended?
     self.ended_at != nil
   end
+  
+  def end
+    self.update(ended_at: Time.now) unless ended?
+  end
 end

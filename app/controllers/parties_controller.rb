@@ -164,7 +164,8 @@ class PartiesController < ApplicationController
 
       retries += 1
     end
-
+    
+    PartyEnderJob.set(wait_until: party.ends_at).perform_later(party.id)
     party
   end
 
