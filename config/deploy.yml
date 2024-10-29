@@ -8,7 +8,7 @@ image: hugo0706/spoty_fest
 servers:
   web:
     hosts:
-      - 167.71.8.170
+      - 167.172.170.242
     labels:
       traefik.http.routers.example_app_secure.entrypoints: websecure
       traefik.http.routers.example_app_secure.rule: Host(`spotyfest.com`)
@@ -17,7 +17,7 @@ servers:
           network: "private"
   jobs:
     hosts:
-      - 167.71.8.170
+      - 167.172.170.242
     cmd: bin/jobs
     options:
          network: "private"
@@ -45,7 +45,7 @@ env:
   clear:
     POSTGRES_HOST: spoty_fest-db
     POSTGRES_USER: postgres
-    #REDIS_URL: "redis://spoty_fest-redis:6379/0"
+    REDIS_URL: "redis://spoty_fest-redis:6379/0"
   secret:
     - RAILS_MASTER_KEY
     - POSTGRES_PASSWORD
@@ -55,7 +55,7 @@ env:
     - RAILS_ACTIVE_RECORD_ENCRYPTION_PRIMARY_KEY
     - RAILS_ACTIVE_RECORD_ENCRYPTION_DETERMINISTIC_KEY
     - RAILS_ACTIVE_RECORD_ENCRYPTION_KEY_DERIVATION_SALT
-    #- REDIS_URL
+    - REDIS_URL
 
 # Use a different ssh user than root
 # ssh:
@@ -75,7 +75,7 @@ env:
 accessories:
   db:
     image: postgres:16.1
-    host: 167.71.8.170
+    host: 167.172.170.242
     env:
       clear:
         POSTGRES_USER: postgres
@@ -85,13 +85,13 @@ accessories:
       - postgres_data:/var/lib/postgresql/data
     options:
           network: "private"
-#  redis:
-#    image: redis:7.0
-#    host: 167.71.8.170
-#    directories:
-#      - redis_data:/var/lib/redis/data
-#    options:
-#          network: "private"
+  redis:
+    image: redis:7.0
+    host: 167.172.170.242
+    directories:
+      - redis_data:/var/lib/redis/data
+    options:
+          network: "private"
 
 # Configure custom arguments for Traefik. Be sure to reboot traefik when you modify it.
 # traefik:
