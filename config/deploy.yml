@@ -45,17 +45,17 @@ env:
   clear:
     POSTGRES_HOST: spoty_fest-db
     POSTGRES_USER: postgres
-    REDIS_URL: "redis://spoty_fest-redis:6379/0"
+    #REDIS_URL: "redis://spoty_fest-redis:6379/0"
   secret:
     - RAILS_MASTER_KEY
     - POSTGRES_PASSWORD
-    - REDIS_URL
     - SPOTIFY_CLIENT_ID
     - SPOTIFY_CLIENT_SECRET
     - SPOTIFY_REDIRECT_URI
     - RAILS_ACTIVE_RECORD_ENCRYPTION_PRIMARY_KEY
     - RAILS_ACTIVE_RECORD_ENCRYPTION_DETERMINISTIC_KEY
     - RAILS_ACTIVE_RECORD_ENCRYPTION_KEY_DERIVATION_SALT
+    #- REDIS_URL
 
 # Use a different ssh user than root
 # ssh:
@@ -85,13 +85,13 @@ accessories:
       - postgres_data:/var/lib/postgresql/data
     options:
           network: "private"
-  redis:
-    image: redis:7.0
-    host: 167.71.8.170
-    directories:
-      - redis_data:/var/lib/redis/data
-    options:
-          network: "private"
+#  redis:
+#    image: redis:7.0
+#    host: 167.71.8.170
+#    directories:
+#      - redis_data:/var/lib/redis/data
+#    options:
+#          network: "private"
 
 # Configure custom arguments for Traefik. Be sure to reboot traefik when you modify it.
 # traefik:

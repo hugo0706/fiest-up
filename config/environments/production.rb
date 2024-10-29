@@ -73,9 +73,9 @@ Rails.application.configure do
 
   # Use a different cache store in production.
   if ENV['REDIS_URL'].present?
-    config.cache_store = :redis_cache_store, { url: ENV.fetch('REDIS_URL') }
+    config.cache_store = :solid_cache_store
   else
-    config.cache_store = :null_store  # Fallback during asset precompilation
+    config.cache_store = :solid_cache_store
   end
 
   # Use a real queuing backend for Active Job (and separate queues per environment).

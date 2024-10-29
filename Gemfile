@@ -83,3 +83,5 @@ gem "solid_queue", "~> 1.0"
 gem "mission_control-jobs"
 
 gem "solid_errors", "~> 0.6.1"
+
+gem "solid_cache", "~> 1.0"

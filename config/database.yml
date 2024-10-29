@@ -29,9 +29,13 @@ development:
     database: spoty_fest_development_queue
     migrations_paths: db/queue_migrate
   errors:
-      <<: *primary_development
-      database: spoty_fest_development_errors
-      migrations_paths: db/errors_migrate
+    <<: *primary_development
+    database: spoty_fest_development_errors
+    migrations_paths: db/errors_migrate
+  cache:
+    <<: *primary_development
+    database: spoty_fest_development_cache
+    migrations_paths: db/cache_migrate
 
   # The specified database role being used to connect to PostgreSQL.
   # To create additional roles in PostgreSQL see `$ createuser --help`.
@@ -99,6 +103,10 @@ production:
       database: spoty_fest_production_queue
       migrations_paths: db/queue_migrate
   errors:
-      <<: *primary_production
-      database: spoty_fest_production_errors
-      migrations_paths: db/errors_migrate
+    <<: *primary_production
+    database: spoty_fest_production_errors
+    migrations_paths: db/errors_migrate
+  cache:
+    <<: *primary_production
+    database: spoty_fest_production_cache
+    migrations_paths: db/cache_migrate
