@@ -13,6 +13,10 @@ class ApplicationController < ActionController::Base
   def logged_with_spotify?
     !!current_user
   end
+  
+  def user_is_admin?
+    current_user.admin?
+  end
 
   private
 

@@ -29,5 +29,6 @@ module SpotyFest
     config.active_record.encryption.primary_key = ENV["RAILS_ACTIVE_RECORD_ENCRYPTION_PRIMARY_KEY"]
     config.active_record.encryption.deterministic_key = ENV["RAILS_ACTIVE_RECORD_ENCRYPTION_DETERMINISTIC_KEY"]
     config.active_record.encryption.key_derivation_salt = ENV["RAILS_ACTIVE_RECORD_ENCRYPTION_KEY_DERIVATION_SALT"]
+    config.mission_control.jobs.base_controller_class = "AdminController"
   end
 end
