@@ -1,8 +1,8 @@
 # Name of your application. Used to uniquely configure containers.
-service: spoty_fest
+service: fiest_up
 
 # Name of the container image.
-image: hugo0706/spoty_fest
+image: hugo0706/fiest_up
 
 # Deploy to these servers.
 servers:
@@ -11,7 +11,7 @@ servers:
       - 68.183.209.194
     labels:
       traefik.http.routers.example_app_secure.entrypoints: websecure
-      traefik.http.routers.example_app_secure.rule: Host(`spotyfest.com`)
+      traefik.http.routers.example_app_secure.rule: Host(`fiestup.com`)
       traefik.http.routers.example_app_secure.tls: true
     options:
           network: "private"
@@ -22,7 +22,7 @@ servers:
     options:
          network: "private"
 volumes:
-  - "spoty_fest_data:/data"
+  - "fiest_up_data:/data"
 
 traefik:
   options:
@@ -43,9 +43,9 @@ registry:
 # Remember to run `kamal env push` after making changes!
 env:
   clear:
-    POSTGRES_HOST: spoty_fest-db
+    POSTGRES_HOST: fiest_up-db
     POSTGRES_USER: postgres
-    REDIS_URL: "redis://spoty_fest-redis:6379/0"
+    REDIS_URL: "redis://fiest_up-redis:6379/0"
   secret:
     - RAILS_MASTER_KEY
     - POSTGRES_PASSWORD

@@ -82,7 +82,7 @@ Rails.application.configure do
   config.active_job.queue_adapter = :solid_queue
   config.solid_queue.connects_to = { database: { writing: :queue } }
 
-  # config.active_job.queue_name_prefix = "spoty_fest_production"
+  # config.active_job.queue_name_prefix = "fiest_up_production"
 
   # Disable caching for Action Mailer templates even if Action Controller
   # caching is enabled.
