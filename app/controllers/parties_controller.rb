@@ -132,12 +132,16 @@ class PartiesController < ApplicationController
   end
 
   def index
+    temporal_user = TemporalUser.find_by(id: session[:temporal_session])
     if current_user
       @currently_joined = current_user.joined_parties.where.not(user_id: current_user.id).where(ended_at: nil)
       @my_parties = current_user.parties.where(ended_at: nil)
-    elsif
-      @currently_joined = TemporalUser.find_by(id: session[:temporal_session]).party
+    elsif temporal_user
+      @currently_joined = temporal_user.party
       render 'temporal_user_party_index'
+    else
+      flash[:error] = "Join a party or create an account to access that option"
+      redirect_to start_path
     end
   end
 
