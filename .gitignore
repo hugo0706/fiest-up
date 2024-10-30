@@ -38,3 +38,7 @@
 !/app/assets/builds/.keep
 
 .todo
+
+/config/credentials/production.key
+
+/config/credentials/development.key
