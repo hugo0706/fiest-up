@@ -8,7 +8,7 @@ image: hugo0706/fiest_up
 servers:
   web:
     hosts:
-      - 68.183.209.194
+      - 139.59.137.241
     labels:
       traefik.http.routers.example_app_secure.entrypoints: websecure
       traefik.http.routers.example_app_secure.rule: Host(`fiestup.com`)
@@ -17,7 +17,7 @@ servers:
           network: "private"
   jobs:
     hosts:
-      - 68.183.209.194
+      - 139.59.137.241
     cmd: bin/jobs
     options:
          network: "private"
@@ -75,7 +75,7 @@ env:
 accessories:
   db:
     image: postgres:16.1
-    host: 68.183.209.194
+    host: 139.59.137.241
     env:
       clear:
         POSTGRES_USER: postgres
@@ -87,7 +87,7 @@ accessories:
           network: "private"
   redis:
     image: redis:7.0
-    host: 68.183.209.194
+    host: 139.59.137.241
     directories:
       - redis_data:/var/lib/redis/data
     options:
