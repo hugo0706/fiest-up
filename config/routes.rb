@@ -52,7 +52,10 @@ Rails.application.routes.draw do
     post '/destroy', to: "accounts#destroy", as: "account_destroy"
     post '/logout', to: "accounts#logout", as: "logout"
   end
-
+  
+  get '/terms_and_conditions', to: "legal#terms_and_conditions", as: "terms_and_conditions"
+  get '/privacy_policy', to: "legal#privacy_policy", as: "privacy_policy"
+  get '/cookie_policy', to: "legal#cookie_policy", as: "cookie_policy"
   resources :temporal_sessions, only: [ :create, :destroy ]
 
   get "/home", to: "home#index"
