@@ -12,7 +12,7 @@ class UserCreatorService
   def call
     user = User.create!(user_info)
 
-    RefreshAccessTokenJob.set(wait_until: user.access_token_expires_at - 5.minutes).perform_later
+    RefreshAccessTokenJob.set(wait_until: user.access_token_expires_at - 5.minutes).perform_later(user.id)
     user
   rescue ActiveRecord::RecordInvalid,
         ActiveRecord::RecordNotUnique => e
