@@ -16,7 +16,7 @@ class ApplicationController < ActionController::Base
   end
   
   def user_is_admin?
-    current_user.admin?
+    current_user.admin? if current_user
   end
 
   private
