@@ -12,4 +12,8 @@ class User < ApplicationRecord
   has_many :party_users, as: :user, dependent: :destroy
   has_many :joined_parties, through: :party_users, source: :party
   has_many :sessions, dependent: :destroy
+  
+  def is_premium?
+    self.product == 'premium'
+  end
 end

@@ -6,6 +6,8 @@ class PartiesController < ApplicationController
   before_action :party_has_device?, except: [ :create, :settings, :select_device, :index ]
   before_action :user_in_party?, only: :show
   before_action :user_owns_party?, only: [ :settings, :select_device, :start, :end, :resume, :stop ]
+  before_action :user_is_premium?, only: :create
+  before_action :owner_is_premium?, only: [ :join, :show ]
 
   rate_limit to: 7, within: 3.minutes,
     by: -> { request.remote_ip },
@@ -83,7 +85,7 @@ class PartiesController < ApplicationController
 
   def stop
     Spotify::Api::Playback::TransferPlaybackService.new(party.user.access_token, party.device_id, play: false).call
-  
+
     Spotify::Api::Playback::StopService.new(party.user.access_token, party.device_id).call
     party.update(stopped: true)
     UpdateCurrentlyPlayingService.new(party: party).call
@@ -164,7 +166,7 @@ class PartiesController < ApplicationController
 
       retries += 1
     end
-    
+
     PartyEnderJob.set(wait_until: party.ends_at).perform_later(party.id)
     party
   end
@@ -217,6 +219,20 @@ class PartiesController < ApplicationController
     report_error(RateLimitExceeded.new(request.remote_ip))
     flash[:error] = "Too many party creation requests. Please wait some minutes"
     redirect_to home_path
+  end
+
+  def user_is_premium?
+    unless current_user.is_premium?
+      flash[:error] = 'You need a premium Spotify account to create a party'
+      redirect_to home_path
+    end
+  end
+
+  def owner_is_premium?
+    unless party.user.is_premium?
+      flash[:error] = 'The party owner needs a premium Spotify account'
+      redirect_to home_path
+    end
   end
 
   def code
