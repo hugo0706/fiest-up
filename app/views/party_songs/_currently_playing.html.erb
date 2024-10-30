@@ -9,10 +9,10 @@
     
     <% if user_is_owner %>
     <div class="flex items-center h-full bg-blackZ gap-2">
-        <div data-action="click->party#stop" data-stop-url="<%= stop_party_path(code: party.code)%>"class="flex items-center bg-gray-200 text-black font-extrabold p-2 h-3/5 rounded-xl hover:bg-spotify-gray-clear hover:border-spotify-green hover:text-spotify-green">
+        <div data-action="click->party#stop" data-stop-url="<%= stop_party_path(code: party.code)%>" class="flex items-center bg-gray-200 text-black font-extrabold p-2 h-3/5 rounded-xl hover:bg-spotify-gray-clear hover:border-spotify-green hover:text-spotify-green">
             Stop
         </div>
-        <div class="flex items-center bg-gray-200 text-black font-extrabold p-2 h-3/5 rounded-xl hover:bg-spotify-gray-clear hover:border-spotify-green hover:text-spotify-green">
+        <div data-action="click->party#skip" data-skip-url="<%= skip_party_path(code: party.code)%>" class="flex items-center bg-gray-200 text-black font-extrabold p-2 h-3/5 rounded-xl hover:bg-spotify-gray-clear hover:border-spotify-green hover:text-spotify-green">
             Skip
         </div>
     </div>

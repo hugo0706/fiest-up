@@ -5,7 +5,7 @@ class PartiesController < ApplicationController
   before_action :party_exists?, except: [ :index, :create ]
   before_action :party_has_device?, except: [ :create, :settings, :select_device, :index ]
   before_action :user_in_party?, only: :show
-  before_action :user_owns_party?, only: [ :settings, :select_device, :start, :end, :resume, :stop ]
+  before_action :user_owns_party?, only: [ :settings, :select_device, :start, :end, :resume, :stop, :skip ]
   before_action :user_is_premium?, only: :create
   before_action :owner_is_premium?, only: [ :join, :show ]
 
@@ -89,6 +89,18 @@ class PartiesController < ApplicationController
     Spotify::Api::Playback::StopService.new(party.user.access_token, party.device_id).call
     party.update(stopped: true)
     UpdateCurrentlyPlayingService.new(party: party).call
+    head :ok
+  rescue Spotify::ApiError => e
+    report_error(e)
+    head 500
+  end
+  
+  def skip
+    next_song_job = SolidQueue::Job.find_by(id: party.next_song_job_id)
+    next_song_job.destroy if next_song_job.present?
+    
+    PlayNextSongJob.perform_now(current_party_song: party.currently_playing_party_song)
+    
     head :ok
   rescue Spotify::ApiError => e
     report_error(e)
