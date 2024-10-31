@@ -25,6 +25,10 @@ class Party < ApplicationRecord
   def non_played_songs
     songs.where(party_songs: { played: false })
   end
+  
+  def next_party_song
+    party_songs.where(next_song: true).first || non_played_songs.first
+  end
 
   def has_pending_songs?
     non_played_songs.count > 0
