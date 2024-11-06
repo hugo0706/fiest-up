@@ -3,10 +3,10 @@
 class PlayNextSongJob < ApplicationJob
   def perform(current_party_song:)
     @party = current_party_song.party
-    unless @party.ended? 
+    unless @party.ended?
       if @party.next_party_song.present? && !@party.stopped?
         current_party_song.update(is_playing: false)
-        PlaySongAndEnqueueNextService.new(party_song: next_party_song, party: @party).call
+        PlaySongAndEnqueueNextService.new(party_song: @party.next_party_song, party: @party).call
       else
         @party.update(stopped: true)
         UpdateCurrentlyPlayingService.new(party: @party).call

@@ -15,6 +15,7 @@ class PartyStatusUpdaterJob < ApplicationJob
           reconcile_spotify_state
         else
           @party.update(stopped: true) if status.present?
+          @party.currently_playing_party_song.update(is_playing: false) if status["progress_ms"] == 0
           next_song_job.destroy
         end
         UpdateCurrentlyPlayingService.new(party: @party).call
