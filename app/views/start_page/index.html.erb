@@ -1,9 +1,15 @@
 <div class="text-gray-200 flex flex-col items-center justify-center gap-20">
-    <div class="flex gap-1 justify-center items-center">
-        <%= image_tag 'logo.png', class: 'w-9' %>
-        <div class="relative inline-block">
-          <span class="text-5xl lg:text-6xl font-extrabold text-gray-300">FiestUp</span>
-          <span class="absolute bottom-0 right-0 transform translate-x-2 translate-y-3 text-xs font-semibold bg-spotify-green px-1 py-0.2 rounded">BETA</span>
+    <div class="flex flex-col gap-6 justify-center items-center">
+        <div class="flex gap-1 justify-center items-center">
+            <%= image_tag 'logo.png', class: 'w-9' %>
+            <div class="relative inline-block">
+            <span class="text-6xl font-extrabold text-gray-300">FiestUp</span>
+            <span class="absolute bottom-0 right-0 transform translate-x-2 translate-y-3 text-xs font-semibold bg-spotify-green px-1 py-0.2 rounded">BETA</span>
+            </div>
+        </div>
+        <div class="flex items-center gap-2">
+            <span class="text-sm lg:text-md font-medium text-white">A party creator for </span>
+            <%= image_tag 'spotify-full-logo.svg', class: 'w-24' %>
         </div>
     </div>
     <div class="flex flex-col justify-center w-80 gap-4 items-center">

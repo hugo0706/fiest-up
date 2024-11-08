@@ -1,17 +1,17 @@
 <li id="<%="party_song_#{party_song_id}"%>" class="flex items-center gap-1 justify-between h-14 hover:bg-spotify-gray-clear">
     <div id="<%= song.spotify_song_id %>" class="flex items-center gap-2 flex-grow min-w-0">
-        <img src="<%= song.image %>" class="w-14 h-14">
+        <img src="<%= song.image %>" class="w-14 rounded-sm lg:rounded">
         <div class="overflow-hidden text-ellipsis whitespace-nowrap">
           <p class="font-semibold text-md truncate"><%= song.name %></p>
             <p class="font-semibold text-gray-500 text-sm truncate"><%= song.artists.join(',') %></p>
         </div>
     </div>
     <% if false %>
-        <div class="flex items-center bg-gray-200 text-black font-extrabold p-2 h-3/5 rounded-xl hover:bg-spotify-gray-clear hover:border-spotify-green hover:text-spotify-green">
-        <%= image_tag 'dark-heart-icon.svg', class: 'w-5 h-5' %>
-        </div>
-    <% end %>
+    <div class="flex items-center bg-gray-200 text-black font-extrabold p-2 h-3/5 rounded-xl hover:bg-spotify-gray-clear hover:border-spotify-green hover:text-spotify-green">
+    <%= image_tag 'dark-heart-icon.svg', class: 'w-5 h-5' %>
+    </div>
     <div class="flex items-center bg-gray-200 text-black font-extrabold p-2 h-3/5 rounded-xl hover:bg-spotify-gray-clear hover:border-spotify-green hover:text-spotify-green">
         <%= image_tag 'dark-trash-icon.svg', class: 'w-5 h-5' %>
     </div>
+    <% end %>
 </li>
