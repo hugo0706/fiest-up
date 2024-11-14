@@ -117,12 +117,12 @@ GEM
     factory_bot_rails (6.4.3)
       factory_bot (~> 6.4)
       railties (>= 5.0.0)
-    faraday (2.12.0)
-      faraday-net_http (>= 2.0, < 3.4)
+    faraday (2.12.1)
+      faraday-net_http (>= 2.0, < 3.5)
       json
       logger
-    faraday-net_http (3.3.0)
-      net-http
+    faraday-net_http (3.4.0)
+      net-http (>= 0.5.0)
     ffaker (2.23.0)
     fugit (1.11.1)
       et-orbi (~> 1, >= 1.2.11)
@@ -143,7 +143,7 @@ GEM
     jbuilder (2.13.0)
       actionview (>= 5.0.0)
       activesupport (>= 5.0.0)
-    json (2.7.2)
+    json (2.8.2)
     language_server-protocol (3.17.0.3)
     logger (1.6.1)
     loofah (2.22.0)
@@ -165,7 +165,7 @@ GEM
       stimulus-rails
       turbo-rails
     msgpack (1.7.2)
-    net-http (0.4.1)
+    net-http (0.5.0)
       uri
     net-imap (0.4.16)
       date
@@ -357,7 +357,7 @@ GEM
     tzinfo (2.0.6)
       concurrent-ruby (~> 1.0)
     unicode-display_width (2.5.0)
-    uri (0.13.1)
+    uri (1.0.2)
     useragent (0.16.10)
     web-console (4.2.1)
       actionview (>= 6.0.0)
