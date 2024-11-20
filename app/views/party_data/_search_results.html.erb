@@ -1,7 +1,7 @@
 <% songs.each do |song| %>
     <div class="flex items-center justify-between p-1 gap-3 h-18">
         <div class="flex items-center gap-2 flex-grow min-w-0">
-            <img src="<%= song[:image] %>" class="h-16 rounded-sm lg:rounded">
+            <img src="<%= song[:image] %>" class="w-16 rounded-sm lg:rounded">
             <div class="flex flex-col gap-1 my-2 overflow-hidden">
               <div class="text-ellipsis whitespace-nowrap">
                 <p class="font-semibold text-sm truncate"><%= song[:name] %></p>
