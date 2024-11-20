@@ -11,7 +11,7 @@
 
         <% if current_user %>
             <%= link_to account_settings_path, class: "flex justify-end gap-2 items-center w-full max-w-xs md:max-w-sm lg:max-w-md" do %>
-            <%= image_tag current_user.image, class: "object-cover h-10 w-10 rounded-full", alt: "User Profile Image" %>
+            <%= image_tag current_user.image || 'user-settings-icon.svg', class: "object-cover h-10 w-10 rounded-full", alt: "User Profile Image" %>
 
             <span class="text-md max-w-36 md:max-w-fit md:text-lg lg:text-xl font-bold truncate" title="<%= current_user.username %>">
                 <%= current_user.username %>

@@ -43,7 +43,7 @@ class UserFetcherService
       access_token: oauth_data["access_token"],
       refresh_token: oauth_data["refresh_token"],
       access_token_expires_at: Time.now + oauth_data["expires_in"],
-      image: @user_profile["images"].min_by { |image| image["height"] }["url"]
+      image: @user_profile["images"].present? ? @user_profile["images"].min_by { |image| image["height"] }["url"] : nil
     }
   end
 end
