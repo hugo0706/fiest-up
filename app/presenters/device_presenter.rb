@@ -10,7 +10,7 @@ class DevicePresenter
   def icon
     case device["type"]
     when "Computer"
-      "🖵"
+      "💻"
     when "Smartphone"
       "📱"
     else

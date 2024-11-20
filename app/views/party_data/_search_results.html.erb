@@ -1,10 +1,13 @@
 <% songs.each do |song| %>
-    <div class="flex items-center justify-between p-1 gap-3 h-14">
+    <div class="flex items-center justify-between p-1 gap-3 h-18">
         <div class="flex items-center gap-2 flex-grow min-w-0">
-            <img src="<%= song[:image] %>" class="w-12 h-12 rounded-sm lg:rounded">
-            <div class="overflow-hidden text-ellipsis whitespace-nowrap">
-            <p class="font-semibold text-sm truncate"><%= song[:name] %></p>
+            <img src="<%= song[:image] %>" class="h-16 rounded-sm lg:rounded">
+            <div class="flex flex-col gap-1 my-2 overflow-hidden">
+              <div class="text-ellipsis whitespace-nowrap">
+                <p class="font-semibold text-sm truncate"><%= song[:name] %></p>
                 <p class="font-semibold text-gray-500 text-xs truncate"><%= song[:artists].join(',')%></p>
+              </div>  
+              <%= image_tag 'spotify-full-logo.svg', class: 'w-[70px]' %>
             </div>
         </div>
         <div data-action="click->search#addToQueue" data-add-to-queue-url="<%=party_data_add_to_queue_path(code: party_code, spotify_song_id: song[:spotify_song_id])%>"class="hover:bg-spotify-gray-highlight rounded-md p-1">

@@ -1,7 +1,7 @@
 <% if devices.empty? %>
 <div class="flex flex-col h-full w-full justify-center items-center gap-2">
     <div class="animate-spin rounded-full h-16 w-16 border-2 border-t-8 border-zinc-400"></div>
-    <span class="font-medium text-center">Searching for devices</span>
+    <span class="flex gap-1 font-medium text-center">Searching your <%= image_tag 'spotify-full-logo.svg', class: 'w-[70px]' %> devices</span>
 </div>
 <% else %>
 <div class="grid grid-cols-2 <%= 'lg:grid-cols-3' if devices.count > 2 %> gap-4 w-full h-full max-h-screen p-4 overflow-y-auto overflow-hidden custom-scrollbar">
