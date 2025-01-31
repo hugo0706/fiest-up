@@ -4,14 +4,18 @@
             <img src="<%= song[:image] %>" class="w-16 rounded-sm lg:rounded">
             <div class="flex flex-col gap-1 my-2 overflow-hidden">
               <div class="text-ellipsis whitespace-nowrap">
-                <p class="font-semibold text-sm truncate"><%= song[:name] %></p>
+                <p class="font-semibold text-md truncate"><%= song[:name] %></p>
                 <p class="font-semibold text-gray-500 text-xs truncate"><%= song[:artists].join(',')%></p>
               </div>  
-              <%= image_tag 'spotify-full-logo.svg', class: 'w-[70px]' %>
+              <%= link_to "http://open.spotify.com/track/#{song[:spotify_song_id]}", target: '_blank', class: 'inline-block flex items-center gap-2' do %>
+                <span class='text-xs font-semibold text-gray-300 underline'>LISTEN ON</span> <%= image_tag('spotify-full-logo.svg', class: 'w-[75px] md:w-[90px]') %>
+              <% end %>
             </div>
         </div>
-        <div data-action="click->search#addToQueue" data-add-to-queue-url="<%=party_data_add_to_queue_path(code: party_code, spotify_song_id: song[:spotify_song_id])%>"class="hover:bg-spotify-gray-highlight rounded-md p-1">
-          <%= image_tag 'add-to-queue-icon.svg', class: 'w-8 h-8 mr-2' %>
+        <div data-action="click->search#addToQueue" 
+            data-add-to-queue-url="<%=party_data_add_to_queue_path(code: party_code, spotify_song_id: song[:spotify_song_id])%>"
+            class="w-12 h-12 shrink-0 flex items-center justify-center rounded-md">
+          <%= image_tag 'add-song-icon.svg', class: 'w-9' %>
         </div>
     </div>
     <hr class="border-t border-spotify-gray-highlight opacity-30 my-1">

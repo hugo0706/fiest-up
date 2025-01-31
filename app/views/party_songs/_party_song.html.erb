@@ -1,4 +1,4 @@
-<li id="<%="party_song_#{party_song_id}"%>" class="flex items-center gap-1 justify-between h-14 hover:bg-spotify-gray-clear">
+<li id="<%="party_song_#{party_song_id}"%>" class="flex items-center gap-1 justify-between h-14">
     <div id="<%= song.spotify_song_id %>" class="flex items-center gap-2 flex-grow min-w-0">
         <img src="<%= song.image %>" class="w-16 rounded-sm lg:rounded">
         <div class="flex flex-col gap-1 my-2 overflow-hidden">
@@ -6,7 +6,9 @@
             <p class="font-semibold text-base truncate"><%= song.name %></p>
               <p class="font-semibold text-gray-500 text-xs truncate"><%= song.artists.join(',') %></p>
           </div>
-          <%= link_to image_tag('spotify-full-logo.svg', class: 'w-[70px]'), "http://open.spotify.com/track/#{song.spotify_song_id}", target: '_blank', class: 'inline-block' %>
+          <%= link_to "http://open.spotify.com/track/#{song.spotify_song_id}", target: '_blank', class: 'inline-block flex items-center gap-2' do %>
+            <span class='text-xs font-semibold text-gray-300 underline'>LISTEN ON</span> <%= image_tag('spotify-full-logo.svg', class: 'w-[75px] md:w-[90px]') %>
+          <% end %>
         </div>
     </div>
     <% if false %>
